@@ -27,8 +27,16 @@
             <p-message severity="error">{{error()}}</p-message>
             }
             <div class="flex flex-col items-start justify-center gap-2">
-                <p-button [disabled]="!authForm.valid" label="Login" type="submit"
-                    [styleClass]="'transition-transform duration-200 ease-in-out transform hover:scale-105'" />
+                <p-button type="submit" [disabled]="!authForm.valid || isLoading()"
+                    [styleClass]="'transition-transform duration-200 ease-in-out transform hover:scale-105'">
+                    <ng-template pTemplate="content">
+                        @if (!isLoading()) {
+                        Login
+                        } @else {
+                        <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s"
+                            [style]="{ width: '25px', height: '25px' }" />
+                        } </ng-template>
+                </p-button>
                 <p>New User?<a routerLink="/auth/register" class="ml-2 hover:underline">Register</a>
                 </p>
             </div>
@@ -95,8 +103,17 @@
             }
 
             <div class="flex flex-col items-start justify-center gap-2">
-                <p-button [disabled]="!authForm.valid" label="Register" type="submit"
-                    [styleClass]="'transition-transform duration-200 ease-in-out transform hover:scale-105'" />
+                <p-button type="submit" [disabled]="!authForm.valid || isLoading()"
+                    [styleClass]="'transition-transform duration-200 ease-in-out transform hover:scale-105'">
+                    <ng-template pTemplate="content">
+                        @if (!isLoading()) {
+                        Register
+                        } @else {
+                        <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s"
+                            [style]="{ width: '25px', height: '25px' }" />
+                        } </ng-template>
+                </p-button>
+
                 <p>Already register?<a routerLink="/auth/login" class="ml-2 hover:underline">Login</a>
                 </p>
             </div>
