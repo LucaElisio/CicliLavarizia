@@ -8,9 +8,12 @@
 
     <nav>
         <ul>
-            <li>
+            <li class="flex flex-row items-center justify-between gap-4">
                 @if (authService.isAuthenticated()) {
-                <p-button><i class="material-icons">person</i>{{userInfo()?.email}}</p-button>
+                <p-button class="transition-transform duration-200 ease-in-out transform hover:scale-105"><i
+                        class="material-icons">person</i>{{authService.userInfo()?.email}}</p-button>
+                <a pButton routerLink="/auth/logout"
+                    class="transition-transform duration-200 ease-in-out transform hover:scale-105">Logout</a>
                 }@else {
                 <a routerLink="/auth/login" pButton label="Login"
                     class="transition-transform duration-200 ease-in-out transform hover:scale-105">

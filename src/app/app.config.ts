@@ -2,16 +2,17 @@ import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalE
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { providePrimeNG } from 'primeng/config';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 //theme PrimeNG
 import Nora from '@primeuix/themes/nora';
-import { AuthService } from './features/services/auth.service';
+import { AuthService } from './shared/services/auth.service';
+import { authInterceptor } from './interceptors/auth.interceptor';
 
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authInterceptor])),
     provideAppInitializer(() => {
       const authService = inject(AuthService);
       authService.changeAuthState();

@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from "../../../environments/environment"
-import { LoginRequest, RegisterRequest } from '../../shared/models/authModel';
+import { LoginRequest, RegisterRequest } from '../models/authModel';
 import { Observable } from 'rxjs';
-import { TokenDecoded, TokenResponse } from '../../shared/models/tokenModel';
+import { TokenDecoded, TokenResponse } from '../models/tokenModel';
 import { jwtDecode } from "jwt-decode";
 
 @Injectable({
@@ -15,6 +15,7 @@ export class AuthService {
   private url = environment.apiUrl;
 
   public isAuthenticated = signal<boolean>(false)
+  public userInfo = signal<TokenDecoded | null>(null);
 
   login(userData: LoginRequest): Observable<TokenResponse> {
     return this.http.post<TokenResponse>(`${this.url}/Auth/Login`, userData, { withCredentials: true });
@@ -24,22 +25,23 @@ export class AuthService {
     return this.http.post<void>(`${this.url}/Auth/Register`, userData);
   }
 
-  getTokenInfo(): TokenDecoded {
-    const token = localStorage.getItem('token');
-    let tokenDecoded!: TokenDecoded;
+  logout(): Observable<void> {
+    return this.http.post<void>(`${this.url}/Auth/Logout`, {}, { withCredentials: true });
+  }
 
-    if (token) {
-      tokenDecoded = jwtDecode(token);
-    }
-    return tokenDecoded;
+  refresh(): Observable<TokenResponse> {
+    return this.http.post<TokenResponse>(`${this.url}/Auth/Refresh`, {}, { withCredentials: true });
+
   }
 
   changeAuthState() {
     const token = localStorage.getItem('token');
     if (token) {
       this.isAuthenticated.set(true);
+      this.userInfo.set(jwtDecode(token));
     } else {
       this.isAuthenticated.set(false);
+      this.userInfo.set(null);
     }
   }
 

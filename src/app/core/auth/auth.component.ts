@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { AuthService } from '../../features/services/auth.service';
+import { AuthService } from '../../shared/services/auth.service';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -14,7 +14,7 @@ import { MessageModule } from 'primeng/message';
 
 
 @Component({
-  selector: 'app-auth.component',
+  selector: 'app-auth',
   imports: [InputGroupAddonModule, MessageModule, CardModule, PasswordModule, InputTextModule, InputGroupModule, FloatLabelModule, ButtonModule, RouterLink, ReactiveFormsModule],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
@@ -54,7 +54,6 @@ export class AuthComponent implements OnInit {
       })
     }
   }
-
 
   onSubmit() {
     if (this.isLoginPage && this.authForm.valid) {
