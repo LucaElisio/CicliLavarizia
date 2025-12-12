@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { AuthService } from '../../features/services/auth.service';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
@@ -9,7 +9,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { LoginRequest } from '../../shared/models/authModel';
+import { LoginRequest, RegisterRequest } from '../../shared/models/authModel';
 import { MessageModule } from 'primeng/message';
 
 
@@ -27,7 +27,7 @@ export class AuthComponent implements OnInit {
 
   isLoginPage: boolean = false;
   authForm!: FormGroup;
-  error: string | null = null;
+  error = signal<string | null>(null);
 
   ngOnInit(): void {
     const url = this.activatedRoute.url.subscribe({
@@ -63,13 +63,24 @@ export class AuthComponent implements OnInit {
         next: (data) => {
           localStorage.setItem('token', data.token);
           this.authService.changeAuthState();
-          this.error = null;
+          this.error.set(null);
           this.authForm.reset();
           this.router.navigate(['/']);
         },
         error: (err) => {
-          console.log(err.error)
-          this.error = err.error.detail;
+          this.error.set(err.error.detail);
+        }
+      });
+    } else if (!this.isLoginPage && this.authForm.valid) {
+      const userData: RegisterRequest = this.authForm.value;
+      this.authService.register(userData).subscribe({
+        next: () => {
+          this.error.set(null);
+          this.authForm.reset();
+          this.router.navigate(['/auth/login']);
+        },
+        error: (err) => {
+          this.error.set(err.error.detail);
         }
       });
     }

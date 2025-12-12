@@ -23,8 +23,8 @@
                     <label for="password">Password</label>
                 </p-floatlabel>
             </p-inputgroup>
-            @if (error) {
-            <p-message severity="error">{{error}}</p-message>
+            @if (error()) {
+            <p-message severity="error">{{error()}}</p-message>
             }
             <div class="flex flex-col items-start justify-center gap-2">
                 <p-button [disabled]="!authForm.valid" label="Login" type="submit"
@@ -90,8 +90,8 @@
                 </p-floatlabel>
             </p-inputgroup>
 
-            @if (error) {
-            <p-message severity="error">{{error}}</p-message>
+            @if (error()) {
+            <p-message severity="error">{{error()}}</p-message>
             }
 
             <div class="flex flex-col items-start justify-center gap-2">

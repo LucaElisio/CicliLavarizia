@@ -9,9 +9,13 @@
     <nav>
         <ul>
             <li>
+                @if (authService.isAuthenticated()) {
+                <p-button><i class="material-icons">person</i>{{userInfo()?.email}}</p-button>
+                }@else {
                 <a routerLink="/auth/login" pButton label="Login"
                     class="transition-transform duration-200 ease-in-out transform hover:scale-105">
                 </a>
+                }
             </li>
         </ul>
     </nav>
