@@ -1,0 +1,106 @@
+<section class="flex flex-col items-center justify-center">
+    @if (isLoginPage) {
+
+    <p-card header="Login" role="form" [style]="{width: '400px;'}" class="mt-20">
+        <form class="w-100 flex flex-col gap-6 mt-1" [formGroup]="authForm" (ngSubmit)="onSubmit()">
+            <p-inputgroup>
+                <p-inputgroup-addon>
+                    <i class="material-icons">email</i>
+                </p-inputgroup-addon>
+                <p-floatlabel variant="on">
+                    <input pInputText type="email" id="emailAddress" required formControlName="emailAddress" />
+                    <label for="emailAddress">Email</label>
+                </p-floatlabel>
+            </p-inputgroup>
+
+            <p-inputgroup>
+                <p-inputgroup-addon>
+                    <i class="material-icons">lock</i>
+                </p-inputgroup-addon>
+                <p-floatlabel variant="on">
+                    <p-password formControlName="password" id="password" [feedback]="false"
+                        [toggleMask]="true"></p-password>
+                    <label for="password">Password</label>
+                </p-floatlabel>
+            </p-inputgroup>
+            @if (error) {
+            <p-message severity="error">{{error}}</p-message>
+            }
+            <div class="flex flex-col items-start justify-center gap-2">
+                <p-button [disabled]="!authForm.valid" label="Login" type="submit"
+                    [styleClass]="'transition-transform duration-200 ease-in-out transform hover:scale-105'" />
+                <p>New User?<a routerLink="/auth/register" class="ml-2 hover:underline">Register</a>
+                </p>
+            </div>
+        </form>
+    </p-card>
+    } @else {
+    <p-card header="Register" role="form" [style]="{width: '400px;'}" class="mt-20">
+        <form class="w-100 flex flex-col gap-6 mt-1" [formGroup]="authForm" (ngSubmit)="onSubmit()">
+            <div class="flex gap-4 flex-col md:flex-row w-full">
+                <p-inputgroup class="flex-1">
+                    <p-inputgroup-addon>
+                        <i class="material-icons">person</i>
+                    </p-inputgroup-addon>
+                    <p-floatlabel variant="on">
+                        <input formControlName="firstName" pInputText type="text" id="firstName" required />
+                        <label for="firstName">First Name</label>
+                    </p-floatlabel>
+                </p-inputgroup>
+
+                <p-inputgroup class="flex-1">
+                    <p-inputgroup-addon>
+                        <i class="material-icons">person</i>
+                    </p-inputgroup-addon>
+                    <p-floatlabel variant="on">
+                        <input formControlName="lastName" pInputText type="text" id="lastName" required />
+                        <label for="lastName">Last Name</label>
+                    </p-floatlabel>
+                </p-inputgroup>
+            </div>
+
+            <p-inputgroup>
+                <p-inputgroup-addon>
+                    <i class="material-icons">email</i>
+                </p-inputgroup-addon>
+                <p-floatlabel variant="on">
+                    <input formControlName="emailAddress" pInputText type="email" id="emailAddress" required />
+                    <label for="emailAddress">Email</label>
+                </p-floatlabel>
+            </p-inputgroup>
+
+            <p-inputgroup>
+                <p-inputgroup-addon>
+                    <i class="material-icons">password</i>
+                </p-inputgroup-addon>
+                <p-floatlabel variant="on">
+                    <p-password formControlName="password" id="password" [toggleMask]="true"></p-password>
+                    <label for="password">Password</label>
+                </p-floatlabel>
+            </p-inputgroup>
+
+            <p-inputgroup>
+                <p-inputgroup-addon>
+                    <i class="material-icons">password</i>
+                </p-inputgroup-addon>
+                <p-floatlabel variant="on">
+                    <p-password formControlName="confirmPassword" id=" confirmPassword"
+                        [toggleMask]="true"></p-password>
+                    <label for="confirmPassword">Confirm Password</label>
+                </p-floatlabel>
+            </p-inputgroup>
+
+            @if (error) {
+            <p-message severity="error">{{error}}</p-message>
+            }
+
+            <div class="flex flex-col items-start justify-center gap-2">
+                <p-button [disabled]="!authForm.valid" label="Register" type="submit"
+                    [styleClass]="'transition-transform duration-200 ease-in-out transform hover:scale-105'" />
+                <p>Already register?<a routerLink="/auth/login" class="ml-2 hover:underline">Login</a>
+                </p>
+            </div>
+        </form>
+    </p-card>
+    }
+</section>
