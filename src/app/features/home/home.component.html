@@ -1,0 +1,48 @@
+<section class="flex flex-col w-full gap-12">
+  <div class="w-full relative overflow-hidden rounded-xl h-[340px] md:h-[420px] lg:h-[480px]">
+    <img src="hero-section.jpg" alt="Hero Image" class="w-full h-full object-cover object-center" />
+
+    <div class="absolute inset-0 bg-black/50 flex items-center justify-center pt-6">
+      <div class="text-center text-white px-6 max-w-2xl">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Domina il sentiero!</h1>
+
+        <p class="text-lg md:text-xl text-gray-200">
+          Mountain Bikes costruite per l’avidità di adrenalina. Performance estrema per chi non si
+          accontenta mai.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <p-card header="Prodotti in evidenza">
+    <p-carousel
+      class="my-8"
+      [value]="randomProducts()"
+      [numVisible]="1"
+      [numScroll]="1"
+      [circular]="true"
+      [showIndicators]="false"
+      [responsiveOptions]="productResponsiveOptions"
+      [autoplayInterval]="5000"
+    >
+      <ng-template let-product #item>
+        <p-card>
+          <div class="mb-4 font-medium">{{ product.name }}</div>
+          <div class="flex justify-between items-center">
+            <div class="mt-0 font-semibold text-xl">{{ product.listPrice + ' €' }}</div>
+          </div>
+        </p-card>
+      </ng-template>
+    </p-carousel>
+  </p-card>
+
+  <p-card header="Esplora le categorie ">
+    <div class="flex my-6 flex-row items-center justify-evenly gap-4 overflow-x-auto">
+      @for (category of categories(); track $index) {
+      <a class="p-button p-button-outlined mb-6 flex-shrink-0">
+        {{ category.name }}
+      </a>
+      }
+    </div>
+  </p-card>
+</section>

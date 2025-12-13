@@ -1,14 +1,18 @@
-import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { providePrimeNG } from 'primeng/config';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 //theme PrimeNG
-import Nora from '@primeuix/themes/nora';
+import Aura from '@primeuix/themes/aura';
 import { AuthService } from './shared/services/auth.service';
 import { authInterceptor } from './interceptors/auth.interceptor';
-
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,11 +23,11 @@ export const appConfig: ApplicationConfig = {
     }),
     providePrimeNG({
       theme: {
-        preset: Nora,
+        preset: Aura,
       },
       ripple: true,
     }),
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes)
-  ]
+    provideRouter(routes),
+  ],
 };
