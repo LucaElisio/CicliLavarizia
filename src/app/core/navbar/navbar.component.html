@@ -1,26 +1,39 @@
 <header class="flex justify-between items-center py-6 px-12">
-    <h1 class="text-2xl font-bold">
-        <a routerLink="/" class="flex items-center gap-3">
-            <span class="material-icons text-3xl bike">pedal_bike</span>
-            <span>Cicli L'Avarizia</span>
-        </a>
-    </h1>
+  <h1 class="text-2xl font-bold">
+    <a routerLink="/" class="flex items-center gap-3">
+      <span class="material-icons text-3xl bike">pedal_bike</span>
+      <span>Cicli L'Avarizia</span>
+    </a>
+  </h1>
 
-    <nav>
-        <ul>
-            <li class="flex flex-row items-center justify-between gap-4">
-                @if (authService.isAuthenticated()) {
-                <a pButton routerLink="/profile"
-                    class="transition-transform duration-200 ease-in-out transform hover:scale-105"><i
-                        class="material-icons">person</i>{{authService.userInfo()?.email}}</a>
-                <a pButton routerLink="/auth/logout"
-                    class="transition-transform duration-200 ease-in-out transform hover:scale-105">Logout</a>
-                }@else {
-                <a routerLink="/auth/login" pButton label="Login"
-                    class="transition-transform duration-200 ease-in-out transform hover:scale-105">
-                </a>
-                }
-            </li>
-        </ul>
-    </nav>
+  <nav>
+    <ul class="flex flex-row items-center justify-between gap-4">
+      @if (authService.isAuthenticated()) {
+      <li>
+        <p-menu
+          #menu
+          [model]="menuItems"
+          popup="true"
+          styleClass="menu-custom-position"
+          appendTo="body"
+        />
+        <p-button
+          (click)="menu.toggle($event)"
+          styleClass="transition-transform duration-200 ease-in-out transform hover:scale-105"
+          ><i class="material-icons">person</i></p-button
+        >
+      </li>
+      }@else {
+      <li>
+        <a
+          routerLink="/auth/login"
+          pButton
+          label="Login"
+          class="transition-transform duration-200 ease-in-out transform hover:scale-105"
+        >
+        </a>
+      </li>
+      }
+    </ul>
+  </nav>
 </header>

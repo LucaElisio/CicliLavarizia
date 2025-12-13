@@ -1,21 +1,32 @@
 h1:hover .bike {
-    animation: bike-dynamic 0.8s ease-out;
+  animation: bike-dynamic 0.8s ease-out;
+}
+
+::ng-deep .menu-custom-position {
+  transform: translateX(-75%) !important;
+  margin-top: 10px !important;
+  transition: transform 0.2s ease-out;
+}
+
+::ng-deep .menu-custom-position::before,
+::ng-deep .menu-custom-position::after {
+  left: 85% !important;
 }
 
 @keyframes bike-dynamic {
-    0% {
-        transform: translateY(0) rotate(0);
-    }
+  0% {
+    transform: translateY(0) rotate(0);
+  }
 
-    30% {
-        transform: translateY(-3px) rotate(-5deg);
-    }
+  30% {
+    transform: translateY(-3px) rotate(-5deg);
+  }
 
-    60% {
-        transform: translateY(2px) rotate(3deg);
-    }
+  60% {
+    transform: translateY(2px) rotate(3deg);
+  }
 
-    100% {
-        transform: translateY(0) rotate(0);
-    }
+  100% {
+    transform: translateY(0) rotate(0);
+  }
 }
