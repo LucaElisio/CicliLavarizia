@@ -1,0 +1,14 @@
+<section>
+    <div class="flex items-center justify-start gap-4 mb-6">
+        <p-avatar [label]="labelName" size="xlarge" shape="circle">
+        </p-avatar>
+
+        <div>
+            <h2 class="text-2xl font-semibold">
+                {{customerInfo()?.firstName}} {{customerInfo()?.lastName}}
+            </h2>
+            <p class="text-sm text-gray-400">{{authService.userInfo()?.email}}</p>
+        </div>
+    </div>
+
+</section>

@@ -31,7 +31,10 @@ export class AuthService {
 
   refresh(): Observable<TokenResponse> {
     return this.http.post<TokenResponse>(`${this.url}/Auth/Refresh`, {}, { withCredentials: true });
+  }
 
+  delete(): Observable<void> {
+    return this.http.delete<void>(`${this.url}/Auth/Delete`);
   }
 
   changeAuthState() {
