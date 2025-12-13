@@ -1,33 +1,20 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 
-import { MenuModule } from 'primeng/menu';
-import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { DrawerModule } from 'primeng/drawer';
+import { ProfileService } from '../../shared/services/profile.service';
 
 @Component({
   selector: 'app-navbar',
-  imports: [ButtonModule, RouterLink, MenuModule],
+  imports: [ButtonModule, RouterLink, DrawerModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   public authService = inject(AuthService);
-  private router = inject(Router);
+  public profileService = inject(ProfileService);
 
-  menuItems!: MenuItem[];
-
-  ngOnInit(): void {
-    this.menuItems = [
-      {
-        label: 'Settings',
-        routerLink: '/profile',
-      },
-      {
-        label: 'Logout',
-        routerLink: '/auth/logout',
-      },
-    ];
-  }
+  visible: boolean = false;
 }
