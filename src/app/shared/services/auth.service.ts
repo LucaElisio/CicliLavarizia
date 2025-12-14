@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { environment } from "../../../environments/environment"
+import { environment } from '../../../environments/environment';
 import { LoginRequest, RegisterRequest } from '../models/authModel';
 import { Observable } from 'rxjs';
 import { TokenDecoded, TokenResponse } from '../models/tokenModel';
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -14,11 +14,13 @@ export class AuthService {
 
   private url = environment.apiUrl;
 
-  public isAuthenticated = signal<boolean>(false)
+  public isAuthenticated = signal<boolean>(false);
   public userInfo = signal<TokenDecoded | null>(null);
 
   login(userData: LoginRequest): Observable<TokenResponse> {
-    return this.http.post<TokenResponse>(`${this.url}/Auth/Login`, userData, { withCredentials: true });
+    return this.http.post<TokenResponse>(`${this.url}/Auth/Login`, userData, {
+      withCredentials: true,
+    });
   }
 
   register(userData: RegisterRequest): Observable<void> {
@@ -37,6 +39,12 @@ export class AuthService {
     return this.http.delete<void>(`${this.url}/Auth/Delete`);
   }
 
+  updateEmail(newEmail: string): Observable<void> {
+    return this.http.post<void>(`${this.url}/Auth/UpdateEmail`, newEmail, {
+      withCredentials: true,
+    });
+  }
+
   changeAuthState() {
     const token = localStorage.getItem('token');
     if (token) {
@@ -47,5 +55,4 @@ export class AuthService {
       this.userInfo.set(null);
     }
   }
-
 }

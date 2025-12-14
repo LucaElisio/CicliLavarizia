@@ -41,9 +41,11 @@
   </ng-template>
 </p-drawer>
 
-<p-button
-  outlined
-  (onClick)="visible = true"
-  styleClass="transition-transform duration-200 ease-in-out transform hover:scale-105"
-  ><i class="material-icons">person</i></p-button
+<p-avatar
+  [label]="labelName"
+  shape="circle"
+  size="large"
+  class="cursor-pointer transition-transform duration-200 hover:scale-105"
+  (click)="visible = true"
 >
+</p-avatar>

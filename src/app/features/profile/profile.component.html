@@ -1,0 +1,76 @@
+<section class="w-full flex flex-col gap-8">
+  <p-card>
+    <div class="flex flex-col md:flex-row items-center gap-6">
+      <div class="text-center md:text-left">
+        <h1 class="text-2xl font-bold">
+          {{ customerInfo()?.firstName }} {{ customerInfo()?.lastName }}
+        </h1>
+        <p class="text-gray-500">{{ authService.userInfo()?.email }}</p>
+      </div>
+    </div>
+  </p-card>
+
+  <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-8">
+    <p-card header="Informazioni profilo" class="shadow-lg rounded-2xl">
+      <div class="space-y-4">
+        <div class="flex justify-between">
+          <span class="text-gray-500">Nome</span>
+          <span class="font-medium">{{ customerInfo()?.firstName }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500">Cognome</span>
+          <span class="font-medium">{{ customerInfo()?.lastName }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500">Middle Name</span>
+          <span class="font-medium">{{ customerInfo()?.middleName }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500">Email</span>
+          <span class="font-medium">{{ authService.userInfo()?.email }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500">Phone</span>
+          <span class="font-medium">{{ customerInfo()?.phone }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500">Suffix</span>
+          <span class="font-medium">{{ customerInfo()?.suffix }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500">Sales Person</span>
+          <span class="font-medium">{{ customerInfo()?.salesPerson }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500">Company Name</span>
+          <span class="font-medium">{{ customerInfo()?.companyName }}</span>
+        </div>
+        <div class="flex flex-col md:flex-row justify-between gap-2">
+          <span class="text-gray-500">Address</span>
+          <div class="flex flex-col gap-1">
+            @for (address of customerInfo()?.customerAddresses; track $index) {
+            <span class="font-medium">Ciao {{ address.Address.addressLine1 }}</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <ng-template #footer>
+        <div class="flex flex-wrap justify-between items-center gap-2 mt-4">
+          <div class="flex flex-wrap gap-2">
+            <a
+              routerLink="/auth/delete"
+              pButton
+              severity="danger"
+              class="p-button-text"
+              label="Elimina profilo"
+            ></a>
+            <p-button text label="Aggiorna Email"></p-button>
+            <p-button text label="Aggiorna Password"></p-button>
+          </div>
+          <p-button text label="Modifica profilo"></p-button>
+        </div>
+      </ng-template>
+    </p-card>
+  </div>
+</section>
