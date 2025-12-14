@@ -65,8 +65,8 @@
               class="p-button-text"
               label="Elimina profilo"
             ></a>
-            <p-button text label="Aggiorna Email"></p-button>
-            <p-button text label="Aggiorna Password"></p-button>
+            <p-button text (onClick)="showDialogEmail()" label="Aggiorna Email"></p-button>
+            <p-button text (onClick)="showDialogPassword()" label="Aggiorna Password"></p-button>
           </div>
           <p-button text label="Modifica profilo"></p-button>
         </div>
@@ -74,3 +74,61 @@
     </p-card>
   </div>
 </section>
+
+<!-- DIALOG UPDATE EMAIL -->
+<div class="card flex justify-center">
+  <p-dialog
+    (onHide)="error = null"
+    header="Update Email"
+    [modal]="true"
+    [(visible)]="visibleEmail"
+    [style]="{ width: '25rem' }"
+  >
+    <div class="flex items-center gap-4 mb-8">
+      <label for="email" class="font-semibold w-24">Email</label>
+      <input
+        pInputText
+        id="email"
+        class="flex-auto"
+        autocomplete="off"
+        type="email"
+        [formControl]="inputEmail"
+      />
+    </div>
+    @if (error) {
+    <p-message severity="error">{{ error }}</p-message>
+    }
+    <div class="flex justify-end gap-2">
+      <p-button label="Cancel" severity="secondary" (click)="visibleEmail = false" />
+      <p-button [disabled]="!inputPassword.valid" label="Update" (onClick)="updateEmail()" />
+    </div>
+  </p-dialog>
+</div>
+
+<!-- DIALOG UPDATE PASSWORD -->
+<div class="card flex justify-center">
+  <p-dialog
+    (onHide)="error = null"
+    header="Update Password"
+    [modal]="true"
+    [(visible)]="visiblePassword"
+    [style]="{ width: '25rem' }"
+  >
+    <div class="flex items-center gap-4 mb-8">
+      <label for="password" class="font-semibold w-24">New Password</label>
+      <p-password
+        [formControl]="inputPassword"
+        id="password"
+        [feedback]="false"
+        [toggleMask]="true"
+      ></p-password>
+    </div>
+    @if (error) {
+    <p-message severity="error">{{ error }}</p-message>
+    }
+    <div class="flex justify-end gap-2">
+      <p-button label="Cancel" severity="secondary" (click)="visiblePassword = false" />
+      <p-button [disabled]="!inputPassword.valid" label="Update" (onClick)="updatePassword()" />
+    </div>
+  </p-dialog>
+</div>

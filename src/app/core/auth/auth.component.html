@@ -1,123 +1,198 @@
 <section class="flex flex-col items-center justify-center">
-    @if (isLoginPage) {
+  @if (isLoginPage) {
 
-    <p-card header="Login" role="form" [style]="{width: '400px;'}" class="mt-20">
-        <form class="w-100 flex flex-col gap-6 mt-1" [formGroup]="authForm" (ngSubmit)="onSubmit()">
-            <p-inputgroup>
-                <p-inputgroup-addon>
-                    <i class="material-icons">email</i>
-                </p-inputgroup-addon>
-                <p-floatlabel variant="on">
-                    <input pInputText type="email" id="emailAddress" required formControlName="emailAddress" />
-                    <label for="emailAddress">Email</label>
-                </p-floatlabel>
-            </p-inputgroup>
+  <p-card header="Login" role="form" [style]="{ width: '400px;' }" class="mt-20">
+    <form class="w-100 flex flex-col gap-6 mt-1" [formGroup]="authForm" (ngSubmit)="onSubmit()">
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="material-icons">email</i>
+        </p-inputgroup-addon>
+        <p-floatlabel variant="on">
+          <input
+            pInputText
+            type="email"
+            id="emailAddress"
+            required
+            formControlName="emailAddress"
+          />
+          <label for="emailAddress">Email</label>
+        </p-floatlabel>
+      </p-inputgroup>
 
-            <p-inputgroup>
-                <p-inputgroup-addon>
-                    <i class="material-icons">lock</i>
-                </p-inputgroup-addon>
-                <p-floatlabel variant="on">
-                    <p-password formControlName="password" id="password" [feedback]="false"
-                        [toggleMask]="true"></p-password>
-                    <label for="password">Password</label>
-                </p-floatlabel>
-            </p-inputgroup>
-            @if (error()) {
-            <p-message severity="error">{{error()}}</p-message>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="material-icons">lock</i>
+        </p-inputgroup-addon>
+        <p-floatlabel variant="on">
+          <p-password
+            formControlName="password"
+            id="password"
+            [feedback]="false"
+            [toggleMask]="true"
+          ></p-password>
+          <label for="password">Password</label>
+        </p-floatlabel>
+      </p-inputgroup>
+      @if (error()) {
+      <p-message severity="error">{{ error() }}</p-message>
+      }
+      <div class="flex flex-col items-start justify-center gap-2">
+        <div class="flex justify-between w-full items-center">
+          <p-button
+            type="submit"
+            [disabled]="!authForm.valid || isLoading()"
+            [styleClass]="'transition-transform duration-200 ease-in-out transform hover:scale-105'"
+          >
+            <ng-template pTemplate="content">
+              @if (!isLoading()) { Login } @else {
+              <p-progress-spinner
+                strokeWidth="8"
+                fill="transparent"
+                animationDuration=".5s"
+                [style]="{ width: '25px', height: '25px' }"
+              />
+              }
+            </ng-template>
+          </p-button>
+          <p-button
+            text
+            (onClick)="showDialog()"
+            class="p-button-link"
+            label="Forgot Password?"
+          ></p-button>
+        </div>
+        <p>New User?<a routerLink="/auth/register" class="ml-2 hover:underline">Register</a></p>
+      </div>
+    </form>
+  </p-card>
+  } @else {
+  <p-card header="Register" role="form" [style]="{ width: '400px;' }" class="mt-20">
+    <form class="w-100 flex flex-col gap-6 mt-1" [formGroup]="authForm" (ngSubmit)="onSubmit()">
+      <div class="flex gap-4 flex-col md:flex-row w-full">
+        <p-inputgroup class="flex-1">
+          <p-inputgroup-addon>
+            <i class="material-icons">person</i>
+          </p-inputgroup-addon>
+          <p-floatlabel variant="on">
+            <input formControlName="firstName" pInputText type="text" id="firstName" required />
+            <label for="firstName">First Name</label>
+          </p-floatlabel>
+        </p-inputgroup>
+
+        <p-inputgroup class="flex-1">
+          <p-inputgroup-addon>
+            <i class="material-icons">person</i>
+          </p-inputgroup-addon>
+          <p-floatlabel variant="on">
+            <input formControlName="lastName" pInputText type="text" id="lastName" required />
+            <label for="lastName">Last Name</label>
+          </p-floatlabel>
+        </p-inputgroup>
+      </div>
+
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="material-icons">email</i>
+        </p-inputgroup-addon>
+        <p-floatlabel variant="on">
+          <input
+            formControlName="emailAddress"
+            pInputText
+            type="email"
+            id="emailAddress"
+            required
+          />
+          <label for="emailAddress">Email</label>
+        </p-floatlabel>
+      </p-inputgroup>
+
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="material-icons">password</i>
+        </p-inputgroup-addon>
+        <p-floatlabel variant="on">
+          <p-password formControlName="password" id="password" [toggleMask]="true"></p-password>
+          <label for="password">Password</label>
+        </p-floatlabel>
+      </p-inputgroup>
+
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="material-icons">password</i>
+        </p-inputgroup-addon>
+        <p-floatlabel variant="on">
+          <p-password
+            formControlName="confirmPassword"
+            id=" confirmPassword"
+            [toggleMask]="true"
+          ></p-password>
+          <label for="confirmPassword">Confirm Password</label>
+        </p-floatlabel>
+      </p-inputgroup>
+
+      @if (error()) {
+      <p-message severity="error">{{ error() }}</p-message>
+      }
+
+      <div class="flex flex-col items-start justify-center gap-2">
+        <p-button
+          type="submit"
+          [disabled]="!authForm.valid || isLoading()"
+          [styleClass]="'transition-transform duration-200 ease-in-out transform hover:scale-105'"
+        >
+          <ng-template pTemplate="content">
+            @if (!isLoading()) { Register } @else {
+            <p-progress-spinner
+              strokeWidth="8"
+              fill="transparent"
+              animationDuration=".5s"
+              [style]="{ width: '25px', height: '25px' }"
+            />
             }
-            <div class="flex flex-col items-start justify-center gap-2">
-                <p-button type="submit" [disabled]="!authForm.valid || isLoading()"
-                    [styleClass]="'transition-transform duration-200 ease-in-out transform hover:scale-105'">
-                    <ng-template pTemplate="content">
-                        @if (!isLoading()) {
-                        Login
-                        } @else {
-                        <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s"
-                            [style]="{ width: '25px', height: '25px' }" />
-                        } </ng-template>
-                </p-button>
-                <p>New User?<a routerLink="/auth/register" class="ml-2 hover:underline">Register</a>
-                </p>
-            </div>
-        </form>
-    </p-card>
-    } @else {
-    <p-card header="Register" role="form" [style]="{width: '400px;'}" class="mt-20">
-        <form class="w-100 flex flex-col gap-6 mt-1" [formGroup]="authForm" (ngSubmit)="onSubmit()">
-            <div class="flex gap-4 flex-col md:flex-row w-full">
-                <p-inputgroup class="flex-1">
-                    <p-inputgroup-addon>
-                        <i class="material-icons">person</i>
-                    </p-inputgroup-addon>
-                    <p-floatlabel variant="on">
-                        <input formControlName="firstName" pInputText type="text" id="firstName" required />
-                        <label for="firstName">First Name</label>
-                    </p-floatlabel>
-                </p-inputgroup>
+          </ng-template>
+        </p-button>
 
-                <p-inputgroup class="flex-1">
-                    <p-inputgroup-addon>
-                        <i class="material-icons">person</i>
-                    </p-inputgroup-addon>
-                    <p-floatlabel variant="on">
-                        <input formControlName="lastName" pInputText type="text" id="lastName" required />
-                        <label for="lastName">Last Name</label>
-                    </p-floatlabel>
-                </p-inputgroup>
-            </div>
-
-            <p-inputgroup>
-                <p-inputgroup-addon>
-                    <i class="material-icons">email</i>
-                </p-inputgroup-addon>
-                <p-floatlabel variant="on">
-                    <input formControlName="emailAddress" pInputText type="email" id="emailAddress" required />
-                    <label for="emailAddress">Email</label>
-                </p-floatlabel>
-            </p-inputgroup>
-
-            <p-inputgroup>
-                <p-inputgroup-addon>
-                    <i class="material-icons">password</i>
-                </p-inputgroup-addon>
-                <p-floatlabel variant="on">
-                    <p-password formControlName="password" id="password" [toggleMask]="true"></p-password>
-                    <label for="password">Password</label>
-                </p-floatlabel>
-            </p-inputgroup>
-
-            <p-inputgroup>
-                <p-inputgroup-addon>
-                    <i class="material-icons">password</i>
-                </p-inputgroup-addon>
-                <p-floatlabel variant="on">
-                    <p-password formControlName="confirmPassword" id=" confirmPassword"
-                        [toggleMask]="true"></p-password>
-                    <label for="confirmPassword">Confirm Password</label>
-                </p-floatlabel>
-            </p-inputgroup>
-
-            @if (error()) {
-            <p-message severity="error">{{error()}}</p-message>
-            }
-
-            <div class="flex flex-col items-start justify-center gap-2">
-                <p-button type="submit" [disabled]="!authForm.valid || isLoading()"
-                    [styleClass]="'transition-transform duration-200 ease-in-out transform hover:scale-105'">
-                    <ng-template pTemplate="content">
-                        @if (!isLoading()) {
-                        Register
-                        } @else {
-                        <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s"
-                            [style]="{ width: '25px', height: '25px' }" />
-                        } </ng-template>
-                </p-button>
-
-                <p>Already register?<a routerLink="/auth/login" class="ml-2 hover:underline">Login</a>
-                </p>
-            </div>
-        </form>
-    </p-card>
-    }
+        <p>Already register?<a routerLink="/auth/login" class="ml-2 hover:underline">Login</a></p>
+      </div>
+    </form>
+  </p-card>
+  }
 </section>
+
+<div class="card flex justify-center">
+  <p-dialog
+    (onHide)="error.set(null)"
+    header="Update Password"
+    [modal]="true"
+    [(visible)]="visible"
+    [style]="{ width: '25rem' }"
+  >
+    <div class="flex items-center gap-4 mb-8">
+      <label for="email" class="font-semibold w-24">Email</label>
+      <input
+        pInputText
+        id="email"
+        class="flex-auto"
+        autocomplete="off"
+        type="email"
+        [formControl]="inputEmail"
+      />
+    </div>
+    <div class="flex items-center gap-4 mb-8">
+      <label for="password" class="font-semibold w-24">New Password</label>
+      <p-password
+        [formControl]="inputPassword"
+        id="password"
+        [feedback]="false"
+        [toggleMask]="true"
+      ></p-password>
+    </div>
+    @if (error()) {
+    <p-message severity="error">{{ error() }}</p-message>
+    }
+    <div class="flex justify-end gap-2">
+      <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+      <p-button [disabled]="!inputPassword.valid" label="Update" (onClick)="updatePassword()" />
+    </div>
+  </p-dialog>
+</div>

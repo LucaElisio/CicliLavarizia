@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { LoginRequest, RegisterRequest } from '../models/authModel';
+import { LoginRequest, RegisterRequest, UpdateEmailRequest } from '../models/authModel';
 import { Observable } from 'rxjs';
 import { TokenDecoded, TokenResponse } from '../models/tokenModel';
 import { jwtDecode } from 'jwt-decode';
@@ -39,10 +39,14 @@ export class AuthService {
     return this.http.delete<void>(`${this.url}/Auth/Delete`);
   }
 
-  updateEmail(newEmail: string): Observable<void> {
-    return this.http.post<void>(`${this.url}/Auth/UpdateEmail`, newEmail, {
+  updateEmail(newEmail: UpdateEmailRequest): Observable<void> {
+    return this.http.put<void>(`${this.url}/Auth/UpdateEmailAddress`, newEmail, {
       withCredentials: true,
     });
+  }
+
+  updatePassword(userData: LoginRequest): Observable<void> {
+    return this.http.put<void>(`${this.url}/Auth/RefreshPassword`, userData);
   }
 
   changeAuthState() {
