@@ -1,0 +1,49 @@
+<p-drawer [(visible)]="visible" position="right" [closable]="true" class="w-80">
+  <ng-template #header>
+    <span class="font-semibold text-lg">Account</span>
+  </ng-template>
+
+  <div class="flex flex-col h-full">
+    <section class="border-b pb-4 mb-4">
+      <div class="flex items-center gap-3 px-2">
+        <p-avatar [label]="labelName" size="large" shape="circle" class="shrink-0"></p-avatar>
+
+        <div class="flex flex-col leading-tight">
+          <h2 class="text-base font-semibold">
+            {{ customerInfo()?.firstName }}
+            {{ customerInfo()?.lastName }}
+          </h2>
+
+          <p class="text-sm text-gray-400 truncate max-w-[14rem]">
+            {{ authService.userInfo()?.email }}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <nav class="flex flex-col gap-2 flex-1">
+      <a routerLink="/profile" class="p-button p-button-text">
+        <i class="material-icons">person</i>
+        Profilo
+      </a>
+
+      <a routerLink="/orders" class="p-button p-button-text">
+        <i class="material-icons">receipt_long</i>
+        Ordini
+      </a>
+    </nav>
+  </div>
+
+  <ng-template #footer>
+    <div class="flex gap-2 w-full">
+      <a routerLink="/auth/logout" pButton label="Logout" class="w-full" severity="danger" text></a>
+    </div>
+  </ng-template>
+</p-drawer>
+
+<p-button
+  outlined
+  (onClick)="visible = true"
+  styleClass="transition-transform duration-200 ease-in-out transform hover:scale-105"
+  ><i class="material-icons">person</i></p-button
+>

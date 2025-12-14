@@ -10,27 +10,7 @@
     <ul class="flex flex-row items-center justify-between gap-4">
       @if (authService.isAuthenticated()) {
       <li class="card flex justify-center">
-        <p-drawer [(visible)]="visible" [closable]="false" position="right">
-          <ng-template #header>Info User</ng-template>
-          <ng-template #footer>
-            <div class="flex items-center gap-2">
-              <a routerLink="/profile" pButton label="Settings" class="w-full" outlined></a>
-              <a
-                routerLink="/auth/logout"
-                pButton
-                label="logout"
-                class="w-full"
-                severity="danger"
-                text
-              ></a>
-            </div>
-          </ng-template>
-        </p-drawer>
-        <p-button
-          (onClick)="visible = true"
-          styleClass="transition-transform duration-200 ease-in-out transform hover:scale-105"
-          ><i class="material-icons">person</i></p-button
-        >
+        <app-sidebar></app-sidebar>
       </li>
       }@else {
       <li>

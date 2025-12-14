@@ -1,27 +1,39 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ProfileService } from '../../shared/services/profile.service';
-import { CustomerInfoRequest } from '../../shared/models/customerModel';
-import { AuthService } from '../../shared/services/auth.service';
 
 import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
-import { InputGroupModule } from "primeng/inputgroup";
-import { InputGroupAddonModule } from "primeng/inputgroupaddon";
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { IftaLabelModule } from 'primeng/iftalabel';
+import { ProfileService } from '../../../shared/services/profile.service';
+import { AuthService } from '../../../shared/services/auth.service';
+import { CustomerInfoRequest } from '../../../shared/models/customerModel';
+import { DrawerModule } from 'primeng/drawer';
 
 @Component({
-  selector: 'app-user-profile',
-  imports: [CardModule, IftaLabelModule, InputTextModule, PasswordModule, AvatarModule, ButtonModule, InputGroupModule, InputGroupAddonModule],
-  templateUrl: './user-profile.component.html',
-  styleUrl: './user-profile.component.css',
+  selector: 'app-sidebar',
+  imports: [
+    DrawerModule,
+    CardModule,
+    IftaLabelModule,
+    InputTextModule,
+    PasswordModule,
+    AvatarModule,
+    ButtonModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+  ],
+  templateUrl: './sidebar.component.html',
+  styleUrl: './sidebar.component.css',
 })
-export class UserProfileComponent implements OnInit {
+export class SidebarComponent implements OnInit {
   private profileService = inject(ProfileService);
 
   authService = inject(AuthService);
+  visible: boolean = false;
 
   customerInfo = signal<CustomerInfoRequest | null>(null);
   labelName!: string;
@@ -34,7 +46,6 @@ export class UserProfileComponent implements OnInit {
         const lastInitial = data.lastName?.charAt(0).toUpperCase() ?? '';
         this.labelName = `${firstInitial}${lastInitial}`;
       },
-    })
+    });
   }
-
 }
