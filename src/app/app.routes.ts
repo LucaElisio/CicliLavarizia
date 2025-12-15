@@ -5,6 +5,7 @@ import { authGuard } from './guards/auth.guard';
 import { DeleteComponent } from './core/auth/delete/delete.component';
 import { HomeComponent } from './features/home/home.component';
 import { ProfileComponent } from './features/profile/profile.component';
+import { ProductComponent } from './features/product/product.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -13,4 +14,5 @@ export const routes: Routes = [
   { path: 'auth/logout', component: LogoutComponent, canActivate: [authGuard] },
   { path: 'auth/delete', component: DeleteComponent, canActivate: [authGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
+  {path: 'products', component: ProductComponent }
 ];

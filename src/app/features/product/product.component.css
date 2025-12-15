@@ -1,0 +1,14 @@
+.quadratino {
+  width: 410px;
+  height: 420px;
+  background-color: rgb(113, 122, 125);
+border-radius: 8px;
+}
+
+.categorie{
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    color: black;
+}
