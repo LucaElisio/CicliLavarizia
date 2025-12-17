@@ -1,8 +1,8 @@
-.quadratino {
-  width: 410px;
-  height: 420px;
+.productCard {
+  /* width: 410px; */
+  /* height: 420px; */
   background-color: rgb(113, 122, 125);
-border-radius: 8px;
+  border-radius: 8px;
 }
 
 .categorie{
