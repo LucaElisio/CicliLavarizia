@@ -1,0 +1,4 @@
+/* Spacer per compensare l'altezza della navbar fixed */
+.navbar-spacer {
+  height: 110px; /* py-6 = 1.5rem top + 1.5rem bottom = 3rem + altezza contenuto ≈ 88px */
+}
