@@ -3,10 +3,48 @@
     <!-- Sidebar -->
     <p-card class="col-span-2 sidebar" header="Categorie">
 
+        <br>
+        <p>Grandezza pagina</p>
         <div class="card flex justify-center">
             <div>
                 <input type="text" pInputText [(ngModel)]="pageSize" (ngModelChange)="getProducts()" class="w-full mb-4" />
                 <p-slider [(ngModel)]="pageSize" (ngModelChange)="getProducts()" [step]="3" class="w-56" min="3" max="99"></p-slider>
+            </div>
+        </div>
+
+        <br>
+        <p>Filtro Prezzo</p>
+        <div class="card flex justify-center">
+            <div>
+            <div style="display: flex; gap: 8px;">
+                <input
+                type="number"
+                pInputText
+                [(ngModel)]="minPrice"
+                (ngModelChange)="minPrice = $event; maxPrice = (minPrice > maxPrice ? minPrice : maxPrice); priceRange = [minPrice, maxPrice]; filterByPrice()"
+                step="20"
+                class="w-full mb-4"
+                placeholder="Prezzo minimo" />
+                <input
+                type="number"
+                pInputText
+                [(ngModel)]="maxPrice"
+                (ngModelChange)="maxPrice = $event; minPrice = (maxPrice < minPrice ? maxPrice : minPrice); priceRange = [minPrice, maxPrice]; filterByPrice()"
+                step="20"
+                class="w-full mb-4"
+                placeholder="Prezzo massimo" />
+            </div>
+
+            <!-- Slider a range; usa step 20 e sincronizza gli input -->
+            <p-slider
+                [(ngModel)]="priceRange"
+                [range]="true"
+                (ngModelChange)="minPrice = priceRange[0]; maxPrice = priceRange[1]; filterByPrice()"
+                [step]="20"
+                class="w-56"
+                min="0"
+                max="10000">
+            </p-slider>
             </div>
         </div>
 

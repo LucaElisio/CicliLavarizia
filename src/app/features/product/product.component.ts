@@ -21,6 +21,7 @@ import { InputTextModule } from 'primeng/inputtext';
 export class ProductComponent implements OnInit {
 
   allProducts = signal<ProductResponse[]>([]);
+  originalProducts = signal<ProductResponse[]>([]); // Prodotti originali non filtrati
   allCategories =signal<ProductCategoryResponse[]>([]);
   currentProduct: ProductResponse | null = null;
 
@@ -29,9 +30,13 @@ export class ProductComponent implements OnInit {
   pageSize: number = 21;
   hasNextPage: boolean = false;
 
+  minPrice: number = 0;
+  maxPrice: number = 9000;
+  priceRange: number[] = [this.minPrice, this.maxPrice];
+
   loading: boolean = true; // stato di caricamento
 
-  constructor(private http: HttpClient, private productService: ProductService, private cd: ChangeDetectorRef) { }
+  constructor(private http: HttpClient, private productService: ProductService) { }
 
   ngOnInit(): void {
   this.getProducts();
@@ -41,7 +46,8 @@ export class ProductComponent implements OnInit {
     this.loading = true;
     this.productService.getProducts(this.currentPage, this.pageSize, this.productCategory).subscribe({
       next: (data) => {
-        this.allProducts.set(data);
+        this.originalProducts.set(data); // Salva i prodotti originali
+        this.filterByPrice(); // Applica il filtro prezzo
         this.hasNextPage = data.length === this.pageSize;
         this.loading = false;
         console.log('Prodotti caricati:', this.allProducts);
@@ -90,4 +96,12 @@ export class ProductComponent implements OnInit {
     });
 
   }
+
+  filterByPrice(): void {
+    const filteredProducts = this.originalProducts().filter(product => 
+      product.listPrice >= this.minPrice && product.listPrice <= this.maxPrice
+    );
+    this.allProducts.set(filteredProducts);
+  }
+
 }
