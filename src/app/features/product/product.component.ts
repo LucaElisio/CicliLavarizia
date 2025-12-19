@@ -1,27 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CardModule } from 'primeng/card';
-import { ProductResponse } from '../../shared/models/productModel';
+import { ProductCategoryResponse, ProductResponse } from '../../shared/models/productModel';
 import { ProductService } from '../../shared/services/product.service';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
+import { SliderModule } from 'primeng/slider';
+import { FormsModule } from '@angular/forms';
+import { Slider } from 'primeng/slider';
+import { InputTextModule } from 'primeng/inputtext';
 
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [CardModule, CommonModule],
+  imports: [CardModule, CommonModule, SliderModule, FormsModule, Slider, InputTextModule],
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css'],
 })
 export class ProductComponent implements OnInit {
 
-  allProducts: ProductResponse[] = [];
+  allProducts = signal<ProductResponse[]>([]);
+  allCategories =signal<ProductCategoryResponse[]>([]);
   currentProduct: ProductResponse | null = null;
 
   productCategory: string = 'All';
   currentPage: number = 1;
-  pageSize: number = 12;
+  pageSize: number = 21;
   hasNextPage: boolean = false;
 
   loading: boolean = true; // stato di caricamento
@@ -30,19 +35,16 @@ export class ProductComponent implements OnInit {
 
   ngOnInit(): void {
   this.getProducts();
-
+  this.getAllCategories();
 }
   getProducts(): void {
     this.loading = true;
     this.productService.getProducts(this.currentPage, this.pageSize, this.productCategory).subscribe({
       next: (data) => {
-        this.allProducts = data;
+        this.allProducts.set(data);
         this.hasNextPage = data.length === this.pageSize;
         this.loading = false;
         console.log('Prodotti caricati:', this.allProducts);
-
-        // Rilevamento manuale dei cambiamenti
-        this.cd.detectChanges();
 
       },
       error: (err) => {
@@ -76,5 +78,16 @@ export class ProductComponent implements OnInit {
     this.currentProduct = product;
   }
 
+  getAllCategories(): void {
+    this.productService.getCategories().subscribe({
+      next: (data) => {
+        this.allCategories.set(data);
+        console.log('Categorie caricate:', this.allCategories);
+      },
+      error: (err) => {
+        console.error('Errore nella chiamata API per le categorie:', err);
+      }
+    });
 
+  }
 }

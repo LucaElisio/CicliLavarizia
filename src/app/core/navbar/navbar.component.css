@@ -1,3 +1,32 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out;
+  background-color: transparent;
+}
+
+.navbar-at-top {
+  transform: translateY(0);
+  background-color: #075f46;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.navbar-visible {
+  transform: translateY(0);
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.navbar-hidden {
+  transform: translateY(-100%);
+  background-color: transparent;
+}
+
 h1:hover .bike {
   animation: bike-dynamic 0.8s ease-out;
 }
