@@ -49,7 +49,7 @@
           <span class="text-gray-500">Address</span>
           <div class="flex flex-col gap-1">
             @for (address of customerInfo()?.customerAddresses; track $index) {
-            <span class="font-medium">Ciao {{ address.Address.addressLine1 }}</span>
+            <span class="font-medium">{{ address.address.addressLine1 }}</span>
             }
           </div>
         </div>
