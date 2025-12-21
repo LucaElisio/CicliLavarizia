@@ -7,8 +7,8 @@
         <p>Grandezza pagina</p>
         <div class="card flex justify-center">
             <div>
-                <input type="text" pInputText [(ngModel)]="pageSize" (ngModelChange)="getProducts()" class="w-full mb-4" />
-                <p-slider [(ngModel)]="pageSize" (ngModelChange)="getProducts()" [step]="3" class="w-56" min="3" max="99"></p-slider>
+                <input type="text" pInputText [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" class="w-full mb-4" />
+                <p-slider [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()" [step]="3" class="w-56" min="3" max="99"></p-slider>
             </div>
         </div>
 
@@ -65,40 +65,98 @@
     </p-card>
 
     <!-- Griglia Prodotti -->
-    <div class="col-span-6" style="grid-template-columns: repeat(3, 1fr); gap: 20px; display: grid;">
+    <div class="col-span-6">
 
-        
+        <!-- Loading -->
+        <div *ngIf="loading" class="text-white col-span-3 text-center">
+            Caricamento in corso...
+        </div>
 
-        <!-- Lista prodotti -->
-        <p-card class="productCard" *ngFor="let p of allProducts()">
+        <!-- Vista Modelli (default) -->
+        <div *ngIf="!selectedModel" style="grid-template-columns: repeat(3, 1fr); gap: 20px; display: grid;">
+            <p-card class="productCard model-card" *ngFor="let model of allProductModels()" 
+                    (click)="selectModel(model)">
 
-            <!-- <ng-template pTemplate="image">
-                <img [src]="`data:image/gif;base64,${p.ThumbNailPhoto}`"
-                    style="width: 100%; height: 250px; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px;">
-            </ng-template> -->
+                <ng-template pTemplate="title">
+                    <h2 style="color: rgb(235, 238, 232); font-size: 1.5rem; margin: 10px 0;">
+                        {{ model.name}}
+                    </h2>
+                </ng-template>
 
-            <ng-template pTemplate="title">
-                <h2 style="color: rgb(235, 238, 232); font-size: 1.5rem; margin: 10px 0;">
-                    {{ p.name }}
+                <ng-template pTemplate="subtitle">
+                    <p style="color: rgb(190, 195, 188); font-size: 1rem; margin: 10px 0;">
+                        {{ model.modelDescription }}
+                    </p>
+                </ng-template>
+
+                <ng-template pTemplate="footer">
+                    <p style="color: rgb(170, 200, 170); font-size: 0.9rem; text-align: center;">
+                        Clicca per vedere i prodotti
+                    </p>
+                </ng-template>
+            </p-card>
+
+            <!-- Messaggio se non ci sono modelli -->
+            <div *ngIf="!loading && allProductModels().length === 0" class="text-white col-span-3 text-center">
+                Nessun modello disponibile.
+            </div>
+        </div>
+
+        <!-- Vista Prodotti del Modello Selezionato -->
+        <div *ngIf="selectedModel">
+            <div style="margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <button (click)="backToModels()" 
+                            style="background-color: rgb(170, 200, 170); color: rgb(20, 20, 20); padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                        ← Torna ai Modelli
+                    </button>
+                </div>
+                <h2 style="color: rgb(235, 238, 232); font-size: 1.8rem; margin: 0;">
+                    {{ selectedModel.name }}
                 </h2>
-            </ng-template>
+                <div style="width: 150px;"></div>
+            </div>
 
-            <ng-template pTemplate="subtitle">
-                <h3 style="color: rgb(170, 200, 170); font-size: 1.2rem; margin: 5px 0;">
-                    € {{ p.listPrice }}
-                </h3>
-            </ng-template>
+            <p style="color: rgb(190, 195, 188); font-size: 1.1rem; margin-bottom: 30px; text-align: center;">
+                {{ selectedModel.modelDescription }}
+            </p>
 
-            <ng-template pTemplate="size">
-                <p style="color: rgb(190, 195, 188); font-size: 1rem; margin: 10px 0;">
-                    Size: {{ p.size }}
-                </p>
-            </ng-template>
-        </p-card>
+            <div style="grid-template-columns: repeat(3, 1fr); gap: 20px; display: grid;">
+                <p-card class="productCard" *ngFor="let p of filteredProducts()">
 
-        <!-- Messaggio se non ci sono prodotti -->
-        <div *ngIf="allProducts().length === 0" class="text-white">
-            Nessun prodotto disponibile.
+                    <ng-template pTemplate="header" *ngIf="p.ThumbNailPhoto">
+                        <img [src]="'data:image/jpeg;base64,' + p.ThumbNailPhoto"
+                            style="width: 100%; height: 250px; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px;"
+                            alt="{{ p.name }}">
+                    </ng-template>
+
+                    <ng-template pTemplate="title">
+                        <h2 style="color: rgb(235, 238, 232); font-size: 1.5rem; margin: 10px 0;">
+                            {{ p.name }}
+                        </h2>
+                    </ng-template>
+
+                    <ng-template pTemplate="subtitle">
+                        <h3 style="color: rgb(170, 200, 170); font-size: 1.2rem; margin: 5px 0;">
+                            € {{ p.listPrice }}
+                        </h3>
+                    </ng-template>
+
+                    <ng-template pTemplate="content">
+                        <p *ngIf="p.color" style="color: rgb(190, 195, 188); font-size: 0.9rem;">
+                            Colore: {{ p.color }}
+                        </p>
+                        <p *ngIf="p.size" style="color: rgb(190, 195, 188); font-size: 0.9rem;">
+                            Taglia: {{ p.size }}
+                        </p>
+                    </ng-template>
+                </p-card>
+
+                <!-- Messaggio se non ci sono prodotti per questo modello -->
+                <div *ngIf="filteredProducts().length === 0" class="text-white col-span-3 text-center">
+                    Nessun prodotto disponibile per questo modello.
+                </div>
+            </div>
         </div>
 
     </div>

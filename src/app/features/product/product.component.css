@@ -1,10 +1,17 @@
 .productCard {
   /* width: 410px; */
   /* height: 420px; */
-  background-color: rgb(78, 86, 80)
-
-;
+  background-color: rgb(78, 86, 80);
   border-radius: 8px;
+}
+
+.model-card {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.model-card:hover {
+  transform: scale(1.02);
 }
 
 .sidebar {
