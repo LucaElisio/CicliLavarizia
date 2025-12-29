@@ -1,5 +1,6 @@
 <section class="flex flex-col w-full gap-12">
-  <div class="w-full relative overflow-hidden rounded-xl h-[340px] md:h-[420px] lg:h-[480px]">
+  @if (this.authService.userInfo()?.role === 'Customer') {
+  <div class="w-full relative overflow-hidden rounded-xl h-85 md:h-105 lg:h-120">
     <img src="hero-section.jpg" alt="Hero Image" class="w-full h-full object-cover object-center" />
 
     <div class="absolute inset-0 bg-black/50 flex items-center justify-center pt-6">
@@ -39,10 +40,10 @@
   <p-card header="Esplora le categorie ">
     <div class="flex my-6 flex-row items-center justify-evenly gap-4 overflow-x-auto">
       @for (category of categories(); track $index) {
-      <a class="p-button p-button-outlined mb-6 flex-shrink-0">
+      <a class="p-button p-button-outlined mb-6 shrink-0">
         {{ category.name }}
       </a>
       }
-    </div>
-  </p-card>
+    </div> </p-card
+  >}@else { sono Admin }
 </section>

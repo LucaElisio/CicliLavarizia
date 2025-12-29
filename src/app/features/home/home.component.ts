@@ -5,6 +5,7 @@ import { ProductCategoryResponse, ProductResponse } from '../../shared/models/pr
 import { CarouselModule } from 'primeng/carousel';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +15,7 @@ import { ButtonModule } from 'primeng/button';
 })
 export class HomeComponent implements OnInit {
   private productService = inject(ProductService);
+  authService = inject(AuthService);
 
   randomProducts = signal<ProductResponse[]>([]);
   categories = signal<ProductCategoryResponse[]>([]);

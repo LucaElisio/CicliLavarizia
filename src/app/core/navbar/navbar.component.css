@@ -1,8 +1,6 @@
-.navbar {
+header {
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
   z-index: 1000;
   transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out,
     backdrop-filter 0.3s ease-in-out;
@@ -27,6 +25,11 @@
 .navbar-hidden {
   transform: translateY(100);
   background-color: transparent;
+}
+
+.bike {
+  display: inline-block;
+  transition: transform 0.3s ease-out;
 }
 
 h1:hover .bike {

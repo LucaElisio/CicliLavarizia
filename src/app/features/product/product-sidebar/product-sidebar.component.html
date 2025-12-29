@@ -1,0 +1,18 @@
+<p-card header="Categorie">
+  @if (isLoading()) {
+  <p-progress-spinner
+    ariaLabel="loading"
+    strokeWidth="4"
+    fill="transparent"
+    [style]="{ width: '25px', height: '25px' }"
+  />
+  }@else {
+  <ul class="grid grid-cols-2">
+    @for (category of categories(); track $index) {
+    <li class="col-span-1">{{ category.name }}</li>
+    }@empty {
+    <li>No categories found</li>
+    }
+  </ul>
+  }
+</p-card>

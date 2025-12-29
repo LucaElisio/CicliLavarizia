@@ -1,19 +1,19 @@
 <header
-  class="navbar flex items-center justify-between py-6 px-4 sm:px-6 lg:px-8"
+  class="flex items-center justify-between py-6 px-4 sm:px-6 lg:px-8 w-full"
   [class.navbar-hidden]="!isNavbarVisible"
   [class.navbar-visible]="isNavbarVisible && !isAtTop"
   [class.navbar-at-top]="isAtTop"
 >
   <div class="flex items-center gap-3">
-    <a routerLink="/" class="flex items-center gap-3">
-      <span class="material-icons text-3xl bike">pedal_bike</span>
-      <span class="text-2xl font-bold">Cicli L'Avarizia</span>
-    </a>
+    <h1>
+      <a routerLink="/" class="flex items-center gap-3">
+        <span class="material-icons bike">pedal_bike</span>
+        <span class="text-2xl font-bold">Cicli L'Avarizia</span>
+      </a>
+    </h1>
   </div>
 
   <div class="relative w-full max-w-md mx-8">
-    <label for="search" class="sr-only">Search</label>
-
     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
       <span class="material-icons text-body text-base">search</span>
     </div>
@@ -22,8 +22,9 @@
       type="search"
       id="search"
       #searchInput
-      class="block w-full p-3 ps-12 bg-gray-800 border border-white text-heading text-sm rounded-lg focus:outline-none focus:ring-0 focus:border-white placeholder:text-body"
-      placeholder="Search"
+      class="block w-full p-3 ps-12 text-heading text-sm rounded-lg focus:outline-1"
+      style="background-color: #1c1b22"
+      placeholder="Cerca..."
     />
   </div>
 
@@ -32,7 +33,16 @@
       Esplora Modelli
     </a>
 
-    <a class="material-icons text-3xl cart cursor-pointer"> shopping_cart </a>
+    @if (authService.isAuthenticated()) {
+    <p-overlay-badge
+      [value]="cartService.cartProducts()?.totalElements ?? 0"
+      badgeSize="small"
+      [style]="{ outline: 'unset' }"
+    >
+      <a routerLink="/cart" class="material-icons">shopping_cart</a>
+      <app-cart></app-cart>
+    </p-overlay-badge>
+    }
 
     <nav>
       <ul class="flex items-center">
