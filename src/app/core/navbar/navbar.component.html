@@ -1,58 +1,56 @@
 <header
-  class="navbar flex justify-between items-center py-6 px-4 sm:px-6 lg:px-8"
+  class="navbar flex items-center justify-between py-6 px-4 sm:px-6 lg:px-8"
   [class.navbar-hidden]="!isNavbarVisible"
   [class.navbar-visible]="isNavbarVisible && !isAtTop"
   [class.navbar-at-top]="isAtTop"
 >
-  <h1 class="text-2xl font-bold">
+  <div class="flex items-center gap-3">
     <a routerLink="/" class="flex items-center gap-3">
       <span class="material-icons text-3xl bike">pedal_bike</span>
-      <span>Cicli L'Avarizia</span>
+      <span class="text-2xl font-bold">Cicli L'Avarizia</span>
     </a>
-  </h1>
+  </div>
 
-  <label for="search" class="sr-only">Search</label>
-  <div class="relative w-190">
+  <div class="relative w-full max-w-md mx-8">
+    <label for="search" class="sr-only">Search</label>
+
     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-      <span class="material-icons text-body text-base" aria-hidden="true">search</span>
+      <span class="material-icons text-body text-base">search</span>
     </div>
 
     <input
       type="search"
       id="search"
       #searchInput
-      class="block w-full p-3 ps-12 bg-gray-800 border border-white text-heading text-sm rounded-lg focus:outline-none focus:ring-0 focus:border-white active:outline-none placeholder:text-body"
+      class="block w-full p-3 ps-12 bg-gray-800 border border-white text-heading text-sm rounded-lg focus:outline-none focus:ring-0 focus:border-white placeholder:text-body"
       placeholder="Search"
-      required
     />
   </div>
 
-  <a
-    routerLink="/products"
-    class="text-lg font-semibold transition-transform duration-200 ease-in-out transform hover:scale-105"
-  >
-    Esplora Modelli
-  </a>
+  <div class="flex items-center gap-6">
+    <a routerLink="/products" class="text-lg font-semibold transition-transform hover:scale-105">
+      Esplora Modelli
+    </a>
 
-  <a class="material-icons text-3xl cart"> shopping_cart </a>
+    <a class="material-icons text-3xl cart cursor-pointer"> shopping_cart </a>
 
-  <nav>
-    <ul class="flex flex-row items-center justify-between gap-4">
-      @if (authService.isAuthenticated()) {
-      <li class="card flex justify-center">
-        <app-sidebar></app-sidebar>
-      </li>
-      }@else {
-      <li>
-        <a
-          routerLink="/auth/login"
-          pButton
-          label="Login"
-          class="transition-transform duration-200 ease-in-out transform hover:scale-105"
-        >
-        </a>
-      </li>
-      }
-    </ul>
-  </nav>
+    <nav>
+      <ul class="flex items-center">
+        @if (authService.isAuthenticated()) {
+        <li>
+          <app-sidebar></app-sidebar>
+        </li>
+        } @else {
+        <li>
+          <a
+            routerLink="/auth/login"
+            pButton
+            label="Login"
+            class="transition-transform hover:scale-105"
+          ></a>
+        </li>
+        }
+      </ul>
+    </nav>
+  </div>
 </header>
