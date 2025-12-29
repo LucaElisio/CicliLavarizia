@@ -7,7 +7,7 @@
     @for (category of categories(); track $index) {
     <li>
       <a routerLink="/products"
-        [queryParams]="{ category: category.name.toLowerCase().trimEnd().trimStart().replaceAll(' ', '-')}">{{
+        [queryParams]="{ category: category.name.toLowerCase().trimEnd().trimStart().replaceAll(' ', '-'), page: page, pageSize: pageSize}">{{
         category.name }}</a>
     </li>
     }@empty {

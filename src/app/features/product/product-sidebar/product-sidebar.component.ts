@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, input, Input, OnInit, signal } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ProductService } from '../../../shared/services/product.service';
 import { ProductCategoryResponse } from '../../../shared/models/productModel';
@@ -16,6 +16,9 @@ export class ProductSidebarComponent implements OnInit {
   categories = signal<ProductCategoryResponse[]>([]);
   isLoading = signal<boolean>(true);
   errorMsg: string | null = null;
+
+  @Input({ required: true }) page!: number;
+  @Input({ required: true }) pageSize!: number;
 
   ngOnInit(): void {
     this.getCategories();
