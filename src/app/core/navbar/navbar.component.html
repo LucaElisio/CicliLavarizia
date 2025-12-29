@@ -1,15 +1,15 @@
-<header 
+<header
   class="navbar flex justify-between items-center py-6 px-4 sm:px-6 lg:px-8"
   [class.navbar-hidden]="!isNavbarVisible"
   [class.navbar-visible]="isNavbarVisible && !isAtTop"
-  [class.navbar-at-top]="isAtTop">
+  [class.navbar-at-top]="isAtTop"
+>
   <h1 class="text-2xl font-bold">
     <a routerLink="/" class="flex items-center gap-3">
       <span class="material-icons text-3xl bike">pedal_bike</span>
       <span>Cicli L'Avarizia</span>
     </a>
   </h1>
-
 
   <label for="search" class="sr-only">Search</label>
   <div class="relative w-190">
@@ -27,29 +27,29 @@
     />
   </div>
 
-
-  <a routerLink="/products"
-    class="text-lg font-semibold transition-transform duration-200 ease-in-out transform hover:scale-105">
+  <a
+    routerLink="/products"
+    class="text-lg font-semibold transition-transform duration-200 ease-in-out transform hover:scale-105"
+  >
     Esplora Modelli
   </a>
 
-  <a class="material-icons text-3xl cart"
-    >
-    shopping_cart
-  </a>
-
+  <a class="material-icons text-3xl cart"> shopping_cart </a>
 
   <nav>
     <ul class="flex flex-row items-center justify-between gap-4">
-      <li>
-        @if (authService.isAuthenticated()) {
+      @if (authService.isAuthenticated()) {
       <li class="card flex justify-center">
         <app-sidebar></app-sidebar>
       </li>
       }@else {
       <li>
-        <a routerLink="/auth/login" pButton label="Login"
-          class="transition-transform duration-200 ease-in-out transform hover:scale-105">
+        <a
+          routerLink="/auth/login"
+          pButton
+          label="Login"
+          class="transition-transform duration-200 ease-in-out transform hover:scale-105"
+        >
         </a>
       </li>
       }

@@ -1,7 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CardModule } from 'primeng/card';
-import { ProductCategoryResponse, ProductResponse } from '../../shared/models/productModel';
+import {
+  ProductCategoryResponse,
+  ProductModelsResponse,
+  ProductResponse,
+} from '../../shared/models/productModel';
 import { ProductService } from '../../shared/services/product.service';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
@@ -9,21 +13,18 @@ import { SliderModule } from 'primeng/slider';
 import { FormsModule } from '@angular/forms';
 import { Slider } from 'primeng/slider';
 import { InputTextModule } from 'primeng/inputtext';
-import { ProductModelsResponse } from '../../shared/models/productModelsResponse';
-
 
 @Component({
   selector: 'app-product',
   standalone: true,
   imports: [CardModule, CommonModule, SliderModule, FormsModule, Slider, InputTextModule],
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.css'], 
+  styleUrls: ['./product.component.css'],
 })
 export class ProductComponent implements OnInit {
-
   allProducts = signal<ProductResponse[]>([]);
   originalProducts = signal<ProductResponse[]>([]); // Prodotti originali non filtrati
-  allCategories =signal<ProductCategoryResponse[]>([]);
+  allCategories = signal<ProductCategoryResponse[]>([]);
   currentProduct: ProductResponse | null = null;
 
   originalModels = signal<ProductModelsResponse[]>([]);
@@ -43,51 +44,53 @@ export class ProductComponent implements OnInit {
 
   loading: boolean = true; // stato di caricamento
 
-  constructor(private http: HttpClient, private productService: ProductService) { }
+  constructor(private http: HttpClient, private productService: ProductService) {}
 
   ngOnInit(): void {
-  this.getProducts();
-  this.getModels();
-  this.getAllCategories();
-}
+    this.getProducts();
+    this.getModels();
+    this.getAllCategories();
+  }
   getProducts(): void {
     this.loading = true;
     // Se c'è un filtro prezzo attivo (diverso dal range completo), carica più prodotti
     const hasActivePriceFilter = this.minPrice > 0 || this.maxPrice < 9000;
     const effectivePageSize = hasActivePriceFilter ? this.pageSize * 3 : this.pageSize;
-    
-    this.productService.getProducts(this.currentPage, effectivePageSize, this.productCategory).subscribe({
-      next: (data) => {
-        this.originalProducts.set(data); // Salva i prodotti originali
-        this.filterByPrice(); // Applica il filtro prezzo lato client
-        this.hasNextPage = data.length === effectivePageSize;
-        this.loading = false;
-        console.log('Prodotti caricati:', this.allProducts());
 
-      },
-      error: (err) => {
-        console.error('Errore nella chiamata API:', err);
-        this.loading = false;
-      }
-    });
+    this.productService
+      .getProducts(this.currentPage, effectivePageSize, this.productCategory)
+      .subscribe({
+        next: (data) => {
+          this.originalProducts.set(data); // Salva i prodotti originali
+          this.filterByPrice(); // Applica il filtro prezzo lato client
+          this.hasNextPage = data.length === effectivePageSize;
+          this.loading = false;
+          console.log('Prodotti caricati:', this.allProducts());
+        },
+        error: (err) => {
+          console.error('Errore nella chiamata API:', err);
+          this.loading = false;
+        },
+      });
   }
 
   getModels(): void {
     this.loading = true;
-    this.productService.getProductModels(this.currentPage, this.pageSize, this.productCategory).subscribe({
-      next: (data) => {
-        this.originalModels.set(data);
-        this.allProductModels.set(data);
-        this.hasNextPage = data.length === this.pageSize;
-        this.loading = false;
-        console.log('Modelli caricati:', this.allProductModels());
-      },
-      error: (err) => {
-        console.error('Errore nella chiamata API per le descrizioni:', err);
-        this.loading = false;
-      }
-    });
-
+    this.productService
+      .getProductModels(this.currentPage, this.pageSize, this.productCategory)
+      .subscribe({
+        next: (data) => {
+          this.originalModels.set(data);
+          this.allProductModels.set(data);
+          this.hasNextPage = data.length === this.pageSize;
+          this.loading = false;
+          console.log('Modelli caricati:', this.allProductModels());
+        },
+        error: (err) => {
+          console.error('Errore nella chiamata API per le descrizioni:', err);
+          this.loading = false;
+        },
+      });
   }
 
   nextPage(): void {
@@ -123,14 +126,13 @@ export class ProductComponent implements OnInit {
       },
       error: (err) => {
         console.error('Errore nella chiamata API per le categorie:', err);
-      }
+      },
     });
-
   }
 
   filterByPrice(): void {
-    const filteredProducts = this.originalProducts().filter(product => 
-      product.listPrice >= this.minPrice && product.listPrice <= this.maxPrice
+    const filteredProducts = this.originalProducts().filter(
+      (product) => product.listPrice >= this.minPrice && product.listPrice <= this.maxPrice
     );
     // Limita i risultati al pageSize richiesto
     const limitedProducts = filteredProducts.slice(0, this.pageSize);
@@ -140,7 +142,9 @@ export class ProductComponent implements OnInit {
   selectModel(model: ProductModelsResponse): void {
     this.selectedModel = model;
     // Filtra i prodotti per il modello selezionato
-    const productsForModel = this.allProducts().filter(p => p.productModelId === model.productModelId);
+    const productsForModel = this.allProducts().filter(
+      (p) => p.productModelId === model.productModelId
+    );
     this.filteredProducts.set(productsForModel);
     console.log('Modello selezionato:', model);
     console.log('Prodotti filtrati:', productsForModel);
@@ -159,5 +163,4 @@ export class ProductComponent implements OnInit {
     // Ricarica sempre i prodotti per avere dati freschi quando si clicca su un modello
     this.getProducts();
   }
-
 }
