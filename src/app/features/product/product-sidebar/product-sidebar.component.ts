@@ -3,10 +3,11 @@ import { CardModule } from 'primeng/card';
 import { ProductService } from '../../../shared/services/product.service';
 import { ProductCategoryResponse } from '../../../shared/models/productModel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-product-sidebar',
-  imports: [CardModule, ProgressSpinnerModule],
+  imports: [CardModule, ProgressSpinnerModule, RouterLink],
   templateUrl: './product-sidebar.component.html',
   styleUrl: './product-sidebar.component.css',
 })

@@ -1,0 +1,36 @@
+<section class="grid grid-cols-12 gap-4">
+    <app-product-sidebar class="md:col-span-2"></app-product-sidebar>
+
+    <div class="md:col-span-10 col-span-12">
+
+        @if (isLoading()) {
+        <p-progressbar class="w-full" mode="indeterminate" [style]="{ height: '2px' }">
+        </p-progressbar>
+        }
+
+        <p-dataview [value]="products()" layout="grid" [lazy]="true" [paginator]="true" [rows]="pageSize"
+            [totalRecords]="totalProducts()" (onLazyLoad)="loadProducts($event)">
+
+            <ng-template #grid let-items>
+                <div class="grid grid-cols-12 gap-4">
+                    @for (product of products(); track $index) {
+                    <div class="col-span-12 sm:col-span-6 xl:col-span-4 p-2">
+                        <p-card [header]="product.name" class="p-6 border rounded">
+                            <p>{{ product.productNumber }}</p>
+                            <p>{{ product.color }}</p>
+                            <p>{{ product.listPrice }}</p>
+                            <p>{{ product.size }}</p>
+                        </p-card>
+                    </div>}
+                </div>
+            </ng-template>
+
+        </p-dataview>
+
+
+        @if (errorMsg) {
+        <p class="text-red-600 mt-2">{{ errorMsg }}</p>
+        }
+
+    </div>
+</section>

@@ -1,5 +1,8 @@
 <section class="flex flex-col w-full gap-12">
-  @if (this.authService.userInfo()?.role === 'Customer') {
+  @if (this.authService.userInfo() !== null) {
+  @switch(this.authService.userInfo()?.role) {
+  @case
+  ("Customer") {
   <div class="w-full relative overflow-hidden rounded-xl h-85 md:h-105 lg:h-120">
     <img src="hero-section.jpg" alt="Hero Image" class="w-full h-full object-cover object-center" />
 
@@ -16,16 +19,8 @@
   </div>
 
   <p-card header="Prodotti in evidenza">
-    <p-carousel
-      class="my-8"
-      [value]="randomProducts()"
-      [numVisible]="1"
-      [numScroll]="1"
-      [circular]="true"
-      [showIndicators]="false"
-      [responsiveOptions]="productResponsiveOptions"
-      [autoplayInterval]="5000"
-    >
+    <p-carousel class="my-8" [value]="randomProducts()" [numVisible]="1" [numScroll]="1" [circular]="true"
+      [showIndicators]="false" [responsiveOptions]="productResponsiveOptions" [autoplayInterval]="5000">
       <ng-template let-product #item>
         <p-card>
           <div class="mb-4 font-medium">{{ product.name }}</div>
@@ -44,6 +39,11 @@
         {{ category.name }}
       </a>
       }
-    </div> </p-card
-  >}@else { sono Admin }
+    </div>
+  </p-card>}@case ('Admin') {
+  <p>Sono Admin</p>
+  >
+  }
+  }
+  }
 </section>

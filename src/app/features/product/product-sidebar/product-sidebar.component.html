@@ -1,15 +1,15 @@
 <p-card header="Categorie">
   @if (isLoading()) {
-  <p-progress-spinner
-    ariaLabel="loading"
-    strokeWidth="4"
-    fill="transparent"
-    [style]="{ width: '25px', height: '25px' }"
-  />
+  <p-progress-spinner ariaLabel="loading" strokeWidth="4" fill="transparent"
+    [style]="{ width: '25px', height: '25px' }" />
   }@else {
-  <ul class="grid grid-cols-2">
+  <ul>
     @for (category of categories(); track $index) {
-    <li class="col-span-1">{{ category.name }}</li>
+    <li>
+      <a routerLink="/products"
+        [queryParams]="{ category: category.name.toLowerCase().trimEnd().trimStart().replaceAll(' ', '-')}">{{
+        category.name }}</a>
+    </li>
     }@empty {
     <li>No categories found</li>
     }
