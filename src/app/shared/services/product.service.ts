@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import {
@@ -14,6 +14,8 @@ import { HttpClient } from '@angular/common/http';
 export class ProductService {
   private http = inject(HttpClient);
   private url = environment.apiUrl;
+
+  categories = signal<ProductCategoryResponse[]>([]);
 
   getCategories(): Observable<ProductCategoryResponse[]> {
     return this.http.get<ProductCategoryResponse[]>(`${this.url}/Product/GetAllCategories`);

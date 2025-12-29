@@ -14,11 +14,10 @@ import { AuthService } from '../../shared/services/auth.service';
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit {
-  private productService = inject(ProductService);
+  productService = inject(ProductService);
   authService = inject(AuthService);
 
   randomProducts = signal<ProductResponse[]>([]);
-  categories = signal<ProductCategoryResponse[]>([]);
 
   productResponsiveOptions = [
     { breakpoint: '1024px', numVisible: 3, numScroll: 3 },
@@ -41,7 +40,7 @@ export class HomeComponent implements OnInit {
 
     this.productService.getCategories().subscribe({
       next: (data) => {
-        this.categories.set(data);
+        this.productService.categories.set(data);
       },
     });
   }

@@ -10,7 +10,9 @@ import { CartService } from '../../shared/services/cart.service';
 export class CartComponent implements OnInit {
   cartService = inject(CartService);
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getCart();
+  }
 
   getCart() {
     this.cartService.getCart().subscribe({

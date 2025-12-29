@@ -33,8 +33,8 @@
           <label for="password">Password</label>
         </p-floatlabel>
       </p-inputgroup>
-      @if (error()) {
-      <p-message severity="error">{{ error() }}</p-message>
+      @if (errorMsg()) {
+      <p-message severity="error">{{ errorMsg() }}</p-message>
       }
       <div class="flex flex-col items-start justify-center gap-2">
         <div class="flex justify-between w-full items-center">
@@ -130,8 +130,8 @@
         </p-floatlabel>
       </p-inputgroup>
 
-      @if (error()) {
-      <p-message severity="error">{{ error() }}</p-message>
+      @if (errorMsg()) {
+      <p-message severity="error">{{ errorMsg() }}</p-message>
       }
 
       <div class="flex flex-col items-start justify-center gap-2">
@@ -161,7 +161,7 @@
 
 <div class="card flex justify-center">
   <p-dialog
-    (onHide)="error.set(null)"
+    (onHide)="errorMsg.set(null)"
     header="Update Password"
     [modal]="true"
     [(visible)]="visible"
@@ -187,8 +187,8 @@
         [toggleMask]="true"
       ></p-password>
     </div>
-    @if (error()) {
-    <p-message severity="error">{{ error() }}</p-message>
+    @if (errorMsg()) {
+    <p-message severity="error">{{ errorMsg() }}</p-message>
     }
     <div class="flex justify-end gap-2">
       <p-button label="Cancel" severity="secondary" (click)="visible = false" />

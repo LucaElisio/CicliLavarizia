@@ -47,7 +47,7 @@ export class AuthComponent implements OnInit {
 
   isLoginPage: boolean = false;
   authForm!: FormGroup;
-  error = signal<string | null>(null);
+  errorMsg = signal<string | null>(null);
   isLoading = signal<boolean>(false);
   inputPassword: FormControl = new FormControl('', Validators.minLength(8));
   inputEmail: FormControl = new FormControl('', Validators.email);
@@ -88,10 +88,10 @@ export class AuthComponent implements OnInit {
       this.authService.updatePassword(userData).subscribe({
         next: () => {
           this.visible = false;
-          this.error.set(null);
+          this.errorMsg.set(null);
         },
         error: (err) => {
-          this.error.set(err.error.detail);
+          this.errorMsg.set(err.error.detail);
         },
       });
     }
@@ -109,28 +109,28 @@ export class AuthComponent implements OnInit {
         next: (data) => {
           localStorage.setItem('token', data.token);
           this.authService.changeAuthState();
-          this.error.set(null);
+          this.errorMsg.set(null);
           this.authForm.reset();
           this.isLoading.set(false);
           this.router.navigate(['/']);
         },
         error: (err) => {
           this.isLoading.set(false);
-          this.error.set(err.error.detail);
+          this.errorMsg.set(err.error.detail);
         },
       });
     } else if (!this.isLoginPage && this.authForm.valid) {
       const userData: RegisterRequest = this.authForm.value;
       this.authService.register(userData).subscribe({
         next: () => {
-          this.error.set(null);
+          this.errorMsg.set(null);
           this.authForm.reset();
           this.isLoading.set(false);
           this.router.navigate(['/auth/login']);
         },
         error: (err) => {
           this.isLoading.set(false);
-          this.error.set(err.error.detail);
+          this.errorMsg.set(err.error.detail);
         },
       });
     }
