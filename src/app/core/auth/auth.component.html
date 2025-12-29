@@ -43,16 +43,14 @@
             [disabled]="!authForm.valid || isLoading()"
             [styleClass]="'transition-transform duration-200 ease-in-out transform hover:scale-105'"
           >
-            <ng-template pTemplate="content">
-              @if (!isLoading()) { Login } @else {
-              <p-progress-spinner
-                strokeWidth="8"
-                fill="transparent"
-                animationDuration=".5s"
-                [style]="{ width: '25px', height: '25px' }"
-              />
-              }
-            </ng-template>
+            @if (!isLoading()) { Login } @else {
+            <p-progress-spinner
+              strokeWidth="8"
+              fill="transparent"
+              animationDuration=".5s"
+              [style]="{ width: '25px', height: '25px' }"
+            />
+            }
           </p-button>
           <p-button
             text
@@ -140,16 +138,14 @@
           [disabled]="!authForm.valid || isLoading()"
           [styleClass]="'transition-transform duration-200 ease-in-out transform hover:scale-105'"
         >
-          <ng-template pTemplate="content">
-            @if (!isLoading()) { Register } @else {
-            <p-progress-spinner
-              strokeWidth="8"
-              fill="transparent"
-              animationDuration=".5s"
-              [style]="{ width: '25px', height: '25px' }"
-            />
-            }
-          </ng-template>
+          @if (!isLoading()) { Register } @else {
+          <p-progress-spinner
+            strokeWidth="8"
+            fill="transparent"
+            animationDuration=".5s"
+            [style]="{ width: '25px', height: '25px' }"
+          />
+          }
         </p-button>
 
         <p>Already register?<a routerLink="/auth/login" class="ml-2 hover:underline">Login</a></p>
@@ -161,7 +157,8 @@
 
 <div class="card flex justify-center">
   <p-dialog
-    (onHide)="errorMsg.set(null)"
+    (onShow)="errorMsg.set(null)"
+    (onHide)="errorMsg.set(null); inputEmail.reset(); inputPassword.reset()"
     header="Update Password"
     [modal]="true"
     [(visible)]="visible"
@@ -188,11 +185,20 @@
       ></p-password>
     </div>
     @if (errorMsg()) {
-    <p-message severity="error">{{ errorMsg() }}</p-message>
+    <p-message severity="error" class="mb-2">{{ errorMsg() }}</p-message>
     }
     <div class="flex justify-end gap-2">
       <p-button label="Cancel" severity="secondary" (click)="visible = false" />
-      <p-button [disabled]="!inputPassword.valid" label="Update" (onClick)="updatePassword()" />
+      <p-button [disabled]="!inputPassword.valid || isLoading()" (onClick)="updatePassword()">
+        @if (!isLoading()) { Update } @else {
+        <p-progress-spinner
+          strokeWidth="8"
+          fill="transparent"
+          animationDuration=".5s"
+          [style]="{ width: '25px', height: '25px' }"
+        />
+        }
+      </p-button>
     </div>
   </p-dialog>
 </div>

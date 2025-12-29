@@ -80,6 +80,7 @@ export class AuthComponent implements OnInit {
   }
 
   updatePassword() {
+    this.isLoading.set(true);
     if (this.inputPassword.valid && this.inputEmail.valid) {
       const userData = {
         emailAddress: this.inputEmail.value,
@@ -89,9 +90,13 @@ export class AuthComponent implements OnInit {
         next: () => {
           this.visible = false;
           this.errorMsg.set(null);
+          this.isLoading.set(false);
+          this.inputEmail.reset();
+          this.inputPassword.reset();
         },
         error: (err) => {
           this.errorMsg.set(err.error.detail);
+          this.isLoading.set(false);
         },
       });
     }
