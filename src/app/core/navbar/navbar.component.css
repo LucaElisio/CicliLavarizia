@@ -11,21 +11,21 @@
 }
 
 .navbar-at-top {
-  top: 0;
+  transform: translateY(0);
   background-color: #075f46;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
 
 .navbar-visible {
-  top: 0;
+  transform: translateY(0);
   background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
 .navbar-hidden {
-  top: -100%;
+  transform: translateY(100);
   background-color: transparent;
 }
 
