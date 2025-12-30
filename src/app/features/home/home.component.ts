@@ -6,10 +6,11 @@ import { CarouselModule } from 'primeng/carousel';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { AuthService } from '../../shared/services/auth.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [CarouselModule, CardModule, ButtonModule],
+  imports: [CarouselModule, CardModule, ButtonModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })

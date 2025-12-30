@@ -37,7 +37,10 @@
   <p-card header="Esplora le categorie ">
     <div class="flex my-6 flex-row items-center justify-evenly gap-4 overflow-x-auto">
       @for (category of productService.categories(); track $index) {
-      <a class="p-button p-button-outlined mb-6 shrink-0">
+      <a routerLink="/products" [queryParams]="{
+          category: category.name.toLowerCase().trimEnd().trimStart().replace(' ', '-'),
+          page: 1,
+          pageSize:10}" class="p-button p-button-outlined mb-6 shrink-0">
         {{ category.name }}
       </a>
       }

@@ -35,13 +35,12 @@ export class NavbarComponent {
   isNavbarVisible = true;
   isAtTop = true;
   private lastScrollTop = 0;
-  private scrollThreshold = 50;
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-    if (scrollTop > this.lastScrollTop && scrollTop > 80) {
+    if (scrollTop > this.lastScrollTop && scrollTop > 120) {
       this.isNavbarVisible = false;
     } else {
       this.isNavbarVisible = true;
