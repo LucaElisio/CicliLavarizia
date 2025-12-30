@@ -11,7 +11,7 @@ export interface ProductResponse {
   thumbnailPhotoFileName?: string;
   productCategoryId: number;
   productModelId?: number;
-  productCategory: ProductCategoryResponse;
+  productsCategory: ProductCategoryResponse;
 }
 
 export interface ProductCategoryResponse {

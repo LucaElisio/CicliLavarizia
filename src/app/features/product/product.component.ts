@@ -3,16 +3,29 @@ import { ProductService } from '../../shared/services/product.service';
 import { ProductResponse } from '../../shared/models/productModel';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { CardModule } from 'primeng/card';
 import { ProductSidebarComponent } from './product-sidebar/product-sidebar.component';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { DataViewLazyLoadEvent, DataViewModule } from 'primeng/dataview';
 import { SkeletonModule } from 'primeng/skeleton';
+import { DrawerModule } from 'primeng/drawer';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-product',
-  imports: [CardModule, DataViewModule, SkeletonModule, ProductSidebarComponent, ProgressBarModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    CardModule,
+    DataViewModule,
+    SkeletonModule,
+    ProductSidebarComponent,
+    ProgressBarModule,
+    DrawerModule,
+    ButtonModule,
+  ],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css',
 })
@@ -31,6 +44,8 @@ export class ProductComponent implements OnInit {
   isLoading = signal<boolean>(true);
   errorMsg: string | null = null;
 
+  isSidebarOpen = false;
+
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe({
       next: (data) => {
@@ -44,8 +59,8 @@ export class ProductComponent implements OnInit {
   }
 
   loadProducts(event: DataViewLazyLoadEvent) {
-    this.page = event.first / event.rows + 1;
-    this.pageSize = event.rows;
+    this.page = (event.first ?? 0) / (event.rows ?? 10) + 1;
+    this.pageSize = event.rows ?? 10;
 
     this.router.navigate([], {
       queryParams: {
@@ -76,7 +91,7 @@ export class ProductComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.errorMsg = err.error.detail;
+        this.errorMsg = err.error?.detail || 'Si è verificato un errore';
       },
     });
   }
