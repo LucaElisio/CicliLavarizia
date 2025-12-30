@@ -41,22 +41,12 @@ export class NavbarComponent {
   onWindowScroll() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-    // Determina se siamo in cima alla pagina
-    this.isAtTop = scrollTop <= this.scrollThreshold;
-
-    if (this.isAtTop) {
-      // In cima: navbar sempre visibile
-      this.isNavbarVisible = true;
-    }
-    // Nasconde navbar quando si scrolla verso il basso
-    else if (scrollTop > this.lastScrollTop) {
+    if (scrollTop > this.lastScrollTop && scrollTop > 80) {
       this.isNavbarVisible = false;
-    }
-    // Mostra navbar quando si scrolla verso l'alto
-    else {
+    } else {
       this.isNavbarVisible = true;
     }
 
-    this.lastScrollTop = scrollTop;
+    this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
   }
 }

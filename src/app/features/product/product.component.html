@@ -1,31 +1,25 @@
-<!-- Drawer mobile -->
 <p-drawer [(visible)]="isSidebarOpen" position="left" [modal]="true" [showCloseIcon]="true" class="md:hidden">
     <app-product-sidebar [pageSize]="pageSize"></app-product-sidebar>
 </p-drawer>
 
 <section class="grid grid-cols-12 gap-4 md:gap-6 p-4 md:p-6">
 
-    <!-- Sidebar desktop -->
     <aside class="hidden md:block md:col-span-2">
         <app-product-sidebar [pageSize]="pageSize"></app-product-sidebar>
     </aside>
 
-    <!-- Bottone mobile -->
     <div class="col-span-12 md:hidden mb-4">
         <p-button variant="outlined" (click)="isSidebarOpen = true" class="w-full">
             Filtri e Categorie
         </p-button>
     </div>
 
-    <!-- Contenuto principale -->
     <div class="col-span-12  md:col-span-10 space-y-4">
 
-        <!-- Loader -->
         @if (isLoading()) {
         <p-progressbar class="w-full" mode="indeterminate" [style]="{ height: '2px' }"></p-progressbar>
         }
 
-        <!-- Prodotti -->
         <p-dataview [value]="products()" layout="grid" [lazy]="true" [paginator]="true" [rows]="pageSize"
             [totalRecords]="totalProducts()" (onLazyLoad)="loadProducts($event)">
 
@@ -53,7 +47,6 @@
 
         </p-dataview>
 
-        <!-- Messaggio di errore -->
         @if (errorMsg) {
         <p class="text-red-600 mt-2">{{ errorMsg }}</p>
         }
