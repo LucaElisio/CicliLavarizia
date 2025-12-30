@@ -9,12 +9,12 @@
     </aside>
 
     <div class="col-span-12 md:hidden mb-4">
-        <p-button variant="outlined" (click)="isSidebarOpen = true" class="w-full">
+        <p-button variant="outlined" (click)="isSidebarOpen = true" class="w-full" icon="pi pi-filter">
             Filtri e Categorie
         </p-button>
     </div>
 
-    <div class="col-span-12  md:col-span-10 space-y-4">
+    <div class="col-span-12 md:col-span-10 space-y-4">
 
         @if (isLoading()) {
         <p-progressbar class="w-full" mode="indeterminate" [style]="{ height: '2px' }"></p-progressbar>
@@ -28,14 +28,16 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 w-full max-w-6xl">
                         @for (product of items; track $index) {
                         <div class="w-full p-2 md:p-3">
-                            <p-card [header]="product.name" class="h-full flex flex-col">
+                            <p-card [header]="product.name"
+                                class="h-full flex flex-col hover:shadow-lg transition-shadow">
                                 <img [src]="product.imageSrc" [alt]="product.thumbnailPhotoFileName"
                                     class="h-48 object-contain rounded mb-2 md:mb-4" loading="lazy" />
-                                <div class="flex-1 space-y-1">
-                                    <p>{{ product.productNumber }}</p>
-                                    <p>{{ product.color }}</p>
-                                    <p>{{ product.listPrice }}</p>
-                                    <p>{{ product.size }}</p>
+                                <div class="flex-1 space-y-1 text-sm">
+                                    <p class="text-gray-500">{{ product.productNumber }}</p>
+                                    <p><strong>Colore:</strong> {{ product.color || 'N/A' }}</p>
+                                    <p class="text-primary font-bold text-lg">{{ product.listPrice | currency:'EUR' }}
+                                    </p>
+                                    <p><strong>Taglia:</strong> {{ product.size || 'Unica' }}</p>
                                 </div>
                             </p-card>
                         </div>
@@ -43,10 +45,19 @@
                     </div>
                 </div>
             </ng-template>
+
+            <ng-template #emptymessage>
+                <p-card>
+                    <h3 class="text-center text-xl font-bold">Nessun risultato trovato</h3>
+                    <p class="text-center mb-6">
+                        Non ci sono prodotti nella categoria <strong>{{ category }}</strong>.
+                    </p>
+                </p-card>
+            </ng-template>
         </p-dataview>
 
         @if (errorMsg) {
-        <p class="text-red-600 mt-2">{{ errorMsg }}</p>
+        <p class="text-red-600 mt-2 p-3 bg-red-50 rounded border border-red-200">{{ errorMsg }}</p>
         }
 
     </div>

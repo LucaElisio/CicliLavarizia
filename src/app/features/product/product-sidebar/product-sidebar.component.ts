@@ -4,10 +4,10 @@ import { ProductService } from '../../../shared/services/product.service';
 import { ProductCategoryResponse } from '../../../shared/models/productModel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RouterLink } from '@angular/router';
-
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-product-sidebar',
-  imports: [CardModule, ProgressSpinnerModule, RouterLink],
+  imports: [CardModule, CommonModule, ProgressSpinnerModule, RouterLink],
   templateUrl: './product-sidebar.component.html',
   styleUrl: './product-sidebar.component.css',
 })
@@ -22,6 +22,10 @@ export class ProductSidebarComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCategories();
+  }
+
+  formatCategorySlug(input: string): string {
+    return input.trimEnd().trimStart().replaceAll(' ', '-');
   }
 
   getCategories() {

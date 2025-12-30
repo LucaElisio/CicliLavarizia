@@ -1,19 +1,31 @@
-<p-card header="Categorie">
+<p-card header="Categorie" class="shadow-none border-none">
   @if (isLoading()) {
-  <p-progress-spinner ariaLabel="loading" strokeWidth="4" fill="transparent"
-    [style]="{ width: '25px', height: '25px' }" />
-  }@else {
-  <ul>
-    @for (category of categories(); track $index) {
-    <li>
-      <a routerLink="/products"
-        [class.categorySelected]="categorySelected === category.name.toLowerCase().trimEnd().trimStart().replaceAll(' ', '-')"
-        [queryParams]="{ category: category.name.toLowerCase().trimEnd().trimStart().replaceAll(' ', '-'), page: 1, pageSize: pageSize}">{{
-        category.name }}</a>
-    </li>
-    }@empty {
-    <li>No categories found</li>
+  <div class="flex justify-center p-4">
+    <p-progress-spinner ariaLabel="loading" strokeWidth="4" [style]="{ width: '30px', height: '30px' }" />
+  </div>
+  } @else {
+  <nav class="flex flex-col gap-1">
+    @for (category of categories(); track category.productCategoryId) {
+    @let categorySlug = formatCategorySlug(category.name);
+    @let isActive = categorySelected === categorySlug;
+
+    <a routerLink="/products" [queryParams]="{ category: categorySlug, page: 1, pageSize: pageSize }"
+      class="flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200 group" [ngClass]="{
+             'bg-primary text-primary-contrast font-semibold shadow-sm': isActive,
+             'hover:bg-gray-100 hover:text-black': !isActive
+           }">
+
+      <span class="text-sm">{{ category.name }}</span>
+
+      <i class="pi pi-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"
+        [class.opacity-100]="isActive"></i>
+    </a>
+    } @empty {
+    <div class="text-center p-4 bg-gray-50 rounded-lg">
+      <i class="pi pi-folder-open text-gray-400 mb-2 block"></i>
+      <span class="text-xs text-gray-500 italic">Nessuna categoria</span>
+    </div>
     }
-  </ul>
+  </nav>
   }
 </p-card>
