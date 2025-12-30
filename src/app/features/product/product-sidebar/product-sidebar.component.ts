@@ -18,6 +18,7 @@ export class ProductSidebarComponent implements OnInit {
   errorMsg: string | null = null;
 
   @Input({ required: true }) pageSize!: number;
+  @Input({ required: true }) categorySelected!: string;
 
   ngOnInit(): void {
     this.getCategories();
