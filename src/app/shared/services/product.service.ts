@@ -35,6 +35,16 @@ export class ProductService {
     return this.http.get<ProductResponse[]>(`${this.url}/Product/GetRandomProducts`);
   }
 
+  hexToBase64(input?: string): string {
+    if (!input) return '';
+    const hex = input.startsWith('0x') ? input.substring(2) : input;
+    const binary = hex
+      .match(/.{1,2}/g)!
+      .map((b) => String.fromCharCode(parseInt(b, 16)))
+      .join('');
+    return btoa(binary);
+  }
+
   getProductModels(
     page: number,
     pageSize: number,

@@ -7,8 +7,8 @@ export interface ProductResponse {
   listPrice: number;
   size?: string;
   weight?: number;
-  ThumbNailPhoto?: string;
-  ThumbnailPhotoFileName?: string;
+  thumbNailPhoto?: string;
+  thumbnailPhotoFileName?: string;
   productCategoryId: number;
   productModelId?: number;
   productCategory: ProductCategoryResponse;

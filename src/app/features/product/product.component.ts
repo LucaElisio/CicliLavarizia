@@ -63,8 +63,15 @@ export class ProductComponent implements OnInit {
     this.isLoading.set(true);
     this.productService.getProducts(this.page, this.pageSize, this.category).subscribe({
       next: (data: any) => {
+        const productsWithImages = data.products.map((p: any) => ({
+          ...p,
+          imageSrc: p.thumbNailPhoto
+            ? 'data:image/gif;base64,' + this.productService.hexToBase64(p.thumbNailPhoto)
+            : null,
+        }));
+
         this.totalProducts.set(data.totalProducts);
-        this.products.set(data.products);
+        this.products.set(productsWithImages);
         this.isLoading.set(false);
       },
       error: (err) => {

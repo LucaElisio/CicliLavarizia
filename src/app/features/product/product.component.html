@@ -1,5 +1,5 @@
 <section class="grid grid-cols-12 gap-4">
-    <app-product-sidebar [page]="page" [pageSize]="pageSize" class="md:col-span-2"></app-product-sidebar>
+    <app-product-sidebar [pageSize]="pageSize" class="md:col-span-2"></app-product-sidebar>
 
     <div class="md:col-span-10 col-span-12">
 
@@ -13,9 +13,11 @@
 
             <ng-template #grid let-items>
                 <div class="grid grid-cols-12 gap-4">
-                    @for (product of products(); track $index) {
+                    @for (product of items; track $index) {
                     <div class="col-span-12 sm:col-span-6 xl:col-span-4 p-2">
                         <p-card [header]="product.name" class="p-6 border rounded">
+                            <img [src]="product.imageSrc" [alt]="product.thumbnailPhotoFileName"
+                                class="w-full h-48 object-contain mb-3" loading="lazy" />
                             <p>{{ product.productNumber }}</p>
                             <p>{{ product.color }}</p>
                             <p>{{ product.listPrice }}</p>

@@ -17,7 +17,6 @@ export class ProductSidebarComponent implements OnInit {
   isLoading = signal<boolean>(true);
   errorMsg: string | null = null;
 
-  @Input({ required: true }) page!: number;
   @Input({ required: true }) pageSize!: number;
 
   ngOnInit(): void {
