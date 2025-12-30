@@ -14,10 +14,10 @@
             <ng-template #grid let-items>
                 <div class="grid grid-cols-12 gap-4">
                     @for (product of items; track $index) {
-                    <div class="col-span-12 sm:col-span-6 xl:col-span-4 p-2">
-                        <p-card [header]="product.name" class="p-6 border rounded">
+                    <div class="col-span-12 sm:col-span-6 xl:col-span-4 p-2 ">
+                        <p-card [header]="product.name">
                             <img [src]="product.imageSrc" [alt]="product.thumbnailPhotoFileName"
-                                class="w-full h-48 object-contain mb-3" loading="lazy" />
+                                class="h-48 object-contain rounded" loading="lazy" />
                             <p>{{ product.productNumber }}</p>
                             <p>{{ product.color }}</p>
                             <p>{{ product.listPrice }}</p>
