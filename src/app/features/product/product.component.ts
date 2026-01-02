@@ -1,7 +1,6 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ProductService } from '../../shared/services/product.service';
-import { ProductResponse } from '../../shared/models/productModel';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -12,11 +11,13 @@ import { DataViewLazyLoadEvent, DataViewModule } from 'primeng/dataview';
 import { SkeletonModule } from 'primeng/skeleton';
 import { DrawerModule } from 'primeng/drawer';
 import { ButtonModule } from 'primeng/button';
+import { CartService } from '../../shared/services/cart.service';
 
 @Component({
   selector: 'app-product',
   standalone: true,
   imports: [
+    RouterLink,
     CommonModule,
     CardModule,
     DataViewModule,
@@ -32,6 +33,8 @@ import { ButtonModule } from 'primeng/button';
 export class ProductComponent implements OnInit {
   private productService = inject(ProductService);
   private activatedRoute = inject(ActivatedRoute);
+  private cartService = inject(CartService);
+
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
@@ -39,10 +42,10 @@ export class ProductComponent implements OnInit {
   page!: number;
   category!: string;
 
-  products = signal<ProductResponse[]>([]);
-  totalProducts = signal<number>(0);
   isLoading = signal<boolean>(true);
   errorMsg: string | null = null;
+  products = computed(() => this.productService.products());
+  totalProducts = computed(() => this.productService.totalProducts());
 
   isSidebarOpen = false;
 
@@ -54,6 +57,22 @@ export class ProductComponent implements OnInit {
         this.category = data['category'] ?? 'All';
         this.getProducts();
         this.cdr.detectChanges();
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+      },
+    });
+  }
+
+  addToCart(productId: number, quantity: number = 1) {
+    this.cartService.addToCart(productId, quantity).subscribe({
+      next: () => {
+        this.cartService.getCart().subscribe({
+          next: (data) => {
+            this.cartService.cartProducts.set(data);
+          },
+        });
       },
     });
   }
@@ -81,16 +100,9 @@ export class ProductComponent implements OnInit {
   getProducts() {
     this.isLoading.set(true);
     this.productService.getProducts(this.page, this.pageSize, this.category).subscribe({
-      next: (data: any) => {
-        const productsWithImages = data.products.map((p: any) => ({
-          ...p,
-          imageSrc: p.thumbNailPhoto
-            ? 'data:image/gif;base64,' + this.productService.hexToBase64(p.thumbNailPhoto)
-            : null,
-        }));
-
-        this.totalProducts.set(data.totalProducts);
-        this.products.set(productsWithImages);
+      next: (data) => {
+        this.productService.totalProducts.set(data.totalProducts);
+        this.productService.products.set(data.products);
         this.isLoading.set(false);
       },
       error: (err) => {

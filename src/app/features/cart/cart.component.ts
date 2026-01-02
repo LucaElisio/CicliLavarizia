@@ -1,14 +1,18 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { CartService } from '../../shared/services/cart.service';
+import { CardModule } from 'primeng/card';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-cart',
-  imports: [],
+  imports: [CardModule, CommonModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',
 })
 export class CartComponent implements OnInit {
   cartService = inject(CartService);
+
+  cartProducts = computed(() => this.cartService.cartProducts());
 
   ngOnInit(): void {
     this.getCart();

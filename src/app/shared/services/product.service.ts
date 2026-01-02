@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import {
   ProductCategoryResponse,
   ProductModelsResponse,
@@ -16,23 +16,49 @@ export class ProductService {
   private url = environment.apiUrl;
 
   categories = signal<ProductCategoryResponse[]>([]);
+  products = signal<ProductResponse[]>([]);
+  totalProducts = signal<number>(0);
 
   getCategories(): Observable<ProductCategoryResponse[]> {
     return this.http.get<ProductCategoryResponse[]>(`${this.url}/Product/GetAllCategories`);
   }
 
-  getProducts(page: number, pageSize: number, category: string): Observable<ProductResponse[]> {
-    return this.http.get<ProductResponse[]>(`${this.url}/Product/GetProducts`, {
-      params: {
-        page: page,
-        pageSize: pageSize,
-        category: category,
-      },
-    });
+  getProducts(
+    page: number,
+    pageSize: number,
+    category: string
+  ): Observable<{ products: ProductResponse[]; totalProducts: number }> {
+    return this.http
+      .get<{ products: ProductResponse[]; totalProducts: number }>(
+        `${this.url}/Product/GetProducts`,
+        {
+          params: { page, pageSize, category },
+        }
+      )
+      .pipe(
+        map((data) => ({
+          ...data,
+          products: data.products.map((p) => ({
+            ...p,
+            thumbNailPhoto: p.thumbNailPhoto
+              ? 'data:image/gif;base64,' + this.hexToBase64(p.thumbNailPhoto)
+              : undefined,
+          })),
+        }))
+      );
   }
 
   getRandomProducts(): Observable<ProductResponse[]> {
-    return this.http.get<ProductResponse[]>(`${this.url}/Product/GetRandomProducts`);
+    return this.http.get<ProductResponse[]>(`${this.url}/Product/GetRandomProducts`).pipe(
+      map((products) =>
+        products.map((p) => ({
+          ...p,
+          thumbNailPhoto: p.thumbNailPhoto
+            ? 'data:image/gif;base64,' + this.hexToBase64(p.thumbNailPhoto)
+            : undefined,
+        }))
+      )
+    );
   }
 
   hexToBase64(input?: string): string {
@@ -55,6 +81,14 @@ export class ProductService {
         page: page,
         pageSize: pageSize,
         category: category,
+      },
+    });
+  }
+
+  getProductById(productId: number): Observable<ProductResponse> {
+    return this.http.get<ProductResponse>(`${this.url}/product/GetProduct`, {
+      params: {
+        productId: productId,
       },
     });
   }

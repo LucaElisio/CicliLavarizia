@@ -19,6 +19,8 @@ import { LoginRequest, RegisterRequest } from '../../shared/models/authModel';
 import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
+import { CartService } from '../../shared/services/cart.service';
+import { switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
@@ -44,6 +46,7 @@ export class AuthComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
+  private cartService = inject(CartService);
 
   isLoginPage: boolean = false;
   authForm!: FormGroup;
@@ -110,20 +113,28 @@ export class AuthComponent implements OnInit {
     this.isLoading.set(true);
     if (this.isLoginPage && this.authForm.valid) {
       const userData: LoginRequest = this.authForm.value;
-      this.authService.login(userData).subscribe({
-        next: (data) => {
-          localStorage.setItem('token', data.token);
-          this.authService.changeAuthState();
-          this.errorMsg.set(null);
-          this.authForm.reset();
-          this.isLoading.set(false);
-          this.router.navigate(['/']);
-        },
-        error: (err) => {
-          this.isLoading.set(false);
-          this.errorMsg.set(err.error.detail);
-        },
-      });
+      this.authService
+        .login(userData)
+        .pipe(
+          tap((data) => {
+            localStorage.setItem('token', data.token);
+            this.authService.changeAuthState();
+            this.errorMsg.set(null);
+            this.authForm.reset();
+          }),
+          switchMap(() => this.cartService.getCart())
+        )
+        .subscribe({
+          next: (cart) => {
+            this.cartService.cartProducts.set(cart);
+            this.router.navigate(['/']);
+            this.isLoading.set(false);
+          },
+          error: (err) => {
+            this.isLoading.set(false);
+            this.errorMsg.set(err.error.detail);
+          },
+        });
     } else if (!this.isLoginPage && this.authForm.valid) {
       const userData: RegisterRequest = this.authForm.value;
       this.authService.register(userData).subscribe({

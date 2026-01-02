@@ -31,14 +31,20 @@
                         <div class="w-full p-2 md:p-3">
                             <p-card [header]="product.name"
                                 class="h-full flex flex-col hover:shadow-lg transition-shadow">
-                                <img [src]="product.imageSrc" [alt]="product.thumbnailPhotoFileName"
+                                <img [src]="product.thumbNailPhoto" [alt]="product.thumbnailPhotoFileName"
                                     class="h-48 object-contain rounded mb-2 md:mb-4" loading="lazy" />
                                 <div class="flex-1 space-y-1 text-sm">
-                                    <p class="text-gray-500">{{ product.productNumber }}</p>
+                                    <p><strong>Numero:</strong> {{ product.productNumber }}</p>
                                     <p><strong>Colore:</strong> {{ product.color || 'N/A' }}</p>
-                                    <p class="text-primary font-bold text-lg">{{ product.listPrice | currency:'EUR' }}
+                                    <p class="font-bold text-lg">{{ product.listPrice | currency:'EUR' }}
                                     </p>
                                     <p><strong>Taglia:</strong> {{ product.size || 'Unica' }}</p>
+                                </div>
+                                <div class="flex flex-row items-center justify-between">
+                                    <a class="mt-2" pButton routerLink="/product"
+                                        [queryParams]="{productId: product.productId}">Dettagli</a>
+                                    <p-button (onClick)="addToCart(product.productId)"
+                                        class="material-icons">add_shopping_cart</p-button>
                                 </div>
                             </p-card>
                         </div>

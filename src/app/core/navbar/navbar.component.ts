@@ -1,8 +1,7 @@
-import { Component, inject, HostListener } from '@angular/core';
+import { Component, inject, HostListener, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 import { CommonModule } from '@angular/common';
-import { CartComponent } from '../../features/cart/cart.component';
 
 import { ButtonModule } from 'primeng/button';
 import { DrawerModule } from 'primeng/drawer';
@@ -22,7 +21,6 @@ import { CartService } from '../../shared/services/cart.service';
     CommonModule,
     OverlayBadgeModule,
     BadgeModule,
-    CartComponent,
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',

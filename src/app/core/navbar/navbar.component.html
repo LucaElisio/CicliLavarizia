@@ -1,4 +1,4 @@
-<header class="navbar flex md:flex-row flex-col items-center justify-between w-full md:py-4 md:px-8 py-3 px-4"
+<header class="flex bg-primary-800  md:flex-row flex-col items-center justify-between w-full md:py-4 md:px-8 py-3 px-4"
   [class.navbar-hidden]="!isNavbarVisible">
 
 
@@ -42,9 +42,9 @@
     </a>
 
     @if (authService.isAuthenticated()) {
-    <p-overlay-badge [value]="cartService.cartProducts()?.totalElements ?? 0" badgeSize="small">
+    <p-overlay-badge [style]="{outline: 'unset'}" [value]="cartService.cartProducts()?.totalElements ?? 0"
+      badgeSize="small">
       <a routerLink="/cart" class="material-icons">shopping_cart</a>
-      <app-cart></app-cart>
     </p-overlay-badge>
     }
 

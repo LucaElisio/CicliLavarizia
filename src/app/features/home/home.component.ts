@@ -35,14 +35,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.productService.getRandomProducts().subscribe({
       next: (data) => {
-        const productsWithImages = data.map((p: any) => ({
-          ...p,
-          imageSrc: p.thumbNailPhoto
-            ? 'data:image/gif;base64,' + this.productService.hexToBase64(p.thumbNailPhoto)
-            : null,
-        }));
-
-        this.randomProducts.set(productsWithImages);
+        this.randomProducts.set(data);
       },
     });
 

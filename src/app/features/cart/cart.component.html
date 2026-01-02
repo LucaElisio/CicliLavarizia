@@ -1,0 +1,15 @@
+@if (cartProducts(); as cart) {
+<p-card header="Il tuo carrello">
+    @for (product of cartProducts()?.products; track $index) {
+    <div class="flex flex-row items-center justify-start">
+        <img [src]="product.thumbNailPhoto" [alt]="product.thumbnailPhotoFileName" width="150" height="200" />
+        <p-card [header]="product.name ">
+            <p><strong>Prezzo: </strong>: {{ product.listPrice | currency:'EUR' }}</p>
+            <p><strong>Size</strong>: {{ product.size }}</p>
+        </p-card>
+    </div>
+    }@empty {
+    <p>Nessun articolo nel carrello</p>
+    }
+</p-card>
+}
