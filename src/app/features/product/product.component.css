@@ -8,10 +8,146 @@
 .model-card {
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
+  height: 25vh;
+  overflow: auto;
 }
 
+.model-card::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.model-card {
+  scrollbar-width: none;
+  -ms-overflow-style: none; 
+}
+
+.model-card:hover::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.model-card:hover::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.model-card:hover::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.25);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.model-card:hover::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+
+/* Firefox hover */
 .model-card:hover {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.25) transparent;
+
   transform: scale(1.02);
+}
+
+/* Main container */
+.main-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Sidebar Wrapper - Floating */
+.sidebar-wrapper {
+  position: fixed;
+  left: 0;
+  top: 80px;
+  z-index: 1000;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  width: 280px;
+  padding-left: 10px; /* Spazio a sinistra quando appare */
+}
+
+/* Trigger area - zona invisibile per attivare la sidebar */
+.sidebar-trigger {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  width: 25px;
+  height: 100vh;
+  background: transparent;
+}
+
+/* Freccetta animata sul trigger */
+.sidebar-trigger::after {
+  content: '›';
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 32px;
+  color: rgba(224, 220, 210, 0.6);
+  animation: arrowBounce 2s ease-in-out infinite;
+  pointer-events: none;
+  text-shadow: 0 0 10px rgba(72, 61, 42, 0.5);
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Animazione bounce della freccetta */
+@keyframes arrowBounce {
+  0%, 100% {
+    transform: translateY(-50%) translateX(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-50%) translateX(8px);
+    opacity: 1;
+  }
+}
+
+/* Animazione bounce inversa quando la sidebar è aperta */
+@keyframes arrowBounceReverse {
+  0%, 100% {
+    transform: translateY(-50%) translateX(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-50%) translateX(-8px);
+    opacity: 1;
+  }
+}
+
+/* Cambia la freccetta quando la sidebar è aperta */
+.sidebar-wrapper:hover .sidebar-trigger::after {
+  content: '‹';
+  animation: arrowBounceReverse 2s ease-in-out infinite;
+  opacity: 0.8;
+}
+
+/* Indicatore visivo - ombra che appare quando il mouse è vicino */
+.sidebar-wrapper::before {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(72, 61, 42, 0.3), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+.sidebar-trigger:hover ~ .sidebar-wrapper::before,
+.sidebar-wrapper:hover::before {
+  opacity: 1;
+}
+
+/* Mostra la sidebar quando il mouse è sulla wrapper */
+.sidebar-wrapper:hover {
+  transform: translateX(0);
 }
 
 .sidebar {
@@ -19,5 +155,54 @@
   color: rgb(224, 220, 210);
   padding: 16px;
   border-radius: 8px;
-  height: fit-content;
+  height: 87.5vh;
+  overflow: auto;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Content Area */
+.content-area {
+  width: 100%;
+  padding: 0 20px;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.25);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.sidebar::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+
+
+
+/* Stile per la categoria attiva */
+.active {
+  font-weight: bold;
+}
+
+/* CSS per il layout grid di p-dataview */
+::ng-deep .p-dataview-content {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 20px !important;
+}
+
+::ng-deep .p-dataview .p-dataview-content .col-12 {
+  grid-column: span 1 !important;
 }

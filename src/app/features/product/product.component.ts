@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CardModule } from 'primeng/card';
 import { ProductCategoryResponse, ProductResponse } from '../../shared/models/productModel';
@@ -12,12 +12,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ProductModelsResponse } from '../../shared/models/productModelsResponse';
 import { ButtonModule } from 'primeng/button';
 import { CartService } from '../../shared/services/cart.service';
-
+import { DataViewModule } from 'primeng/dataview';
+import { PaginatorModule } from 'primeng/paginator';
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [CardModule, CommonModule, SliderModule, FormsModule, Slider, InputTextModule, ButtonModule],
+  imports: [CardModule, CommonModule, SliderModule, FormsModule, Slider, InputTextModule, ButtonModule, DataViewModule, PaginatorModule],
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css'], 
 })
@@ -33,8 +34,11 @@ export class ProductComponent implements OnInit {
   currentModel: ProductModelsResponse | null = null;
   selectedModel: ProductModelsResponse | null = null;
   filteredProducts = signal<ProductResponse[]>([]);
+  
+  // Traccia se stiamo visualizzando prodotti per categoria
+  viewingByCategory: boolean = false;
 
-   public cartService = inject(CartService);
+  public cartService = inject(CartService);
 
   productCategory: string = 'All';
   currentPage: number = 1;
@@ -45,7 +49,18 @@ export class ProductComponent implements OnInit {
   maxPrice: number = 9000;
   priceRange: number[] = [this.minPrice, this.maxPrice];
 
-  loading: boolean = true; // stato di caricamento
+  loading = signal<boolean>(true); // stato di caricamento
+
+  // Paginazione modelli
+  modelsCurrentPage = signal<number>(0);
+  modelsPerPage = signal<number>(9);
+
+  // Signal computed per i modelli paginati
+  paginatedModels = computed(() => {
+    const start = this.modelsCurrentPage() * this.modelsPerPage();
+    const end = start + this.modelsPerPage();
+    return this.allProductModels().slice(start, end);
+  });
 
   constructor(private http: HttpClient, private productService: ProductService) { }
 
@@ -55,40 +70,39 @@ export class ProductComponent implements OnInit {
   this.getAllCategories();
 }
   getProducts(): void {
-    this.loading = true;
-    // Se c'è un filtro prezzo attivo (diverso dal range completo), carica più prodotti
-    const hasActivePriceFilter = this.minPrice > 0 || this.maxPrice < 9000;
-    const effectivePageSize = hasActivePriceFilter ? this.pageSize * 3 : this.pageSize;
+    this.loading.set(true);
+    // Carica molti prodotti per avere prodotti di tutti i modelli
+    const loadSize = 300;
     
-    this.productService.getProducts(this.currentPage, effectivePageSize, this.productCategory).subscribe({
+    this.productService.getProducts(this.currentPage, loadSize, this.productCategory).subscribe({
       next: (data: any) => {
         this.originalProducts.set(data.products); // Salva i prodotti originali
         this.filterByPrice(); // Applica il filtro prezzo lato client
-        this.hasNextPage = data.length === effectivePageSize;
-        this.loading = false;
+        this.hasNextPage = data.products.length === loadSize;
+        this.loading.set(false);
         console.log('Prodotti caricati:', this.allProducts());
 
       },
       error: (err) => {
         console.error('Errore nella chiamata API:', err);
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }
 
   getModels(): void {
-    this.loading = true;
-    this.productService.getProductModels(this.currentPage, this.pageSize, this.productCategory).subscribe({
+    // Non impostiamo loading a true qui se stiamo solo caricando i modelli
+    // perché i prodotti potrebbero già essere stati caricati
+    const modelsLoadSize = 100;
+    this.productService.getProductModels(this.currentPage, modelsLoadSize, this.productCategory).subscribe({
       next: (data) => {
         this.originalModels.set(data);
         this.allProductModels.set(data);
-        this.hasNextPage = data.length === this.pageSize;
-        this.loading = false;
+        this.hasNextPage = data.length === modelsLoadSize;
         console.log('Modelli caricati:', this.allProductModels());
       },
       error: (err) => {
         console.error('Errore nella chiamata API per le descrizioni:', err);
-        this.loading = false;
       }
     });
 
@@ -111,8 +125,19 @@ export class ProductComponent implements OnInit {
   changeCategory(category: string): void {
     this.productCategory = category;
     this.currentPage = 1;
-    this.getProducts();
-    this.getModels();
+    this.selectedModel = null;
+    
+    if (category === 'All') {
+      // Se clicca su "Tutti i Prodotti", torna alla vista modelli
+      this.viewingByCategory = false;
+      this.loading.set(true);
+      this.getModels();
+      this.getProducts();
+    } else {
+      // Se clicca su una categoria specifica, mostra i prodotti di quella categoria
+      this.viewingByCategory = true;
+      this.getProducts();
+    }
   }
 
   productInfo(product: ProductResponse): void {
@@ -146,35 +171,61 @@ export class ProductComponent implements OnInit {
   }
 
   filterByPrice(): void {
-    const filteredProducts = this.originalProducts().filter(product => 
-      product.listPrice >= this.minPrice && product.listPrice <= this.maxPrice
-    );
-    // Limita i risultati al pageSize richiesto
-    const limitedProducts = filteredProducts.slice(0, this.pageSize);
-    this.allProducts.set(limitedProducts);
+    if (!this.selectedModel) {
+      // Se non c'è un modello selezionato, filtriamo tutti i prodotti normalmente
+      const filteredProducts = this.originalProducts().filter(product => 
+        product.listPrice >= this.minPrice && product.listPrice <= this.maxPrice
+      );
+      const limitedProducts = filteredProducts.slice(0, this.pageSize);
+      this.allProducts.set(limitedProducts);
+    } else {
+      // Se c'è un modello selezionato, filtriamo dai prodotti originali
+      const productsForModel = this.originalProducts().filter(p => p.productModelId === this.selectedModel!.productModelId);
+      const filteredByPrice = productsForModel.filter(product => 
+        product.listPrice >= this.minPrice && product.listPrice <= this.maxPrice
+      );
+      const limitedProducts = filteredByPrice.slice(0, this.pageSize);
+      this.filteredProducts.set(limitedProducts);
+    }
   }
 
   selectModel(model: ProductModelsResponse): void {
     this.selectedModel = model;
-    // Filtra i prodotti per il modello selezionato
-    const productsForModel = this.allProducts().filter(p => p.productModelId === model.productModelId);
-    this.filteredProducts.set(productsForModel);
+    // Applica i filtri correnti al modello selezionato
+    this.filterByPrice();
     console.log('Modello selezionato:', model);
-    console.log('Prodotti filtrati:', productsForModel);
+    console.log('Prodotti filtrati:', this.filteredProducts());
   }
 
   backToModels(): void {
     this.selectedModel = null;
     this.filteredProducts.set([]);
+    this.viewingByCategory = false;
+    this.productCategory = 'All';
+    // Reset dei filtri ai valori di default
+    this.minPrice = 0;
+    this.maxPrice = 9000;
+    this.priceRange = [this.minPrice, this.maxPrice];
+    this.pageSize = 21;
+    // Ricarica i modelli
+    this.getModels();
+    this.getProducts();
   }
 
   onPageSizeChange(): void {
-    // Se siamo nella vista modelli, ricarica i modelli
     if (!this.selectedModel) {
+      // Se siamo nella vista modelli, ricarica i modelli
       this.getModels();
+      this.getProducts();
+    } else {
+      // Se c'è un modello selezionato, applica solo i filtri senza ricaricare
+      this.filterByPrice();
     }
-    // Ricarica sempre i prodotti per avere dati freschi quando si clicca su un modello
-    this.getProducts();
+  }
+
+  onModelsPageChange(event: any): void {
+    this.modelsCurrentPage.set(event.page);
+    this.modelsPerPage.set(event.rows);
   }
 
 }
