@@ -44,8 +44,17 @@ export class ProductService {
       );
   }
 
-  getRandomProducts(): Observable<ProductResponse[]> {
-    return this.http.get<ProductResponse[]>(`${this.url}/Product/GetRandomProducts`);
+ getRandomProducts(): Observable<ProductResponse[]> {
+    return this.http.get<ProductResponse[]>(`${this.url}/Product/GetRandomProducts`).pipe(
+      map((products) =>
+        products.map((p) => ({
+          ...p,
+          thumbNailPhoto: p.thumbNailPhoto
+            ? 'data:image/gif;base64,' + this.hexToBase64(p.thumbNailPhoto)
+            : undefined,
+        }))
+      )
+    );
   }
 
   hexToBase64(input?: string): string {
