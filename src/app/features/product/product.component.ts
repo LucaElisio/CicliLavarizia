@@ -34,7 +34,7 @@ export class ProductComponent implements OnInit {
   selectedModel: ProductModelsResponse | null = null;
   filteredProducts = signal<ProductResponse[]>([]);
 
-   private cartService = inject(CartService);
+   public cartService = inject(CartService);
 
   productCategory: string = 'All';
   currentPage: number = 1;

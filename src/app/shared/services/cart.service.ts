@@ -36,4 +36,19 @@ export class CartService {
       quantity: quantity,
     });
   }
+
+  isInCart(productId: number): boolean {
+    return this.cartProducts()?.products.some(p => p.productId === productId) ?? false;
+  }
+
+  itemCount(productId: number): number {
+    let count = 0;
+
+    for (let item of this.cartProducts()?.products ?? []) {
+      if (item.productId === productId) {
+        count += 1;
+      }
+    }
+    return count;
+  }
 }

@@ -152,8 +152,14 @@
                     </ng-template>
 
                      <div class="flex flex-row items-center justify-between">
+                                @if(cartService.isInCart(p.productId)) {
+                                    <p-button (onClick)="addToCart(p.productId, cartService.itemCount(p.productId) + 1)"
+                                        class="material-icons">add_shopping_cart</p-button>
+                                }
+                                @else {
                                     <p-button (onClick)="addToCart(p.productId)"
                                         class="material-icons">add_shopping_cart</p-button>
+                                }
                     </div>
 
                 </p-card>

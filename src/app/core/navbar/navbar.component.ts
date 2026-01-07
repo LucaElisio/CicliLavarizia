@@ -1,23 +1,25 @@
-import { Component, inject, HostListener } from '@angular/core';
+import { Component, inject, HostListener} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 import { CommonModule } from '@angular/common';
-
 import { ButtonModule } from 'primeng/button';
 import { DrawerModule } from 'primeng/drawer';
 import { ProfileService } from '../../shared/services/profile.service';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { CartService } from '../../shared/services/cart.service';
 
 @Component({
   selector: 'app-navbar',
-  imports: [ButtonModule, RouterLink, DrawerModule, SidebarComponent, CommonModule],
+  imports: [ButtonModule, RouterLink, DrawerModule, SidebarComponent, CommonModule, OverlayBadgeModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
   public authService = inject(AuthService);
   public profileService = inject(ProfileService);
-  
+  public cartService = inject(CartService);
+
   isNavbarVisible = true;
   isAtTop = true;
   private lastScrollTop = 0;
