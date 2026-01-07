@@ -57,8 +57,8 @@ export class ProductComponent implements OnInit {
     const effectivePageSize = hasActivePriceFilter ? this.pageSize * 3 : this.pageSize;
     
     this.productService.getProducts(this.currentPage, effectivePageSize, this.productCategory).subscribe({
-      next: (data) => {
-        this.originalProducts.set(data); // Salva i prodotti originali
+      next: (data: any) => {
+        this.originalProducts.set(data.products); // Salva i prodotti originali
         this.filterByPrice(); // Applica il filtro prezzo lato client
         this.hasNextPage = data.length === effectivePageSize;
         this.loading = false;

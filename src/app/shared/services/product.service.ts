@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ProductCategoryResponse, ProductResponse } from '../models/productModel';
 import { HttpClient } from '@angular/common/http';
 import { ProductModelsResponse } from '../models/productModelsResponse';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -18,18 +19,43 @@ export class ProductService {
     return this.http.get<ProductCategoryResponse[]>(`${this.url}/Product/GetAllCategories`);
   }
 
-  getProducts(page: number, pageSize: number, category: string): Observable<ProductResponse[]> {
-    return this.http.get<ProductResponse[]>(`${this.url}/Product/GetProducts`, {
-      params: {
-        page: page,
-        pageSize: pageSize,
-        category: category
-      }
-    });
+  getProducts(
+    page: number,
+    pageSize: number,
+    category: string
+  ): Observable<{ products: ProductResponse[]; totalProducts: number }> {
+    return this.http
+      .get<{ products: ProductResponse[]; totalProducts: number }>(
+        `${this.url}/Product/GetProducts`,
+        {
+          params: { page, pageSize, category },
+        }
+      )
+      .pipe(
+        map((data) => ({
+          ...data,
+          products: data.products.map((p) => ({
+            ...p,
+            thumbNailPhoto: p.thumbNailPhoto
+              ? 'data:image/gif;base64,' + this.hexToBase64(p.thumbNailPhoto)
+              : undefined,
+          })),
+        }))
+      );
   }
 
   getRandomProducts(): Observable<ProductResponse[]> {
     return this.http.get<ProductResponse[]>(`${this.url}/Product/GetRandomProducts`);
+  }
+
+  hexToBase64(input?: string): string {
+    if (!input) return '';
+    const hex = input.startsWith('0x') ? input.substring(2) : input;
+    const binary = hex
+      .match(/.{1,2}/g)!
+      .map((b) => String.fromCharCode(parseInt(b, 16)))
+      .join('');
+    return btoa(binary);
   }
 
   getProductModels(page: number, pageSize: number, category: string): Observable<ProductModelsResponse[]> {

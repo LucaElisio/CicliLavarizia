@@ -15,22 +15,19 @@
   </div>
 
   <p-card header="Prodotti in evidenza">
-    <p-carousel
-      class="my-8"
-      [value]="randomProducts()"
-      [numVisible]="1"
-      [numScroll]="1"
-      [circular]="true"
-      [showIndicators]="false"
-      [responsiveOptions]="productResponsiveOptions"
-      [autoplayInterval]="5000"
-    >
+    <p-carousel class="my-8" [value]="randomProducts()" [numVisible]="3" [numScroll]="3" [circular]="true"
+      [showIndicators]="false" [responsiveOptions]="productResponsiveOptions" [autoplayInterval]="5000">
       <ng-template let-product #item>
         <p-card>
           <div class="mb-4 font-medium">{{ product.name }}</div>
+          <img [src]="product.thumbNailPhoto" [alt]="product.thumbnailPhotoFileName"
+            class="h-48 object-contain mb-3 rounded" loading="lazy" />
           <div class="flex justify-between items-center">
             <div class="mt-0 font-semibold text-xl">{{ product.listPrice + ' €' }}</div>
           </div>
+          <ng-template #footer>
+            <a pButton routerLink="/product">Dettagli</a>
+          </ng-template>
         </p-card>
       </ng-template>
     </p-carousel>
