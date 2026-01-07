@@ -12,6 +12,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { DrawerModule } from 'primeng/drawer';
 import { ButtonModule } from 'primeng/button';
 import { CartService } from '../../shared/services/cart.service';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-product',
@@ -66,15 +67,14 @@ export class ProductComponent implements OnInit {
   }
 
   addToCart(productId: number, quantity: number = 1) {
-    this.cartService.addToCart(productId, quantity).subscribe({
-      next: () => {
-        this.cartService.getCart().subscribe({
-          next: (data) => {
-            this.cartService.cartProducts.set(data);
-          },
-        });
-      },
-    });
+    this.cartService
+      .addToCart(productId, quantity)
+      .pipe(switchMap(() => this.cartService.getCart()))
+      .subscribe({
+        next: (data) => {
+          this.cartService.cartProducts.set(data);
+        },
+      });
   }
 
   loadProducts(event: DataViewLazyLoadEvent) {
