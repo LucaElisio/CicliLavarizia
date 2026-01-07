@@ -150,6 +150,12 @@
                             Taglia: {{ p.size }}
                         </p>
                     </ng-template>
+
+                     <div class="flex flex-row items-center justify-between">
+                                    <p-button (onClick)="addToCart(p.productId)"
+                                        class="material-icons">add_shopping_cart</p-button>
+                    </div>
+
                 </p-card>
 
                 <!-- Messaggio se non ci sono prodotti per questo modello -->

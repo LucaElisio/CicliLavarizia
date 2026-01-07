@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CardModule } from 'primeng/card';
 import { ProductCategoryResponse, ProductResponse } from '../../shared/models/productModel';
@@ -10,12 +10,14 @@ import { FormsModule } from '@angular/forms';
 import { Slider } from 'primeng/slider';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProductModelsResponse } from '../../shared/models/productModelsResponse';
+import { ButtonModule } from 'primeng/button';
+import { CartService } from '../../shared/services/cart.service';
 
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [CardModule, CommonModule, SliderModule, FormsModule, Slider, InputTextModule],
+  imports: [CardModule, CommonModule, SliderModule, FormsModule, Slider, InputTextModule, ButtonModule],
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css'], 
 })
@@ -31,6 +33,8 @@ export class ProductComponent implements OnInit {
   currentModel: ProductModelsResponse | null = null;
   selectedModel: ProductModelsResponse | null = null;
   filteredProducts = signal<ProductResponse[]>([]);
+
+   private cartService = inject(CartService);
 
   productCategory: string = 'All';
   currentPage: number = 1;
@@ -126,6 +130,19 @@ export class ProductComponent implements OnInit {
       }
     });
 
+  }
+
+  addToCart(productId: number, quantity: number = 1) {
+    console.log(`Aggiungo al carrello il prodotto con ID: ${productId}, Quantità: ${quantity}`);
+    this.cartService.addToCart(productId, quantity).subscribe({
+      next: () => {
+        this.cartService.getCart().subscribe({
+          next: (data) => {
+            this.cartService.cartProducts.set(data);
+          },
+        });
+      },
+    });
   }
 
   filterByPrice(): void {
