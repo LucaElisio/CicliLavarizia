@@ -1,4 +1,4 @@
-<p-drawer [(visible)]="visible" position="right" [closable]="true" class="w-80">
+<p-drawer [(visible)]="visible" position="right" [closable]="true" class="w-80" appendTo="body">
   <ng-template #header>
     <span class="font-semibold text-lg">Account</span>
   </ng-template>
@@ -10,8 +10,8 @@
 
         <div class="flex flex-col leading-tight">
           <h2 class="text-base font-semibold">
-            {{ customerInfo()?.firstName }}
-            {{ customerInfo()?.lastName }}
+            {{ authService.customerInfo()?.firstName }}
+            {{ authService.customerInfo()?.lastName }}
           </h2>
 
           <p class="text-sm text-gray-400 truncate max-w-56">
@@ -41,11 +41,5 @@
   </ng-template>
 </p-drawer>
 
-<p-avatar
-  [label]="labelName"
-  shape="circle"
-  size="large"
-  class="cursor-pointer transition-transform duration-200 hover:scale-105"
-  (click)="visible = true"
->
+<p-avatar [label]="labelName" shape="circle" size="large" class="cursor-pointer" (click)="visible = true">
 </p-avatar>

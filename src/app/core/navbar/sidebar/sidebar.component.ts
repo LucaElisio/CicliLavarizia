@@ -37,13 +37,12 @@ export class SidebarComponent implements OnInit {
   authService = inject(AuthService);
   visible: boolean = false;
 
-  customerInfo = signal<CustomerInfoRequest | null>(null);
   labelName!: string;
 
   ngOnInit(): void {
     this.profileService.getCustomerInfo().subscribe({
       next: (data) => {
-        this.customerInfo.set(data);
+        this.authService.customerInfo.set(data);
         const firstInitial = data.firstName?.charAt(0).toUpperCase() ?? '';
         const lastInitial = data.lastName?.charAt(0).toUpperCase() ?? '';
         this.labelName = `${firstInitial}${lastInitial}`;

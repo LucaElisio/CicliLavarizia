@@ -5,6 +5,7 @@ import { LoginRequest, RegisterRequest, UpdateEmailRequest } from '../models/aut
 import { Observable } from 'rxjs';
 import { TokenDecoded, TokenResponse } from '../models/tokenModel';
 import { jwtDecode } from 'jwt-decode';
+import { CustomerInfoRequest } from '../models/customerModel';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,7 @@ export class AuthService {
 
   public isAuthenticated = signal<boolean>(false);
   public userInfo = signal<TokenDecoded | null>(null);
+  public customerInfo = signal<CustomerInfoRequest | null>(null);
 
   login(userData: LoginRequest): Observable<TokenResponse> {
     return this.http.post<TokenResponse>(`${this.url}/Auth/Login`, userData, {
