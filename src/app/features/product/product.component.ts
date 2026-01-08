@@ -14,7 +14,7 @@ import { ButtonModule } from 'primeng/button';
 import { CartService } from '../../shared/services/cart.service';
 import { DataViewModule } from 'primeng/dataview';
 import { PaginatorModule } from 'primeng/paginator';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { ProgressBarModule } from 'primeng/progressbar';
 
 @Component({
@@ -22,7 +22,6 @@ import { ProgressBarModule } from 'primeng/progressbar';
   standalone: true,
   imports: [
     CardModule,
-    ProgressBarModule,
     CommonModule,
     SliderModule,
     FormsModule,
@@ -77,7 +76,7 @@ export class ProductComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private productService: ProductService,
-    private router: Router,
+    public router: Router,
     private route: ActivatedRoute
   ) {}
 
