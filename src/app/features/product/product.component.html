@@ -114,7 +114,7 @@
                 <div>
                     <button (click)="backToModels()"
                         style="background-color: rgb(170, 200, 170); color: rgb(20, 20, 20); padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                        ← Torna ai Modelli
+                        Torna ai Modelli
                     </button>
                 </div>
                 <h2 style="color: rgb(235, 238, 232); font-size: 1.8rem; margin: 0;">
@@ -153,7 +153,12 @@
                         </p>
                     </ng-template>
 
-                    <div class="flex flex-row items-center justify-between">
+                    <div class="flex flex-row items-center justify-between" style="padding-bottom: 1vh;">
+                        <p-button 
+                            label="Dettagli" 
+                            (onClick)="router.navigate(['/product'], {queryParams: {productId: p.productId}})">
+                        </p-button>
+                        
                         @if(cartService.isInCart(p.productId)) {
                         <p-button (onClick)="addToCart(p.productId, cartService.itemCount(p.productId) + 1)"
                             class="material-icons">add_shopping_cart</p-button>
@@ -221,7 +226,12 @@
                         </p>
                     </ng-template>
 
-                    <div class="flex flex-row items-center justify-between">
+                    <div class="flex flex-row items-center justify-between gap-2" style="padding-bottom: 1vh;">
+                        <p-button 
+                            label="Dettagli" 
+                            (onClick)="router.navigate(['/product'], {queryParams: {productId: p.productId}})">
+                        </p-button>
+
                         @if(cartService.isInCart(p.productId)) {
                         <p-button (onClick)="addToCart(p.productId, cartService.itemCount(p.productId) + 1)"
                             class="material-icons">add_shopping_cart</p-button>
@@ -230,7 +240,6 @@
                         <p-button (onClick)="addToCart(p.productId)" class="material-icons">add_shopping_cart</p-button>
                         }
                     </div>
-
                 </p-card>
 
                 <!-- Messaggio se non ci sono prodotti per questo modello -->

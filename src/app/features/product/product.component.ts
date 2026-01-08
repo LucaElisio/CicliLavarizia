@@ -14,12 +14,12 @@ import { ButtonModule } from 'primeng/button';
 import { CartService } from '../../shared/services/cart.service';
 import { DataViewModule } from 'primeng/dataview';
 import { PaginatorModule } from 'primeng/paginator';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [CardModule, CommonModule, SliderModule, FormsModule, Slider, InputTextModule, ButtonModule, DataViewModule, PaginatorModule],
+  imports: [CardModule, CommonModule, SliderModule, FormsModule, Slider, InputTextModule, ButtonModule, DataViewModule, PaginatorModule, RouterModule],
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css'], 
 })
@@ -66,7 +66,7 @@ export class ProductComponent implements OnInit {
   constructor(
     private http: HttpClient, 
     private productService: ProductService,
-    private router: Router,
+    public router: Router,
     private route: ActivatedRoute
   ) { }
 
