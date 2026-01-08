@@ -227,8 +227,13 @@
                             <span style="color: rgb(170, 200, 170);">{{ finalTotal() | number:'1.2-2' }} €</span>
                         </div>
 
+                        <div class="flex justify-between">
+                            <span style="color: rgb(190, 195, 188);">IVA (22%):</span>
+                            <span style="color: rgb(235, 238, 232);">{{ taxAmount() | number:'1.2-2' }} €</span>
+                        </div>
+
                         <div class="flex justify-between text-xl font-bold">
-                            <span style="color: rgb(170, 200, 170);">Totale + tasse (IVA 22%):</span>
+                            <span style="color: rgb(170, 200, 170);">Totale + tasse:</span>
                             <span style="color: rgb(170, 200, 170);">{{ totalWithTax() | number:'1.2-2' }} €</span>
                         </div>
                     </div>

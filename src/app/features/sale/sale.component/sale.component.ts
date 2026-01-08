@@ -49,8 +49,17 @@ export class SaleComponent implements OnInit {
   // Computed per il totale finale
   finalTotal = computed(() => this.totalPrice() + this.shippingCost());
   
-  // Computed per il totale con IVA (22%)
-  totalWithTax = computed(() => this.finalTotal() * 1.22);
+  // Computed per calcolare l'IVA per ogni prodotto (22%)
+  taxAmount = computed(() => {
+    const products = this.cartService.cartProducts()?.products ?? [];
+    return products.reduce((total, product) => {
+      const productTax = product.listPrice * 0.22;
+      return total + productTax;
+    }, 0);
+  });
+  
+  // Computed per il totale con IVA
+  totalWithTax = computed(() => this.finalTotal() + this.taxAmount());
   
   // shipType segue automaticamente shipMethod
   get shipType(): boolean {
