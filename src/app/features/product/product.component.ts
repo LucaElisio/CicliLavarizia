@@ -16,6 +16,8 @@ import { DataViewModule } from 'primeng/dataview';
 import { PaginatorModule } from 'primeng/paginator';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-product',
@@ -30,8 +32,10 @@ import { ProgressBarModule } from 'primeng/progressbar';
     ButtonModule,
     DataViewModule,
     PaginatorModule,
-    ProgressBarModule
+    ProgressBarModule,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css'],
 })
@@ -190,10 +194,18 @@ export class ProductComponent implements OnInit {
     });
   }
 
+  private messageService = inject(MessageService);
+
   addToCart(productId: number, quantity: number = 1) {
+    
     console.log(`Aggiungo al carrello il prodotto con ID: ${productId}, Quantità: ${quantity}`);
     this.cartService.addToCart(productId, quantity).subscribe({
       next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Elemento aggiunto al carrello!',
+          life: 3000
+        });
         this.cartService.getCart().subscribe({
           next: (data) => {
             this.cartService.cartProducts.set(data);

@@ -8,6 +8,7 @@ import { ProfileComponent } from './features/profile/profile.component';
 import { ProductComponent } from './features/product/product.component';
 import { CartComponent } from './features/cart/cart';
 import { ProductInfoComponent } from './features/product/product-info/product-info.component';
+import { SaleComponent } from './features/sale/sale.component/sale.component';
 import { OrderComponent } from './features/order/order.component';
 
 export const routes: Routes = [
@@ -20,5 +21,4 @@ export const routes: Routes = [
   { path: 'products', component: ProductComponent },
   { path: 'cart', component: CartComponent, canActivate: [authGuard] },
   { path: 'product', component: ProductInfoComponent },
-  { path: 'orders', component: OrderComponent, canActivate: [authGuard] },
 ];
