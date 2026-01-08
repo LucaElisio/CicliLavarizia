@@ -77,4 +77,12 @@ export class ProductService {
     });
   }
 
+  getProductById(productId: number): Observable<ProductResponse> {
+    return this.http.get<ProductResponse>(`${this.url}/product/GetProduct`, {
+      params: {
+        productId: productId,
+      },
+    });
+  }
+
 }

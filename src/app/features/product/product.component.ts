@@ -14,6 +14,7 @@ import { ButtonModule } from 'primeng/button';
 import { CartService } from '../../shared/services/cart.service';
 import { DataViewModule } from 'primeng/dataview';
 import { PaginatorModule } from 'primeng/paginator';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-product',
@@ -62,13 +63,28 @@ export class ProductComponent implements OnInit {
     return this.allProductModels().slice(start, end);
   });
 
-  constructor(private http: HttpClient, private productService: ProductService) { }
+  constructor(
+    private http: HttpClient, 
+    private productService: ProductService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
-  this.getProducts();
-  this.getModels();
-  this.getAllCategories();
-}
+    // Legge la categoria dall'URL se presente
+    this.route.queryParams.subscribe(params => {
+      if (params['category']) {
+        this.productCategory = params['category'];
+        if (this.productCategory !== 'All') {
+          this.viewingByCategory = true;
+        }
+      }
+    });
+    
+    this.getProducts();
+    this.getModels();
+    this.getAllCategories();
+  }
   getProducts(): void {
     this.loading.set(true);
     // Carica molti prodotti per avere prodotti di tutti i modelli
@@ -126,6 +142,13 @@ export class ProductComponent implements OnInit {
     this.productCategory = category;
     this.currentPage = 1;
     this.selectedModel = null;
+    
+    // Aggiorna l'URL con la categoria selezionata
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { category: category },
+      queryParamsHandling: 'merge'
+    });
     
     if (category === 'All') {
       // Se clicca su "Tutti i Prodotti", torna alla vista modelli
@@ -202,6 +225,14 @@ export class ProductComponent implements OnInit {
     this.filteredProducts.set([]);
     this.viewingByCategory = false;
     this.productCategory = 'All';
+    
+    // Aggiorna l'URL
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { category: 'All' },
+      queryParamsHandling: 'merge'
+    });
+    
     // Reset dei filtri ai valori di default
     this.minPrice = 0;
     this.maxPrice = 9000;

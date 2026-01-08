@@ -5,15 +5,17 @@ import { ProductCategoryResponse, ProductResponse } from '../../shared/models/pr
 import { CarouselModule } from 'primeng/carousel';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-home',
-  imports: [CarouselModule, CardModule, ButtonModule],
+  imports: [CarouselModule, CardModule, ButtonModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit {
   private productService = inject(ProductService);
+
 
   randomProducts = signal<ProductResponse[]>([]);
   categories = signal<ProductCategoryResponse[]>([]);
@@ -42,5 +44,7 @@ export class HomeComponent implements OnInit {
         this.categories.set(data);
       },
     });
+
+    
   }
 }

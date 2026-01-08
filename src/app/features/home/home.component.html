@@ -26,7 +26,7 @@
             <div class="mt-0 font-semibold text-xl">{{ product.listPrice + ' €' }}</div>
           </div>
           <ng-template #footer>
-            <a pButton routerLink="/product">Dettagli</a>
+            <a pButton routerLink="/product" [queryParams]="{productId: product.productId}">Dettagli</a>
           </ng-template>
         </p-card>
       </ng-template>
@@ -36,7 +36,7 @@
   <p-card header="Esplora le categorie ">
     <div class="flex my-6 flex-row items-center justify-evenly gap-4 overflow-x-auto">
       @for (category of categories(); track $index) {
-      <a class="p-button p-button-outlined mb-6 flex-shrink-0">
+      <a class="p-button p-button-outlined mb-6 shrink-0" [routerLink]="['/products']" [queryParams]="{category: category.name}">
         {{ category.name }}
       </a>
       }
