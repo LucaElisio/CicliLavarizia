@@ -15,19 +15,30 @@ import { CartService } from '../../shared/services/cart.service';
 import { DataViewModule } from 'primeng/dataview';
 import { PaginatorModule } from 'primeng/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [CardModule, CommonModule, SliderModule, FormsModule, Slider, InputTextModule, ButtonModule, DataViewModule, PaginatorModule],
+  imports: [
+    CardModule,
+    ProgressBarModule,
+    CommonModule,
+    SliderModule,
+    FormsModule,
+    Slider,
+    InputTextModule,
+    ButtonModule,
+    DataViewModule,
+    PaginatorModule,
+  ],
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.css'], 
+  styleUrls: ['./product.component.css'],
 })
 export class ProductComponent implements OnInit {
-
   allProducts = signal<ProductResponse[]>([]);
   originalProducts = signal<ProductResponse[]>([]); // Prodotti originali non filtrati
-  allCategories =signal<ProductCategoryResponse[]>([]);
+  allCategories = signal<ProductCategoryResponse[]>([]);
   currentProduct: ProductResponse | null = null;
 
   originalModels = signal<ProductModelsResponse[]>([]);
@@ -35,7 +46,7 @@ export class ProductComponent implements OnInit {
   currentModel: ProductModelsResponse | null = null;
   selectedModel: ProductModelsResponse | null = null;
   filteredProducts = signal<ProductResponse[]>([]);
-  
+
   // Traccia se stiamo visualizzando prodotti per categoria
   viewingByCategory: boolean = false;
 
@@ -64,15 +75,15 @@ export class ProductComponent implements OnInit {
   });
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private productService: ProductService,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     // Legge la categoria dall'URL se presente
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       if (params['category']) {
         this.productCategory = params['category'];
         if (this.productCategory !== 'All') {
@@ -80,7 +91,7 @@ export class ProductComponent implements OnInit {
         }
       }
     });
-    
+
     this.getProducts();
     this.getModels();
     this.getAllCategories();
@@ -89,7 +100,7 @@ export class ProductComponent implements OnInit {
     this.loading.set(true);
     // Carica molti prodotti per avere prodotti di tutti i modelli
     const loadSize = 300;
-    
+
     this.productService.getProducts(this.currentPage, loadSize, this.productCategory).subscribe({
       next: (data: any) => {
         this.originalProducts.set(data.products); // Salva i prodotti originali
@@ -97,12 +108,11 @@ export class ProductComponent implements OnInit {
         this.hasNextPage = data.products.length === loadSize;
         this.loading.set(false);
         console.log('Prodotti caricati:', this.allProducts());
-
       },
       error: (err) => {
         console.error('Errore nella chiamata API:', err);
         this.loading.set(false);
-      }
+      },
     });
   }
 
@@ -110,18 +120,19 @@ export class ProductComponent implements OnInit {
     // Non impostiamo loading a true qui se stiamo solo caricando i modelli
     // perché i prodotti potrebbero già essere stati caricati
     const modelsLoadSize = 100;
-    this.productService.getProductModels(this.currentPage, modelsLoadSize, this.productCategory).subscribe({
-      next: (data) => {
-        this.originalModels.set(data);
-        this.allProductModels.set(data);
-        this.hasNextPage = data.length === modelsLoadSize;
-        console.log('Modelli caricati:', this.allProductModels());
-      },
-      error: (err) => {
-        console.error('Errore nella chiamata API per le descrizioni:', err);
-      }
-    });
-
+    this.productService
+      .getProductModels(this.currentPage, modelsLoadSize, this.productCategory)
+      .subscribe({
+        next: (data) => {
+          this.originalModels.set(data);
+          this.allProductModels.set(data);
+          this.hasNextPage = data.length === modelsLoadSize;
+          console.log('Modelli caricati:', this.allProductModels());
+        },
+        error: (err) => {
+          console.error('Errore nella chiamata API per le descrizioni:', err);
+        },
+      });
   }
 
   nextPage(): void {
@@ -142,14 +153,14 @@ export class ProductComponent implements OnInit {
     this.productCategory = category;
     this.currentPage = 1;
     this.selectedModel = null;
-    
+
     // Aggiorna l'URL con la categoria selezionata
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { category: category },
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'merge',
     });
-    
+
     if (category === 'All') {
       // Se clicca su "Tutti i Prodotti", torna alla vista modelli
       this.viewingByCategory = false;
@@ -175,9 +186,8 @@ export class ProductComponent implements OnInit {
       },
       error: (err) => {
         console.error('Errore nella chiamata API per le categorie:', err);
-      }
+      },
     });
-
   }
 
   addToCart(productId: number, quantity: number = 1) {
@@ -196,16 +206,18 @@ export class ProductComponent implements OnInit {
   filterByPrice(): void {
     if (!this.selectedModel) {
       // Se non c'è un modello selezionato, filtriamo tutti i prodotti normalmente
-      const filteredProducts = this.originalProducts().filter(product => 
-        product.listPrice >= this.minPrice && product.listPrice <= this.maxPrice
+      const filteredProducts = this.originalProducts().filter(
+        (product) => product.listPrice >= this.minPrice && product.listPrice <= this.maxPrice
       );
       const limitedProducts = filteredProducts.slice(0, this.pageSize);
       this.allProducts.set(limitedProducts);
     } else {
       // Se c'è un modello selezionato, filtriamo dai prodotti originali
-      const productsForModel = this.originalProducts().filter(p => p.productModelId === this.selectedModel!.productModelId);
-      const filteredByPrice = productsForModel.filter(product => 
-        product.listPrice >= this.minPrice && product.listPrice <= this.maxPrice
+      const productsForModel = this.originalProducts().filter(
+        (p) => p.productModelId === this.selectedModel!.productModelId
+      );
+      const filteredByPrice = productsForModel.filter(
+        (product) => product.listPrice >= this.minPrice && product.listPrice <= this.maxPrice
       );
       const limitedProducts = filteredByPrice.slice(0, this.pageSize);
       this.filteredProducts.set(limitedProducts);
@@ -225,14 +237,14 @@ export class ProductComponent implements OnInit {
     this.filteredProducts.set([]);
     this.viewingByCategory = false;
     this.productCategory = 'All';
-    
+
     // Aggiorna l'URL
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { category: 'All' },
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'merge',
     });
-    
+
     // Reset dei filtri ai valori di default
     this.minPrice = 0;
     this.maxPrice = 9000;
@@ -258,5 +270,4 @@ export class ProductComponent implements OnInit {
     this.modelsCurrentPage.set(event.page);
     this.modelsPerPage.set(event.rows);
   }
-
 }

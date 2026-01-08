@@ -58,17 +58,11 @@
       <ng-template #footer>
         <div class="flex flex-wrap justify-between items-center gap-2 mt-4">
           <div class="flex flex-wrap gap-2">
-            <a
-              routerLink="/auth/delete"
-              pButton
-              severity="danger"
-              class="p-button-text"
-              label="Elimina profilo"
-            ></a>
+            <a routerLink="/auth/delete" pButton severity="danger" class="p-button-text" label="Elimina profilo"></a>
             <p-button text (onClick)="showDialogEmail()" label="Aggiorna Email"></p-button>
             <p-button text (onClick)="showDialogPassword()" label="Aggiorna Password"></p-button>
           </div>
-          <p-button text label="Modifica profilo"></p-button>
+          <p-button text (onClick)="showDialogUpdateInfo()" label="Modifica profilo"></p-button>
         </div>
       </ng-template>
     </p-card>
@@ -76,24 +70,12 @@
 </section>
 
 <!-- DIALOG UPDATE EMAIL -->
-<div class="card flex justify-center">
-  <p-dialog
-    (onHide)="error = null"
-    header="Update Email"
-    [modal]="true"
-    [(visible)]="visibleEmail"
-    [style]="{ width: '25rem' }"
-  >
+<div class="flex justify-center items-center">
+  <p-dialog (onHide)="error = null" header="Update Email" [modal]="true" [(visible)]="visibleEmail"
+    [style]="{ width: '25rem' }">
     <div class="flex items-center gap-4 mb-8">
       <label for="email" class="font-semibold w-24">Email</label>
-      <input
-        pInputText
-        id="email"
-        class="flex-auto"
-        autocomplete="off"
-        type="email"
-        [formControl]="inputEmail"
-      />
+      <input pInputText id="email" class="flex-auto" autocomplete="off" type="email" [formControl]="inputEmail" />
     </div>
     @if (error) {
     <p-message severity="error">{{ error }}</p-message>
@@ -106,22 +88,12 @@
 </div>
 
 <!-- DIALOG UPDATE PASSWORD -->
-<div class="card flex justify-center">
-  <p-dialog
-    (onHide)="error = null"
-    header="Update Password"
-    [modal]="true"
-    [(visible)]="visiblePassword"
-    [style]="{ width: '25rem' }"
-  >
+<div class="flex justify-center items-center">
+  <p-dialog (onHide)="error = null" header="Update Password" [modal]="true" [(visible)]="visiblePassword"
+    [style]="{ width: '25rem' }">
     <div class="flex items-center gap-4 mb-8">
       <label for="password" class="font-semibold w-24">New Password</label>
-      <p-password
-        [formControl]="inputPassword"
-        id="password"
-        [feedback]="false"
-        [toggleMask]="true"
-      ></p-password>
+      <p-password [formControl]="inputPassword" id="password" [feedback]="false" [toggleMask]="true"></p-password>
     </div>
     @if (error) {
     <p-message severity="error">{{ error }}</p-message>
@@ -130,5 +102,43 @@
       <p-button label="Cancel" severity="secondary" (click)="visiblePassword = false" />
       <p-button [disabled]="!inputPassword.valid" label="Update" (onClick)="updatePassword()" />
     </div>
+  </p-dialog>
+</div>
+
+<!-- DIALOG UPDATE INFO -->
+<div class="flex justify-center items-center">
+  <p-dialog (onHide)="error = null" header="Update Info" [modal]="true" [(visible)]="visibleUpdateInfo"
+    [style]="{ width: '25rem'}">
+    <div class="flex items-start justify-center gap-4 mb-8">
+      <label for="firstName" class="font-semibold w-24">First Name</label>
+      <input pInputText [formControl]="firstName" id="firstName" />
+    </div>
+    <div class="flex items-start justify-center gap-4 mb-8">
+      <label for="firstName" class="font-semibold w-24">Last Name</label>
+      <input pInputText [formControl]="lastName" id="lastName" />
+    </div>
+    <div class="flex items-start justify-center gap-4 mb-8">
+      <label for="middleName" class="font-semibold w-24">Middle Name</label>
+      <input pInputText [formControl]="middleName" id="middleName" />
+    </div>
+    <div class="flex items-start justify-center gap-4 mb-8">
+      <label for="phone" class="font-semibold w-24">Phone</label>
+      <input pInputText [formControl]="phone" id="phone" />
+    </div>
+    <div class="flex items-start justify-center gap-4 mb-8">
+      <label for="salesPerson" class="font-semibold w-24">Sales Person</label>
+      <input pInputText [formControl]="salesPerson" id="salesPerson" />
+    </div>
+    <div class="flex items-start justify-center gap-4 mb-8">
+      <label for="companyName" class="font-semibold w-24">Company Name</label>
+      <input pInputText [formControl]="companyName" id="companyName" />
+    </div>
+    @if (error) {
+    <p-message severity="error">{{ error }}</p-message> }
+    <div class="flex justify-end gap-2">
+      <p-button label="Cancel" severity="secondary" (click)="visibleUpdateInfo = false" />
+      <p-button [disabled]="!inputPassword.valid" label="Update" (onClick)="updatePassword()" />
+    </div>
+
   </p-dialog>
 </div>

@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, Validators, ReactiveFormsModule, FormControlName } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { MessageModule } from 'primeng/message';
 
@@ -33,9 +33,18 @@ export class ProfileComponent implements OnInit {
   customerInfo = signal<CustomerInfoRequest | null>(null);
   visibleEmail: boolean = false;
   visiblePassword: boolean = false;
+  visibleUpdateInfo: boolean = false;
 
   inputEmail: FormControl = new FormControl('', Validators.email);
   inputPassword: FormControl = new FormControl('', Validators.minLength(8));
+
+  firstName: FormControl = new FormControl('');
+  lastName: FormControl = new FormControl('');
+  middleName: FormControl = new FormControl('');
+  phone: FormControl = new FormControl('');
+  suffix: FormControl = new FormControl('');
+  salesPerson: FormControl = new FormControl('');
+  companyName: FormControl = new FormControl('');
 
   error: string | null = null;
 
@@ -44,6 +53,10 @@ export class ProfileComponent implements OnInit {
   }
   showDialogPassword() {
     this.visiblePassword = true;
+  }
+
+  showDialogUpdateInfo() {
+    this.visibleUpdateInfo = true;
   }
 
   updateEmail() {
