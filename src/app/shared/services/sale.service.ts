@@ -4,11 +4,12 @@ import { environment } from '../../../environments/environment';
 import { map, Observable } from 'rxjs';
 import { CartResponse } from '../models/cartModel';
 import { ProductService } from './product.service';
+import { SaleResponse } from '../models/saleModel';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CartService {
+export class SaleService {
   private http = inject(HttpClient);
   private productService = inject(ProductService);
 
@@ -30,29 +31,11 @@ export class CartService {
     );
   }
 
-  addToCart(productId: number, quantity: number): Observable<void> {
-    return this.http.put<void>(`${this.url}/Cart/AddToCart`, {
-      productId: productId,
-      quantity: quantity,
-    });
-  }
+   createOrder(orderData: SaleResponse): Observable<SaleResponse> {
+    return this.http.post<SaleResponse>(`${this.url}/Sales/CreateSalesOrder`, orderData);
+   }
 
-  isInCart(productId: number): boolean {
-    return this.cartProducts()?.products.some(p => p.productId === productId) ?? false;
-  }
-
-  itemCount(productId: number): number {
-    let count = 0;
-
-    for (let item of this.cartProducts()?.products ?? []) {
-      if (item.productId === productId) {
-        count += 1;
-      }
-    }
-    return count;
-  }
-
-  removeFromCart(productId: number): Observable<void> {
-    return this.http.put<void>(`${this.url}/Cart/RemoveItemFromCart/${productId}`, {});
-  }
-}
+   showOrder(): Observable<SaleResponse> {
+    return this.http.get<SaleResponse>(`${this.url}/Sales/GetCustomerOrders`);
+   }
+}   

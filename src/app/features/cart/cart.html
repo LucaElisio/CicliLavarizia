@@ -1,15 +1,127 @@
-@if (cartProducts(); as cart) {
-<p-card header="Il tuo carrello">
-    @for (product of cartProducts()?.products; track $index) {
-    <div class="flex flex-row items-center justify-start">
-        <img [src]="product.thumbNailPhoto" [alt]="product.thumbnailPhotoFileName" width="150" height="200" />
-        <p-card [header]="product.name ">
-            <p><strong>Prezzo: </strong>: {{ product.listPrice | currency:'EUR' }}</p>
-            <p><strong>Size</strong>: {{ product.size }}</p>
-        </p-card>
+<div class="container mx-auto px-4 py-6">
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold" style="color: rgb(235, 238, 232);">Il tuo Carrello</h1>
     </div>
-    }@empty {
-    <p>Nessun articolo nel carrello</p>
+
+    @if (cartProducts(); as cart) {
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Lista Prodotti -->
+        <div class="lg:col-span-2">
+            @for (product of groupedProducts(); track product.productId) {
+            <p-card [style]="{'background-color': 'rgb(78, 86, 80)', 'border-radius': '8px', 'margin-bottom': '20px'}">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <!-- Immagine -->
+                    <div class="shrink-0">
+                        <img [src]="product.thumbNailPhoto" [alt]="product.name"
+                            class="w-full md:w-32 h-32 object-cover rounded-lg" />
+                    </div>
+
+                    <!-- Dettagli Prodotto -->
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold" style="color: rgb(235, 238, 232);">
+                                {{ product.name }}
+                            </h3>
+                            <p-button class="material-icons" [outlined]="true" severity="danger" size="small"
+                                (onClick)="removeProduct(product.productId)" [style]="{'color': '#ef4444'}">
+                                delete
+                            </p-button>
+                        </div>
+
+                        <div class="space-y-1">
+                            <p style="color: rgb(190, 195, 188);">
+                                <strong>Prezzo unitario:</strong> {{ product.listPrice | number:'1.2-2' }} €
+                            </p>
+                            <div class="flex items-center gap-3">
+                                <span style="color: rgb(190, 195, 188);">
+                                    <strong>Quantità:</strong>
+                                </span>
+                                <div class="flex items-center gap-2">
+                                    <p-button class="material-icons" [outlined]="true" size="small"
+                                        [disabled]="product.quantity <= 1"
+                                        (onClick)="decreaseQuantity(product.productId, product.quantity)"
+                                        [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}">
+                                        keyboard_double_arrow_left
+                                    </p-button>
+                                    <span class="font-bold"
+                                        style="color: rgb(235, 238, 232); min-width: 30px; text-align: center;">
+                                        {{ product.quantity }}
+                                    </span>
+                                    <p-button icon="pi pi-plus" [outlined]="true" size="small"
+                                        class="material-icons"
+                                        (onClick)="increaseQuantity(product.productId, product.quantity)"
+                                        [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}">
+                                        keyboard_double_arrow_right
+                                    </p-button>
+                                </div>
+                            </div>
+                            <p *ngIf="product.size" style="color: rgb(190, 195, 188);">
+                                <strong>Taglia:</strong> {{ product.size }}
+                            </p>
+                            <p *ngIf="product.color" style="color: rgb(190, 195, 188);">
+                                <strong>Colore:</strong> {{ product.color }}
+                            </p>
+                            <p class="text-lg font-bold mt-2" style="color: rgb(170, 200, 170);">
+                                <strong>Subtotale:</strong> {{ (product.listPrice * product.quantity) | number:'1.2-2'
+                                }} €
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+            }@empty {
+            <p-card [style]="{'background-color': 'rgb(78, 86, 80)', 'border-radius': '8px'}">
+                <p class="text-center" style="color: rgb(190, 195, 188); font-size: 1.1rem;">
+                    Nessun articolo nel carrello
+                </p>
+            </p-card>
+            }
+        </div>
+
+        <!-- Riepilogo Carrello -->
+        <div class="lg:col-span-1">
+            <p-card
+                [style]="{'background-color': 'rgb(78, 86, 80)', 'border-radius': '8px', 'position': 'sticky', 'top': '20px'}">
+                <ng-template pTemplate="header">
+                    <div class="p-4">
+                        <h2 class="text-2xl font-bold" style="color: rgb(235, 238, 232);">
+                            <i class="pi pi-shopping-cart mr-2"></i>
+                            Riepilogo
+                        </h2>
+                    </div>
+                </ng-template>
+
+                <div class="space-y-4">
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span style="color: rgb(190, 195, 188);">Articoli:</span>
+                            <span class="font-bold" style="color: rgb(235, 238, 232);">{{ totalElements() }}</span>
+                        </div>
+
+                        <p-divider></p-divider>
+
+                        <div class="flex justify-between text-xl font-bold">
+                            <span style="color: rgb(170, 200, 170);">Totale:</span>
+                            <span style="color: rgb(170, 200, 170);">{{ totalPrice() | number:'1.2-2' }} €</span>
+                        </div>
+                    </div>
+
+                    <p-divider></p-divider>
+
+                    <!-- Pulsante Checkout -->
+                    <p-button label="Procedi al Checkout" icon="pi pi-arrow-right" iconPos="right"
+                        [style]="{'width': '100%', 'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none', 'font-weight': 'bold'}"
+                        [disabled]="totalElements() === 0" routerLink="/sales">
+                    </p-button>
+                </div>
+            </p-card>
+        </div>
+    </div>
+    } @else {
+    <p-card [style]="{'background-color': 'rgb(78, 86, 80)', 'border-radius': '8px'}">
+        <p class="text-center" style="color: rgb(190, 195, 188); font-size: 1.1rem;">
+            Caricamento carrello...
+        </p>
+    </p-card>
     }
-</p-card>
-}
+</div>
