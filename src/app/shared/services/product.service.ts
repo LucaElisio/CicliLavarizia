@@ -10,8 +10,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ProductService {
-
-  private http = inject(HttpClient)
+  private http = inject(HttpClient);
   private url = environment.apiUrl;
   modelId: number = 0;
 
@@ -44,7 +43,7 @@ export class ProductService {
       );
   }
 
- getRandomProducts(): Observable<ProductResponse[]> {
+  getRandomProducts(): Observable<ProductResponse[]> {
     return this.http.get<ProductResponse[]>(`${this.url}/Product/GetRandomProducts`).pipe(
       map((products) =>
         products.map((p) => ({
@@ -67,16 +66,27 @@ export class ProductService {
     return btoa(binary);
   }
 
-  getProductModels(page: number, pageSize: number, category: string): Observable<ProductModelsResponse[]> {
+  getProductModels(
+    page: number,
+    pageSize: number,
+    category: string
+  ): Observable<ProductModelsResponse[]> {
     return this.http.get<ProductModelsResponse[]>(`${this.url}/Product/GetAllProductModels`, {
       params: {
         page: page,
         pageSize: pageSize,
-        category: category
-      }
+        category: category,
+      },
     });
   }
 
+  searchProduct(productName: string): Observable<ProductResponse[]> {
+    return this.http.get<ProductResponse[]>(`${this.url}/product/SearchProductByName`, {
+      params: {
+        productName: productName,
+      },
+    });
+  }
   getProductById(productId: number): Observable<ProductResponse> {
     return this.http.get<ProductResponse>(`${this.url}/product/GetProduct`, {
       params: {
