@@ -1,0 +1,225 @@
+<div class="p-6">
+    <p-card header="Gestione Ordini" styleClass="shadow-lg">
+        <p-table #dt [value]="orders()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Visualizzati {first} - {last} di {totalRecords} ordini"
+            [globalFilterFields]="['salesOrderNumber', 'accountNumber', 'customerName']" dataKey="salesOrderId">
+
+            <ng-template pTemplate="caption">
+                <div class="flex justify-between items-center gap-4">
+                    <span class="text-xl font-bold">Lista Ordini</span>
+
+                    <div class="relative flex items-center">
+                        <i class="material-icons absolute left-3 pointer-events-none text-xl">
+                            search
+                        </i>
+
+                        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                            placeholder="Cerca ordini..." class="pl-10 pr-3 py-2 w-64 outline-none" #searchInput />
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="salesOrderNumber">
+                        Numero Ordine <p-sortIcon field="salesOrderNumber" />
+                    </th>
+                    <th pSortableColumn="orderDate">
+                        Data Ordine <p-sortIcon field="orderDate" />
+                    </th>
+                    <th pSortableColumn="status">
+                        Stato <p-sortIcon field="status" />
+                    </th>
+                    <th>Metodo Spedizione</th>
+                    <th pSortableColumn="totalDue" class="text-right">
+                        Totale <p-sortIcon field="totalDue" />
+                    </th>
+                    <th class="text-center">Articoli</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-order>
+                <tr class="cursor-pointer transition-all duration-200 hover:surface-hover hover:shadow-2"
+                    (click)="showOrderDetails(order)">
+                    <td>
+                        <div class="flex flex-col">
+                            <span class="font-bold">{{ order.salesOrderNumber }}</span>
+                            @if (order.accountNumber) {
+                            <span class="text-sm text-color-secondary">
+                                {{ order.accountNumber }}
+                            </span>
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-sm">{{ order.orderDate | date:'dd/MM/yyyy' }}</span>
+                            <span class="text-xs text-color-secondary">Consegna: {{ order.dueDate | date:'dd/MM/yyyy'
+                                }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold">
+                            Status {{ order.status }}
+                        </span>
+                        @if (order.onlineOrderFlag) {
+                        <span class="block mt-1">
+                            <i class="pi pi-shopping-cart text-xs"></i>
+                        </span>
+                        }
+                    </td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm">{{ order.shipMethod }}</span>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <span class="font-bold text-lg">{{ order.subTotal | currency:'EUR' }}</span>
+                    </td>
+                    <td class="text-center">
+                        <span class="px-2 py-1 rounded-full text-xs font-semibold">
+                            {{ order.salesOrderDetails.length }}
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6" class="text-center py-8">
+                        <i class="pi pi-inbox text-4xl mb-2"></i>
+                        <p>Nessun ordine trovato</p>
+                    </td>
+                </tr>
+            </ng-template>
+
+        </p-table>
+    </p-card>
+
+    <!-- Dialog Dettagli Ordine -->
+    <p-dialog [(visible)]="displayDialog" [modal]="true" [style]="{width: '70vw'}"
+        [header]="'Dettagli Ordine ' + selectedOrder?.salesOrderNumber" [draggable]="false" [resizable]="false">
+
+        @if (selectedOrder) {
+        <div class="p-4">
+            <!-- Informazioni Ordine -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 surface-100 rounded-lg">
+                <div>
+                    <label class="text-xs text-color-secondary block mb-1">Data Ordine</label>
+                    <span class="font-semibold">{{ selectedOrder.orderDate | date:'dd/MM/yyyy' }}</span>
+                </div>
+                <div>
+                    <label class="text-xs text-color-secondary block mb-1">Data Consegna</label>
+                    <span class="font-semibold">{{ selectedOrder.dueDate | date:'dd/MM/yyyy' }}</span>
+                </div>
+                <div>
+                    <label class="text-xs text-color-secondary block mb-1">Metodo Spedizione</label>
+                    <span class="font-semibold">{{ selectedOrder.shipMethod }}</span>
+                </div>
+                <div>
+                    <label class="text-xs text-color-secondary block mb-1">Stato</label>
+                    <span class="font-semibold">Status {{ selectedOrder.status }}</span>
+                </div>
+            </div>
+
+            <!-- Tabella Prodotti -->
+            <h3 class="text-lg font-bold mb-3 flex items-center gap-2">
+                <i class="material-icons">inventory_2</i>
+                Prodotti Ordinati
+            </h3>
+
+            <p-table [value]="selectedOrder.salesOrderDetails" [scrollable]="true" scrollHeight="400px">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Prodotto</th>
+                        <th class="text-center">Quantità</th>
+                        <th class="text-right">Prezzo Unitario</th>
+                        <th class="text-right">Sconto</th>
+                        <th class="text-right">Totale</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-detail>
+                    <tr>
+                        <td>
+                            <div class="flex flex-col">
+                                @if (detail.product && detail.product.length > 0) {
+                                <span class="font-semibold">
+                                    {{ detail.product[0].name }}
+                                </span>
+                                <span class="text-xs text-color-secondary">
+                                    {{ detail.product[0].productNumber }}
+                                </span>
+                                } @else {
+                                <span class="text-sm text-color-secondary">
+                                    Prodotto ID: {{ detail.productId }}
+                                </span>
+                                }
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <span class="px-3 py-1 surface-200 rounded-full font-semibold">
+                                {{ detail.orderQty }}
+                            </span>
+                        </td>
+                        <td class="text-right">
+                            {{ detail.unitPrice | currency:'EUR' }}
+                        </td>
+                        <td class="text-right">
+                            @if (detail.unitPriceDiscount > 0) {
+                            <span>
+                                -{{ detail.unitPriceDiscount | currency:'EUR' }}
+                            </span>
+                            } @else {
+                            <span>-</span>
+                            }
+                        </td>
+                        <td class="text-right font-bold">
+                            {{ detail.lineTotal | currency:'EUR' }}
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="footer">
+                    <tr>
+                        <td colspan="4" class="text-right font-bold">Subtotale:</td>
+                        <td class="text-right font-bold">{{ selectedOrder.subTotal | currency:'EUR' }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="text-right">Tasse:</td>
+                        <td class="text-right">{{ selectedOrder.taxAmt | currency:'EUR' }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="text-right">Spedizione:</td>
+                        <td class="text-right">{{ selectedOrder.freight | currency:'EUR' }}</td>
+                    </tr>
+                    <tr class="border-t-2 surface-border">
+                        <td colspan="4" class="text-right font-bold text-lg">Totale:</td>
+                        <td class="text-right font-bold text-lg">
+                            {{ selectedOrder.totalDue | currency:'EUR' }}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+            <!-- Note -->
+            @if (selectedOrder.comment) {
+            <div class="mt-4 p-3 surface-100 rounded-lg border-l-4 surface-border">
+                <div class="flex items-start gap-2">
+                    <div>
+                        <label class="text-xs text-color-secondary block mb-1">Note:</label>
+                        <p class="text-sm">{{ selectedOrder.comment }}</p>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        }
+
+        <ng-template pTemplate="footer">
+            <button pButton label="Chiudi" icon="pi pi-times" class="p-button-text"
+                (click)="displayDialog = false"></button>
+        </ng-template>
+    </p-dialog>
+</div>
