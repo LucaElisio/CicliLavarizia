@@ -61,6 +61,12 @@ export class NavbarComponent implements OnInit {
     this.searchControl.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((value) => this.search(value));
+      
+      this.cartService.getCart().subscribe({
+        next: (data) => {
+          this.cartService.cartProducts.set(data);
+        },
+      });
   }
 
   @HostListener('window:scroll', [])

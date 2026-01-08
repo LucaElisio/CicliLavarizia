@@ -30,6 +30,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
     ButtonModule,
     DataViewModule,
     PaginatorModule,
+    ProgressBarModule
   ],
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css'],
