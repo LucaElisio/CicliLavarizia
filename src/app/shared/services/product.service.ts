@@ -90,9 +90,16 @@ export class ProductService {
   getProductById(productId: number): Observable<ProductResponse> {
     return this.http.get<ProductResponse>(`${this.url}/product/GetProduct`, {
       params: {
-        productId: productId,
+        productId: productId
       },
-    });
+    }).pipe(
+      map((p) => ({
+        ...p,
+        thumbNailPhoto: p.thumbNailPhoto
+          ? 'data:image/gif;base64,' + this.hexToBase64(p.thumbNailPhoto)
+          : undefined,
+      }))
+    );
   }
 
 }

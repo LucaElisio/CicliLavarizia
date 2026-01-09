@@ -22,10 +22,17 @@
                             <h3 class="text-xl font-bold" style="color: rgb(235, 238, 232);">
                                 {{ product.name }}
                             </h3>
-                            <p-button class="material-icons" [outlined]="true" severity="danger" size="small"
-                                (onClick)="removeProduct(product.productId)" [style]="{'color': '#ef4444'}">
-                                delete
-                            </p-button>
+                            <div class="flex gap-2">
+                                <p-button class="material-icons" [outlined]="true" size="small"
+                                    [routerLink]="['/product', ]" [queryParams]="{productId: product.productId}"
+                                    [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}">
+                                    info
+                                </p-button>
+                                <p-button class="material-icons" [outlined]="true" severity="danger" size="small"
+                                    (onClick)="removeProduct(product.productId)" [style]="{'color': '#ef4444'}">
+                                    delete
+                                </p-button>
+                            </div>
                         </div>
 
                         <div class="space-y-1">

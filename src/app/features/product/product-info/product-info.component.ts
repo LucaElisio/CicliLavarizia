@@ -85,4 +85,6 @@ export class ProductInfoComponent implements OnInit {
 
   }
 
+
+
 }

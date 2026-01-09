@@ -14,11 +14,12 @@
     <p-card [style]="{'background-color': 'rgb(78, 86, 80)', 'border-radius': '8px'}">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Immagine Prodotto -->
-            <div class="flex items-center justify-center rounded-lg p-8" style="background-color: rgba(0, 0, 0, 0.2);">
+            <div class="flex items-center justify-center rounded-lg" style="background-color: rgba(0, 0, 0, 0.2); padding: 16px;">
                 <img 
                     [src]="product()?.thumbNailPhoto" 
                     [alt]="product()?.name"
-                    class="max-w-full h-auto object-contain max-h-96 rounded-lg shadow-md" />
+                    class="w-full h-full object-contain rounded-lg shadow-md"
+                    style="max-height: 100%; max-width: 100%;" />
             </div>
 
             <!-- Dettagli Prodotto -->
