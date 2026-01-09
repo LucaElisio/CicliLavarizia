@@ -25,3 +25,13 @@ interface Address {
   countryRegion: string;
   postalCode: string;
 }
+
+export interface CustomerUpdateRequest {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  suffix: string;
+  companyName: string;
+  salesPerson: string;
+  phone: string;
+}

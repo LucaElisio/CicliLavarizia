@@ -2,8 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CustomerInfoRequest } from '../models/customerModel';
-
+import { CustomerInfoRequest, CustomerUpdateRequest } from '../models/customerModel';
 
 @Injectable({
   providedIn: 'root',
@@ -15,5 +14,9 @@ export class ProfileService {
 
   getCustomerInfo(): Observable<CustomerInfoRequest> {
     return this.http.get<CustomerInfoRequest>(`${this.url}/Customer/GetCustomerInfo`);
+  }
+
+  updateCustomerInfo(updateInfo: CustomerUpdateRequest): Observable<void> {
+    return this.http.put<void>(`${this.url}/Customer/UpdateCustomerInfo`, updateInfo);
   }
 }
