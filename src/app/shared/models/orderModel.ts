@@ -1,4 +1,5 @@
 import { ProductResponse } from './productModel';
+import { AddressResponse } from './addressModel';
 
 export interface OrderModelResponse {
   salesOrderId: number;
@@ -14,6 +15,8 @@ export interface OrderModelResponse {
   customerId: number;
   shipToAddressId?: number;
   billToAddressId?: number;
+  shipToAddress?: AddressResponse;
+  billToAddress?: AddressResponse;
   shipMethod: string;
   creditCardApprovalCode?: string;
   subTotal: number;

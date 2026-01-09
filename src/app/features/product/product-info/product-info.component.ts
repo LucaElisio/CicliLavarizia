@@ -8,10 +8,13 @@ import { CartService } from '../../../shared/services/cart.service';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { DividerModule } from 'primeng/divider';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-product-info',
-  imports: [CardModule, ButtonModule, CommonModule, DividerModule],
+  imports: [CardModule, ButtonModule, CommonModule, DividerModule, ToastModule],
+  providers: [MessageService],
   templateUrl: './product-info.component.html',
   styleUrl: './product-info.component.css',
 })
@@ -19,6 +22,7 @@ export class ProductInfoComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private productService = inject(ProductService);
   private cartService = inject(CartService);
+  private messageService = inject(MessageService);
   location = inject(Location);
 
   productId!: number;
@@ -49,6 +53,11 @@ export class ProductInfoComponent implements OnInit {
     console.log(`Aggiungo al carrello il prodotto con ID: ${productId}, Quantità: ${quantity}`);
     this.cartService.addToCart(productId, quantity).subscribe({
       next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Elemento aggiunto al carrello!',
+          life: 3000
+        });
         this.cartService.getCart().subscribe({
           next: (data) => {
             this.cartService.cartProducts.set(data);

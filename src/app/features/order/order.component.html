@@ -1,3 +1,6 @@
+<p-toast position="top-right"></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
 <div class="p-6">
     <p-card header="Gestione Ordini" styleClass="shadow-lg">
         <p-table #dt [value]="orders()" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5, 10, 20, 50]"
@@ -36,6 +39,8 @@
                         Totale <p-sortIcon field="totalDue" />
                     </th>
                     <th class="text-center">Articoli</th>
+                    <th class="text-center">Azioni</th>
+                    <th class="text-center">Rimuovi</th>
                 </tr>
             </ng-template>
 
@@ -81,6 +86,25 @@
                         <span class="px-2 py-1 rounded-full text-xs font-semibold">
                             {{ order.salesOrderDetails.length }}
                         </span>
+                    </td>
+                    <td class="text-center">
+                        @if (order.status === 1) {
+                        <button pButton class="p-button-rounded p-button-text"
+                            (click)="openEditDialog(order, $event)"
+                            pTooltip="Modifica ordine" tooltipPosition="left">
+                            <i class="material-icons">edit</i>
+                        </button>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (order.status === 1) {
+                        <button pButton class="p-button-rounded p-button-text"
+                            style="color: red;"
+                            (click)="removeOrder(order.salesOrderId, $event)"
+                            pTooltip="Rimuovi ordine" tooltipPosition="left">
+                            <i class="material-icons">delete</i>
+                        </button>
+                        }
                     </td>
                 </tr>
             </ng-template>
@@ -220,6 +244,114 @@
         <ng-template pTemplate="footer">
             <button pButton label="Chiudi" icon="pi pi-times" class="p-button-text"
                 (click)="displayDialog = false"></button>
+        </ng-template>
+    </p-dialog>
+
+    <!-- Dialog Modifica Ordine -->
+    <p-dialog [(visible)]="displayEditDialog" [modal]="true" [style]="{width: '60vw'}"
+        [header]="'Modifica Ordine ' + selectedOrder?.salesOrderNumber" [draggable]="false" [resizable]="false">
+
+        @if (selectedOrder) {
+        <div class="p-4">
+            <div class="space-y-4">
+
+                <!-- Commento -->
+                <div>
+                    <label class="block mb-2 font-semibold">Commento</label>
+                    <input type="text" pInputText [(ngModel)]="editOrderData.comment"
+                        placeholder="Inserisci un commento" class="w-full" />
+                </div>
+
+                <!-- Metodo Spedizione -->
+                <div>
+                    <label class="block mb-2 font-semibold">Metodo Spedizione</label>
+                    <p-select [(ngModel)]="editOrderData.shipMethod" [options]="shipMethodOptions"
+                        optionLabel="label" optionValue="value" placeholder="Seleziona metodo"
+                        class="w-full" [style]="{'width': '100%'}"></p-select>
+                </div>
+
+                <!-- Indirizzo di Spedizione -->
+                <div class="mt-4">
+                    <h3 class="text-lg font-bold mb-3">Indirizzo di Spedizione</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mb-2">Indirizzo</label>
+                            <input type="text" pInputText [(ngModel)]="editOrderData.shipToAddress.addressLine1"
+                                placeholder="Via, numero civico" class="w-full" />
+                        </div>
+                        <div>
+                            <label class="block mb-2">Indirizzo 2 (opzionale)</label>
+                            <input type="text" pInputText [(ngModel)]="editOrderData.shipToAddress.addressLine2"
+                                placeholder="Informazioni aggiuntive" class="w-full" />
+                        </div>
+                        <div>
+                            <label class="block mb-2">Città</label>
+                            <input type="text" pInputText [(ngModel)]="editOrderData.shipToAddress.city"
+                                placeholder="Città" class="w-full" />
+                        </div>
+                        <div>
+                            <label class="block mb-2">CAP</label>
+                            <input type="text" pInputText [(ngModel)]="editOrderData.shipToAddress.postalCode"
+                                placeholder="00000" class="w-full" />
+                        </div>
+                        <div>
+                            <label class="block mb-2">Provincia/Stato</label>
+                            <input type="text" pInputText [(ngModel)]="editOrderData.shipToAddress.stateProvince"
+                                placeholder="Provincia" class="w-full" />
+                        </div>
+                        <div>
+                            <label class="block mb-2">Paese</label>
+                            <input type="text" pInputText [(ngModel)]="editOrderData.shipToAddress.countryRegion"
+                                placeholder="Italia" class="w-full" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Indirizzo di Fatturazione -->
+                <div class="mt-4">
+                    <h3 class="text-lg font-bold mb-3">Indirizzo di Fatturazione</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mb-2">Indirizzo</label>
+                            <input type="text" pInputText [(ngModel)]="editOrderData.billToAddress.addressLine1"
+                                placeholder="Via, numero civico" class="w-full" />
+                        </div>
+                        <div>
+                            <label class="block mb-2">Indirizzo 2 (opzionale)</label>
+                            <input type="text" pInputText [(ngModel)]="editOrderData.billToAddress.addressLine2"
+                                placeholder="Informazioni aggiuntive" class="w-full" />
+                        </div>
+                        <div>
+                            <label class="block mb-2">Città</label>
+                            <input type="text" pInputText [(ngModel)]="editOrderData.billToAddress.city"
+                                placeholder="Città" class="w-full" />
+                        </div>
+                        <div>
+                            <label class="block mb-2">CAP</label>
+                            <input type="text" pInputText [(ngModel)]="editOrderData.billToAddress.postalCode"
+                                placeholder="00000" class="w-full" />
+                        </div>
+                        <div>
+                            <label class="block mb-2">Provincia/Stato</label>
+                            <input type="text" pInputText [(ngModel)]="editOrderData.billToAddress.stateProvince"
+                                placeholder="Provincia" class="w-full" />
+                        </div>
+                        <div>
+                            <label class="block mb-2">Paese</label>
+                            <input type="text" pInputText [(ngModel)]="editOrderData.billToAddress.countryRegion"
+                                placeholder="Italia" class="w-full" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+
+        <ng-template pTemplate="footer">
+            <button pButton label="Annulla" icon="pi pi-times" class="p-button-text"
+                (click)="displayEditDialog = false"></button>
+            <button pButton label="Salva Modifiche" icon="pi pi-check"
+                (click)="updateOrder()"></button>
         </ng-template>
     </p-dialog>
 </div>
