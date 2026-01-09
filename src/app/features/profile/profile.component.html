@@ -82,7 +82,7 @@
     }
     <div class="flex justify-end gap-2">
       <p-button label="Cancel" severity="secondary" (click)="visibleEmail = false" />
-      <p-button [disabled]="!inputPassword.valid" label="Update" (onClick)="updateEmail()" />
+      <p-button [disabled]="!inputEmail.valid" label="Update" (onClick)="updateEmail()" />
     </div>
   </p-dialog>
 </div>
@@ -137,7 +137,7 @@
     <p-message severity="error">{{ error }}</p-message> }
     <div class="flex justify-end gap-2">
       <p-button label="Cancel" severity="secondary" (click)="visibleUpdateInfo = false" />
-      <p-button [disabled]="!inputPassword.valid" label="Update" (onClick)="updatePassword()" />
+      <p-button label="Update" (onClick)="updateCustomerInfo()" />
     </div>
 
   </p-dialog>
