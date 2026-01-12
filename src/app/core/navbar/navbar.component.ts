@@ -12,6 +12,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ProductResponse } from '../../shared/models/productModel';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ProductService } from '../../shared/services/product.service';
+import { Role } from '../../shared/models/customerModel';
 
 @Component({
   selector: 'app-navbar',
@@ -32,6 +33,9 @@ export class NavbarComponent implements OnInit {
   public profileService = inject(ProfileService);
   public cartService = inject(CartService);
   private productService = inject(ProductService);
+
+  CustomerRole = this.authService.userInfo()?.role;
+  Roles = Role;
 
   isNavbarVisible = true;
   isAtTop = true;

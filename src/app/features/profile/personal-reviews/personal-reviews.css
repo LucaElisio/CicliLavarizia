@@ -1,0 +1,24 @@
+/* Stili personalizzati per la pagina recensioni personali */
+
+.reviews-container {
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.reviews-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.reviews-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.reviews-container::-webkit-scrollbar-thumb {
+    background: rgba(170, 200, 170, 0.3);
+    border-radius: 4px;
+}
+
+.reviews-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(170, 200, 170, 0.5);
+}

@@ -13,10 +13,11 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import Aura from '@primeuix/themes/aura';
 import { AuthService } from './shared/services/auth.service';
 import { authInterceptor } from './interceptors/auth.interceptor';
+import { errorsInterceptor } from './interceptors/errors.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, errorsInterceptor])),
     provideAppInitializer(() => {
       const authService = inject(AuthService);
       authService.changeAuthState();

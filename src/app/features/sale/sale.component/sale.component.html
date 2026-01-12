@@ -13,7 +13,7 @@
                 <ng-template pTemplate="header">
                     <div class="p-4">
                         <h2 class="text-2xl font-bold" style="color: rgb(235, 238, 232);">
-                            <i class="pi pi-map-marker mr-2"></i>
+                            <span class="material-icons mr-2" style="vertical-align: middle;">location_on</span>
                             Indirizzo di Spedizione
                         </h2>
                     </div>
@@ -67,7 +67,7 @@
                 <ng-template pTemplate="header">
                     <div class="p-4">
                         <h2 class="text-2xl font-bold" style="color: rgb(235, 238, 232);">
-                            <i class="pi pi-file mr-2"></i>
+                            <span class="material-icons mr-2" style="vertical-align: middle;">description</span>
                             Indirizzo di Fatturazione
                         </h2>
                     </div>
@@ -129,7 +129,7 @@
                 <ng-template pTemplate="header">
                     <div class="p-4">
                         <h2 class="text-2xl font-bold" style="color: rgb(235, 238, 232);">
-                            <i class="pi pi-credit-card mr-2"></i>
+                            <span class="material-icons mr-2" style="vertical-align: middle;">credit_card</span>
                             Pagamento e Spedizione
                         </h2>
                     </div>
@@ -176,7 +176,7 @@
                 <ng-template pTemplate="header">
                     <div class="p-4">
                         <h2 class="text-2xl font-bold" style="color: rgb(235, 238, 232);">
-                            <i class="pi pi-shopping-cart mr-2"></i>
+                            <span class="material-icons mr-2" style="vertical-align: middle;">shopping_cart</span>
                             Riepilogo Ordine
                         </h2>
                     </div>
@@ -243,10 +243,12 @@
                     <!-- Pulsante Conferma -->
                     <p-button 
                         label="Conferma Ordine" 
-                        icon="pi pi-check"
                         [style]="{'width': '100%', 'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none', 'font-weight': 'bold'}"
                         [disabled]="isProcessing() || totalElements() === 0"
                         (onClick)="createOrder()">
+                        <ng-template pTemplate="icon">
+                            <span class="material-icons" style="font-size: 20px; vertical-align: middle;">check</span>
+                        </ng-template>
                     </p-button>
 
                     <p class="text-sm text-center" style="color: rgb(190, 195, 188);">

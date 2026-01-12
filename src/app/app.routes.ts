@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthComponent } from './core/auth/auth.component';
 import { LogoutComponent } from './core/auth/logout/logout.component';
 import { authGuard } from './guards/auth.guard';
+import { roleGuard } from './guards/role.guard';
 import { DeleteComponent } from './core/auth/delete/delete.component';
 import { HomeComponent } from './features/home/home.component';
 import { ProfileComponent } from './features/profile/profile.component';
@@ -11,6 +12,10 @@ import { ProductInfoComponent } from './features/product/product-info/product-in
 import { SaleComponent } from './features/sale/sale.component/sale.component';
 import { OrderComponent } from './features/order/order.component';
 import { AssistantComponent } from './features/saleAssistant/assistant.component/assistant.component';
+import { Role } from './shared/models/customerModel';
+import { PersonalReviews } from './features/profile/personal-reviews/personal-reviews';
+import { ErrorComponent } from './core/error/error.component';
+
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -19,10 +24,17 @@ export const routes: Routes = [
   { path: 'auth/logout', component: LogoutComponent, canActivate: [authGuard] },
   { path: 'auth/delete', component: DeleteComponent, canActivate: [authGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
-  { path: 'products', component: ProductComponent },
+  { path: 'products', component: ProductComponent, canActivate: [authGuard, roleGuard([Role.Customer, Role.Admin])] },
   { path: 'cart', component: CartComponent, canActivate: [authGuard] },
-  { path: 'product', component: ProductInfoComponent },
-  { path: 'sales', component: SaleComponent, canActivate: [authGuard] },
-  { path: 'orders', component: OrderComponent, canActivate: [authGuard] },
-  { path: 'sales-assistant', component: AssistantComponent, canActivate: [authGuard] },
+  { path: 'product', component: ProductInfoComponent, canActivate: [authGuard, roleGuard([Role.Customer, Role.Admin])] },
+  
+  { path: 'sales', component: SaleComponent, canActivate: [authGuard, roleGuard([Role.Admin, Role.Customer])] },
+  
+  { path: 'orders', component: OrderComponent, canActivate: [authGuard, roleGuard([Role.Admin, Role.Customer])] },
+  
+  { path: 'sales-assistant', component: AssistantComponent, canActivate: [authGuard, roleGuard([Role.SaleAssistant, Role.Admin, Role.Customer])] },
+
+  {path: 'personal-reviews', component: PersonalReviews, canActivate: [authGuard, roleGuard([Role.Customer, Role.Admin])]},
+  
+  { path: 'error', component: ErrorComponent },
 ];
