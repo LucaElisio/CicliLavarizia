@@ -178,7 +178,30 @@
                     </h2>
                 </div>
             </ng-template>
-            <p-table [value]="products()" [paginator]="true" [rows]="10">
+
+            <p-table #dtProducts [value]="products()" [paginator]="true" [rows]="10" styleClass="p-datatable-rounded"
+                [globalFilterFields]="['name', 'productNumber']">
+                
+                <ng-template pTemplate="caption">
+                    <div class="flex justify-between items-center gap-4 p-3">
+                        <span class="text-lg font-semibold caption-title">
+                            <i class="material-icons align-middle mr-2 caption-icon">inventory_2</i>
+                            Prodotti disponibili
+                        </span>
+
+                        <div class="relative flex items-center">
+                            <i class="material-icons absolute left-3 pointer-events-none text-xl search-icon">
+                                search
+                            </i>
+
+                            <input pInputText type="text" 
+                                (input)="dtProducts.filterGlobal($any($event.target).value, 'contains')"
+                                placeholder="Cerca per nome o numero" 
+                                class="pr-3 py-2 w-64 outline-none search-input" />
+                        </div>
+                    </div>
+                </ng-template>
+
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="color: rgb(235, 238, 232);">ID</th>
@@ -186,6 +209,7 @@
                         <th style="color: rgb(235, 238, 232);">Numero</th>
                         <th style="color: rgb(235, 238, 232);">Prezzo</th>
                         <th style="color: rgb(235, 238, 232);">Categoria</th>
+                        <th style="color: rgb(235, 238, 232);">Modello</th>
                         <th style="color: rgb(235, 238, 232);">Azioni</th>
                     </tr>
                 </ng-template>
@@ -196,6 +220,7 @@
                         <td style="color: rgb(235, 238, 232);">{{product.productNumber}}</td>
                         <td style="color: rgb(235, 238, 232);">{{product.listPrice | currency:'EUR'}}</td>
                         <td style="color: rgb(235, 238, 232);">{{getCategoryName(product.productCategoryId)}}</td>
+                        <td style="color: rgb(235, 238, 232);">{{getModelName(product.productModelId)}}</td>
                         <td>
                             <p-button 
                                 [style]="{'background-color': 'transparent', 'color': 'rgb(255, 100, 100)', 'border': 'none', 'margin-right': '8px'}"
@@ -204,10 +229,10 @@
                                 <i class="material-icons">delete</i>
                             </p-button>
                             <p-button 
-                                [style]="{'background-color': 'transparent', 'color': 'rgb(255, 150, 80)', 'border': 'none'}"
-                                (onClick)="removeAllProducts(product.productNumber)"
-                                pTooltip="Rimuovi tutti i prodotti con questo numero">
-                                <i class="material-icons">delete_sweep</i>
+                                [style]="{'background-color': 'transparent', 'color': 'rgb(170, 200, 170)', 'border': 'none', 'margin-left': '8px'}"
+                                (onClick)="openProductUpdateDialog(product)"
+                                pTooltip="Modifica prodotto">
+                                <i class="material-icons">edit</i>
                             </p-button>
                         </td>
                     </tr>
@@ -226,7 +251,7 @@
             </p-button>
         </div>
         <p-card [style]="{'background-color': 'rgb(78, 86, 80)'}">
-            <p-table [value]="categories()" [paginator]="true" [rows]="10">
+            <p-table [value]="categories()" [paginator]="true" [rows]="10" styleClass="p-datatable-rounded">
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="color: rgb(235, 238, 232);">ID</th>
@@ -261,7 +286,7 @@
             </p-button>
         </div>
         <p-card [style]="{'background-color': 'rgb(78, 86, 80)'}">
-            <p-table [value]="models()" [paginator]="true" [rows]="10">
+            <p-table [value]="models()" [paginator]="true" [rows]="10" styleClass="p-datatable-rounded">
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="color: rgb(235, 238, 232);">ID</th>
@@ -304,7 +329,7 @@
             </p-button>
         </div>
         <p-card [style]="{'background-color': 'rgb(78, 86, 80)'}">
-            <p-table [value]="discounts()" [paginator]="true" [rows]="10">
+            <p-table [value]="discounts()" [paginator]="true" [rows]="10" styleClass="p-datatable-rounded">
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="color: rgb(235, 238, 232);">Codice</th>
@@ -333,6 +358,148 @@
         </p-card>
     </div>
 </div>
+
+
+<!-- DIALOG AGGIORNAMENTO PRODOTTO -->
+<p-dialog [(visible)]="displayProductUpdateDialog" [modal]="true" [style]="{width: '800px'}" 
+    [draggable]="false" [resizable]="false">
+    <ng-template pTemplate="header">
+        <div class="flex items-center gap-3">
+            <i class="material-icons" style="color: rgb(170, 200, 170); font-size: 28px;">edit</i>
+            <h3 class="text-xl font-bold" style="color: rgb(235, 238, 232);">Aggiorna Prodotto</h3>
+        </div>
+    </ng-template>
+    
+    <div class="p-4" *ngIf="selectedProduct" style="background-color: rgb(78, 86, 80); border-radius: 8px;">
+        <!-- Info Badge -->
+        <div class="mb-4 p-3 flex items-center gap-2" 
+            style="background-color: rgba(170, 200, 170, 0.15); border-left: 4px solid rgb(170, 200, 170); border-radius: 4px;">
+            <i class="material-icons" style="color: rgb(170, 200, 170); font-size: 20px;">info</i>
+            <span style="color: rgb(190, 195, 188); font-size: 13px;">Modifica i dettagli del prodotto. I campi con * sono obbligatori.</span>
+        </div>
+
+        <div class="space-y-4">
+            <!-- Nome e Numero Prodotto -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
+                        <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">label</i>
+                        Nome Prodotto *
+                    </label>
+                    <input type="text" pInputText [(ngModel)]="selectedProduct.name" class="w-full" />
+                </div>
+                <div>
+                    <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
+                        <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">confirmation_number</i>
+                        Numero Prodotto *
+                    </label>
+                    <input type="text" pInputText [(ngModel)]="selectedProduct.productNumber" class="w-full" />
+                </div>
+            </div>
+
+            <!-- Prezzo e Costo -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
+                        <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">euro</i>
+                        Prezzo di Listino *
+                    </label>
+                    <p-inputNumber [(ngModel)]="selectedProduct.listPrice" mode="currency" currency="EUR"
+                        locale="it-IT" [showButtons]="false" class="w-full" [style]="{'width': '100%'}"></p-inputNumber>
+                </div>
+                <div>
+                    <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
+                        <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">account_balance_wallet</i>
+                        Costo Standard *
+                    </label>
+                    <p-inputNumber [(ngModel)]="selectedProduct.standardCost" mode="currency" currency="EUR"
+                        locale="it-IT" [showButtons]="false" class="w-full" [style]="{'width': '100%'}"></p-inputNumber>
+                </div>
+            </div>
+
+            <!-- Colore, Taglia e Peso -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
+                        <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">palette</i>
+                        Colore
+                    </label>
+                    <input type="text" pInputText [(ngModel)]="selectedProduct.color" class="w-full" />
+                </div>
+                <div>
+                    <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
+                        <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">straighten</i>
+                        Taglia
+                    </label>
+                    <input type="text" pInputText [(ngModel)]="selectedProduct.size" class="w-full" />
+                </div>
+                <div>
+                    <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
+                        <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">scale</i>
+                        Peso (kg)
+                    </label>
+                    <p-inputNumber [(ngModel)]="selectedProduct.weight" [showButtons]="false" [minFractionDigits]="2"
+                        [maxFractionDigits]="2" class="w-full" [style]="{'width': '100%'}"></p-inputNumber>
+                </div>
+            </div>
+
+            <!-- Categoria e Modello -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
+                        <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">category</i>
+                        Categoria *
+                    </label>
+                    <p-select [(ngModel)]="selectedProduct.productCategoryId" [options]="categories()"
+                        optionLabel="name" optionValue="productCategoryId"
+                        class="w-full" [style]="{'width': '100%'}"></p-select>
+                </div>
+                <div>
+                    <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
+                        <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">view_in_ar</i>
+                        Modello Prodotto
+                    </label>
+                    <p-select [(ngModel)]="selectedProduct.productModelId" [options]="models()"
+                        optionLabel="name" optionValue="productModelId"
+                        class="w-full" [style]="{'width': '100%'}" [showClear]="true"></p-select>
+                </div>
+            </div>
+
+            <!-- Data Inizio Vendita -->
+            <div>
+                <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
+                    <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">event</i>
+                    Data Inizio Vendita *
+                </label>
+                <p-datepicker [(ngModel)]="selectedProduct.sellStartDate" dateFormat="dd/mm/yy" 
+                    class="w-full" [style]="{'width': '100%'}"></p-datepicker>
+            </div>
+        </div>
+    </div>
+    
+    <ng-template pTemplate="footer">
+        <div class="flex gap-3 justify-end">
+            <p-button 
+                label="Annulla" 
+                [outlined]="true"
+                [style]="{'color': 'rgb(235, 238, 232)', 'border-color': 'rgb(170, 200, 170)'}"
+                (onClick)="displayProductUpdateDialog = false">
+                <ng-template pTemplate="icon">
+                    <span class="material-icons" style="font-size: 18px;">close</span>
+                </ng-template>
+            </p-button>
+            <p-button 
+                label="Salva Modifiche" 
+                [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none', 'font-weight': 'bold'}"
+                (onClick)="updateProduct(selectedProduct.productId)">
+                <ng-template pTemplate="icon">
+                    <span class="material-icons" style="font-size: 18px;">check_circle</span>
+                </ng-template>
+            </p-button>
+        </div>
+    </ng-template>
+</p-dialog>
+
 
 <!-- DIALOG CATEGORIA -->
 <p-dialog [(visible)]="displayCategoryDialog" [modal]="true" [style]="{width: '400px'}" header="Nuova Categoria">
@@ -412,11 +579,13 @@
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block mb-2" style="color: rgb(190, 195, 188);">Data Inizio</label>
-                <input type="date" pInputText [(ngModel)]="newDiscount.startDate" class="w-full" />
+                <p-datepicker [(ngModel)]="newDiscount.startDate" dateFormat="dd/mm/yy" 
+                    placeholder="Seleziona data" class="w-full" [style]="{'width': '100%'}" appendTo="body"></p-datepicker>
             </div>
             <div>
                 <label class="block mb-2" style="color: rgb(190, 195, 188);">Data Fine</label>
-                <input type="date" pInputText [(ngModel)]="newDiscount.endDate" class="w-full" />
+                <p-datepicker [(ngModel)]="newDiscount.endDate" dateFormat="dd/mm/yy" 
+                    placeholder="Seleziona data" class="w-full" [style]="{'width': '100%'}" appendTo="body"></p-datepicker>
             </div>
         </div>
     </div>

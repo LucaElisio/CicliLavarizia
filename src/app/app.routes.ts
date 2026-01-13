@@ -38,7 +38,7 @@ export const routes: Routes = [
   
   { path: 'orders', component: OrderComponent, canActivate: [authGuard, roleGuard([Role.Admin, Role.Customer])] },
   
-  { path: 'sales-assistant', component: AssistantComponent, canActivate: [authGuard, roleGuard([Role.SaleAssistant, Role.Admin, Role.Customer])] },
+  { path: 'sales-assistant', component: AssistantComponent, canActivate: [authGuard, roleGuard([Role.SaleAssistant, Role.Admin])] },
 
   {path: 'personal-reviews', component: PersonalReviews, canActivate: [authGuard, roleGuard([Role.Customer, Role.Admin])]},
   

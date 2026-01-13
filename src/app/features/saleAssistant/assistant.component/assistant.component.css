@@ -1,0 +1,70 @@
+/* Angoli arrotondati per le tabelle */
+::ng-deep .p-datatable-rounded {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+::ng-deep .p-datatable-rounded .p-datatable-thead > tr > th {
+    background-color: #1E1E21;
+}
+
+::ng-deep .p-datatable-rounded .p-datatable-thead > tr:first-child > th:first-child {
+    border-top-left-radius: 8px;
+}
+
+::ng-deep .p-datatable-rounded .p-datatable-thead > tr:first-child > th:last-child {
+    border-top-right-radius: 8px;
+}
+
+::ng-deep .p-datatable-rounded .p-datatable-tbody > tr:last-child > td:first-child {
+    border-bottom-left-radius: 8px;
+}
+
+::ng-deep .p-datatable-rounded .p-datatable-tbody > tr:last-child > td:last-child {
+    border-bottom-right-radius: 8px;
+}
+
+::ng-deep .p-datatable-rounded .p-paginator {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    margin-top: 0.7vh;
+}
+
+/* Distanziamento del caption dalla tabella */
+::ng-deep .p-datatable-rounded .p-datatable-header {
+    margin-bottom: 0.7vh;
+    border-radius: 8px;
+    background-color: #232326;
+    max-height: 8vh;
+    padding: 0%;
+}
+
+/* Stili per la barra di ricerca */
+.search-input {
+    background-color: rgba(235, 238, 232, 0.1);
+    border: 1px solid rgba(235, 238, 232, 0.3);
+    color: rgb(235, 238, 232);
+    border-radius: 6px;
+    padding-left: 4vh;
+}
+
+.search-input::placeholder {
+    color: rgba(235, 238, 232, 0.6);
+}
+
+.search-input:focus {
+    border-color: rgb(170, 200, 170);
+    box-shadow: 0 0 0 2px rgba(170, 200, 170, 0.2);
+}
+
+.search-icon {
+    color: rgb(170, 200, 170);
+}
+
+.caption-title {
+    color: rgb(235, 238, 232);
+}
+
+.caption-icon {
+    font-size: 20px;
+}

@@ -52,6 +52,7 @@ export class AssistantComponent implements OnInit {
   selectedModelForDescription: ProductModelsResponse | null = null;
 
   newProduct = {
+    productId: 0,
     name: '',
     productNumber: '',
     color: '',
@@ -160,6 +161,7 @@ export class AssistantComponent implements OnInit {
           life: 3000
         });
         this.resetForm();
+        this.loadProducts(); // Aggiorna automaticamente la lista prodotti
       },
       error: (err) => {
         console.error('Errore durante l\'inserimento del prodotto:', err);
@@ -177,6 +179,7 @@ export class AssistantComponent implements OnInit {
 
   resetForm(): void {
     this.newProduct = {
+      productId: 0,
       name: '',
       productNumber: '',
       color: '',
@@ -239,26 +242,34 @@ export class AssistantComponent implements OnInit {
     });
   }
 
-  removeAllProducts(productNumber: string): void {
-    this.saleService.removeAllProducts(productNumber).subscribe({
+
+  updateProduct(productId: number): void {
+    // Converti la data in formato ISO string se è un oggetto Date
+    const sellStartDate = this.selectedProduct.sellStartDate instanceof Date 
+      ? this.selectedProduct.sellStartDate.toISOString() 
+      : this.selectedProduct.sellStartDate;
+
+    const productData = {
+      ...this.selectedProduct,
+      sellStartDate: sellStartDate
+    };
+
+    this.saleService.updateProduct(this.selectedProduct.productId, productData as any).subscribe({
       next: () => {
-        this.messageService.add({ 
-          severity: 'success', 
-          summary: 'Prodotti rimossi', 
-          detail: `Tutti i prodotti con numero ${productNumber} sono stati eliminati`,
-          life: 3000 
-        });
+        this.messageService.add({ severity: 'success', summary: 'Prodotto aggiornato', life: 3000 });
+        this.displayProductUpdateDialog = false;
         this.loadProducts();
       },
       error: (err) => {
-        console.error('Errore rimozione prodotti:', err);
-        this.messageService.add({ 
-          severity: 'error', 
-          summary: 'Errore eliminazione prodotti', 
-          life: 5000 
-        });
+        console.error('Errore aggiornamento prodotto:', err);
+        this.messageService.add({ severity: 'error', summary: 'Errore aggiornamento prodotto', life: 5000 });
       }
     });
+  }
+
+  openProductUpdateDialog(product: ProductResponse): void {
+    this.selectedProduct = { ...product };
+    this.displayProductUpdateDialog = true;
   }
 
   // === CATEGORIE ===
@@ -327,6 +338,7 @@ export class AssistantComponent implements OnInit {
       next: () => {
         this.messageService.add({ severity: 'success', summary: 'Modello eliminato', life: 3000 });
         this.loadModels();
+        this.loadProducts(); // Aggiorna anche la lista prodotti
       },
       error: () => this.messageService.add({ severity: 'error', summary: 'Errore eliminazione modello', life: 5000 })
     });
@@ -421,5 +433,12 @@ export class AssistantComponent implements OnInit {
   getCategoryName(categoryId: number): string {
     const category = this.categories().find(c => c.productCategoryId === categoryId);
     return category ? category.name : 'N/A';
+  }
+
+  // Metodo helper per ottenere il nome del modello dall'ID
+  getModelName(modelId: number | undefined): string {
+    if (!modelId) return '-';
+    const model = this.models().find(m => m.productModelId === modelId);
+    return model ? model.name : '-';
   }
 }

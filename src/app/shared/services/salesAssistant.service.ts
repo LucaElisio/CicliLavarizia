@@ -21,17 +21,14 @@ export class SaleService {
         return this.http.post<ProductResponse>(`${this.url}/SalesAssistant/Inserisci%20prodotto`, productData);
     }
 
-    updateProduct(productId: number): Observable<ProductResponse> {
-        return this.http.put<ProductResponse>(`${this.url}/SalesAssistant/Aggiorna%20prodotto${productId}`, {});
+    updateProduct(productId: number, productUpdate: ProductResponse): Observable<ProductResponse> {
+        return this.http.put<ProductResponse>(`${this.url}/SalesAssistant/Aggiorna%20prodotto${productId}`, productUpdate);
     }
 
     removeSingleProduct(productId: number): Observable<void> {
-        return this.http.delete<void>(`${this.url}/SalesAssistant/Rimuovi%20singolo%20prodotto/${productId}`);
+        return this.http.delete<void>(`${this.url}/SalesAssistant/Rimuovi%20singolo%20prodotto${productId}`);
     }
-
-    removeAllProducts(prNumber: string): Observable<void> {
-        return this.http.delete<void>(`${this.url}/SalesAssistant/Rimuovi%20Prodotto${prNumber}`);
-    }
+    
 
     // Crud categoria
     insertCategory(category: ProductCategoryResponse): Observable<ProductCategoryResponse> {
