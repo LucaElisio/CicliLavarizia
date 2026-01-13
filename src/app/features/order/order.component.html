@@ -13,10 +13,6 @@
                     <span class="text-xl font-bold">Lista Ordini</span>
 
                     <div class="relative flex items-center">
-                        <i class="material-icons absolute left-3 pointer-events-none text-xl">
-                            search
-                        </i>
-
                         <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
                             placeholder="Cerca ordini..." class="pl-10 pr-3 py-2 w-64 outline-none" #searchInput />
                     </div>
@@ -89,8 +85,7 @@
                     </td>
                     <td class="text-center">
                         @if (order.status === 1) {
-                        <button pButton class="p-button-rounded p-button-text"
-                            (click)="openEditDialog(order, $event)"
+                        <button pButton class="p-button-rounded p-button-text" (click)="openEditDialog(order, $event)"
                             pTooltip="Modifica ordine" tooltipPosition="left">
                             <i class="material-icons">edit</i>
                         </button>
@@ -98,10 +93,9 @@
                     </td>
                     <td class="text-center">
                         @if (order.status === 1) {
-                        <button pButton class="p-button-rounded p-button-text"
-                            style="color: red;"
-                            (click)="removeOrder(order.salesOrderId, $event)"
-                            pTooltip="Rimuovi ordine" tooltipPosition="left">
+                        <button pButton class="p-button-rounded p-button-text" style="color: red;"
+                            (click)="removeOrder(order.salesOrderId, $event)" pTooltip="Rimuovi ordine"
+                            tooltipPosition="left">
                             <i class="material-icons">delete</i>
                         </button>
                         }
@@ -242,8 +236,7 @@
         }
 
         <ng-template pTemplate="footer">
-            <button pButton label="Chiudi" class="p-button-text"
-                (click)="displayDialog = false">
+            <button pButton label="Chiudi" class="p-button-text" (click)="displayDialog = false">
                 <ng-template pTemplate="icon">
                     <span class="material-icons" style="font-size: 18px;">close</span>
                 </ng-template>
@@ -269,9 +262,9 @@
                 <!-- Metodo Spedizione -->
                 <div>
                     <label class="block mb-2 font-semibold">Metodo Spedizione</label>
-                    <p-select [(ngModel)]="editOrderData.shipMethod" [options]="shipMethodOptions"
-                        optionLabel="label" optionValue="value" placeholder="Seleziona metodo"
-                        class="w-full" [style]="{'width': '100%'}"></p-select>
+                    <p-select [(ngModel)]="editOrderData.shipMethod" [options]="shipMethodOptions" optionLabel="label"
+                        optionValue="value" placeholder="Seleziona metodo" class="w-full"
+                        [style]="{'width': '100%'}"></p-select>
                 </div>
 
                 <!-- Indirizzo di Spedizione -->
@@ -352,14 +345,12 @@
         }
 
         <ng-template pTemplate="footer">
-            <button pButton label="Annulla" class="p-button-text"
-                (click)="displayEditDialog = false">
+            <button pButton label="Annulla" class="p-button-text" (click)="displayEditDialog = false">
                 <ng-template pTemplate="icon">
                     <span class="material-icons" style="font-size: 18px;">close</span>
                 </ng-template>
             </button>
-            <button pButton label="Salva Modifiche"
-                (click)="updateOrder()">
+            <button pButton label="Salva Modifiche" (click)="updateOrder()">
                 <ng-template pTemplate="icon">
                     <span class="material-icons" style="font-size: 18px;">check</span>
                 </ng-template>

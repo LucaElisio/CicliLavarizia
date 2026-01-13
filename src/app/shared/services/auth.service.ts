@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { LoginRequest, RegisterRequest, UpdateEmailRequest } from '../models/authModel';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { TokenDecoded, TokenResponse } from '../models/tokenModel';
 import { jwtDecode } from 'jwt-decode';
 import { CustomerInfoRequest } from '../models/customerModel';
@@ -18,6 +18,8 @@ export class AuthService {
   public isAuthenticated = signal<boolean>(false);
   public userInfo = signal<TokenDecoded | null>(null);
   public customerInfo = signal<CustomerInfoRequest | null>(null);
+  isRefreshing = false;
+  refreshSubject = new BehaviorSubject<string | null>(null);
 
   login(userData: LoginRequest): Observable<TokenResponse> {
     return this.http.post<TokenResponse>(`${this.url}/Auth/Login`, userData, {

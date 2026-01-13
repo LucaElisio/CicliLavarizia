@@ -11,7 +11,7 @@
       </a>
     </h1>
 
-    
+
     <a routerLink="/products" class="text-sm md:text-lg font-semibold ml-auto md:ml-0 md:hidden">
       Prodotti
     </a>
@@ -55,13 +55,13 @@
 
   <div class="hidden md:flex items-center gap-6">
 
-    @if(CustomerRole == Roles.Customer || CustomerRole == Roles.Admin) {
-      <a routerLink="/products" class="text-lg font-semibold transition-transform hover:scale-105">
-        Prodotti
-      </a>
+    @if(CustomerRole === Roles.Customer || CustomerRole === Roles.Admin) {
+    <a routerLink="/products" class="text-lg font-semibold transition-transform hover:scale-105">
+      Prodotti
+    </a>
     }
 
-    @if (authService.isAuthenticated() && (CustomerRole == Roles.Customer)) {
+    @if (authService.isAuthenticated() && (CustomerRole === Roles.Customer)) {
     <p-overlay-badge [style]="{outline: 'unset'}" [value]="cartService.cartProducts()?.totalElements ?? 0"
       badgeSize="small">
       <a routerLink="/cart" class="material-icons">shopping_cart</a>
