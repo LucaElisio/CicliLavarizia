@@ -7,6 +7,7 @@ export interface CustomerInfoRequest {
   companyName: string;
   salesPerson: string;
   phone: string;
+  role: Role;
   customerAddresses: CustomerAddress[];
 }
 
@@ -34,4 +35,11 @@ export interface CustomerUpdateRequest {
   companyName: string;
   salesPerson: string;
   phone: string;
+}
+
+export enum Role {
+  Admin = "Admin",
+  Customer = "Customer",
+  SaleAssistant = "SaleAssistant",
+  Logistic = "Logistic"
 }

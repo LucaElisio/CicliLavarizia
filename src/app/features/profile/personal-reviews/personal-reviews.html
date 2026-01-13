@@ -1,0 +1,162 @@
+<p-toast position="top-right"></p-toast>
+<div class="container mx-auto px-4 py-6">
+    <!-- Header -->
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold" style="color: rgb(235, 238, 232);">
+            <span class="material-icons mr-2" style="vertical-align: middle; font-size: 2rem;">rate_review</span>
+            Le mie recensioni
+        </h1>
+        <p class="mt-2" style="color: rgb(190, 195, 188);">
+            Gestisci tutte le recensioni che hai pubblicato
+        </p>
+    </div>
+
+    <!-- Lista Recensioni con Overflow -->
+    @if (reviews().length > 0) {
+        <div class="reviews-container">
+            @for (review of reviews(); track review._id) {
+                <p-card [style]="{'background-color': 'rgb(78, 86, 80)', 'border-radius': '8px'}" class="mb-4">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <!-- Informazioni Recensione -->
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="material-icons" style="color: rgb(170, 200, 170);">shopping_bag</span>
+                                    <a [routerLink]="['/product']" 
+                                       [queryParams]="{productId: review.productId}"
+                                       class="font-semibold hover:underline cursor-pointer" 
+                                       style="color: rgb(235, 238, 232);">
+                                        Prodotto #{{ review.productId }}
+                                    </a>
+                                </div>
+                                <span class="text-sm" style="color: rgb(160, 165, 158);">
+                                    {{ formatDate(review.reviewDate) }}
+                                </span>
+                            </div>
+
+                            <!-- Rating -->
+                            <div class="flex items-center gap-2 mb-3">
+                                @for (star of [1,2,3,4,5]; track star) {
+                                    @if (star <= review.rating + 1) {
+                                        <span class="material-icons" style="color: rgb(255, 193, 7); font-size: 1.25rem;">star</span>
+                                    } @else {
+                                        <span class="material-icons" style="color: rgb(120, 120, 120); font-size: 1.25rem;">star_border</span>
+                                    }
+                                }
+                                <span class="ml-2 font-bold" style="color: rgb(190, 195, 188);">
+                                    {{ review.rating + 1 }}/5
+                                </span>
+                            </div>
+
+                            <!-- Testo Recensione -->
+                            <div class="mb-3">
+                                <p style="color: rgb(210, 215, 208); line-height: 1.6;">
+                                    {{ review.reviewText }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Azioni -->
+                        <div class="flex md:flex-col gap-2 justify-end">
+                            <p-button 
+                                [rounded]="true"
+                                [text]="true"
+                                severity="info"
+                                (onClick)="editReview(review)"
+                                pTooltip="Modifica recensione">
+                                <ng-template pTemplate="icon">
+                                    <span class="material-icons" style="font-size: 20px;">edit</span>
+                                </ng-template>
+                            </p-button>
+                            <p-button 
+                                [rounded]="true"
+                                [text]="true"
+                                severity="danger"
+                                (onClick)="deleteReview(review._id)"
+                                pTooltip="Elimina recensione">
+                                <ng-template pTemplate="icon">
+                                    <span class="material-icons" style="font-size: 20px;">delete</span>
+                                </ng-template>
+                            </p-button>
+                        </div>
+                    </div>
+                </p-card>
+            }
+        </div>
+    } @else {
+        <p-card [style]="{'background-color': 'rgb(78, 86, 80)', 'border-radius': '8px'}">
+            <div class="text-center py-12">
+                <span class="material-icons" style="font-size: 4rem; color: rgb(120, 130, 122); display: block; margin-bottom: 1rem;">inbox</span>
+                <p style="color: rgb(160, 165, 158); font-size: 1.1rem;">
+                    Non hai ancora pubblicato nessuna recensione
+                </p>
+            </div>
+        </p-card>
+    }
+</div>
+
+<!-- Dialog per modificare una recensione -->
+<p-dialog 
+    header="Modifica la tua recensione" 
+    [(visible)]="displayDialog" 
+    [modal]="true"
+    [style]="{width: '500px'}"
+    [draggable]="false"
+    [resizable]="false">
+    
+    <div class="flex flex-col gap-4">
+        <!-- Prodotto -->
+        <div class="p-3 rounded" style="background-color: rgba(170, 200, 170, 0.1);">
+            <div class="flex items-center gap-2">
+                <span class="material-icons" style="color: rgb(170, 200, 170);">shopping_bag</span>
+                <span style="color: rgb(235, 238, 232);">
+                    Prodotto #{{ editingReview?.productId }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Valutazione -->
+        <div class="flex flex-col gap-2">
+            <label for="rating" class="font-semibold" style="color: rgb(235, 238, 232);">Valutazione</label>
+            <p-rating 
+                [(ngModel)]="newReview.rating" 
+                [stars]="5">
+            </p-rating>
+        </div>
+        
+        <!-- Commento -->
+        <div class="flex flex-col gap-2">
+            <label for="reviewText" class="font-semibold" style="color: rgb(235, 238, 232);">Commento</label>
+            <textarea 
+                pInputTextarea
+                [(ngModel)]="newReview.reviewText" 
+                rows="5" 
+                class="px-2 py-1"
+                placeholder="Scrivi qui la tua recensione..."
+                [style]="{'width': '100%', 'resize': 'none'}">
+            </textarea>
+        </div>
+    </div>
+    
+    <ng-template pTemplate="footer">
+        <p-button 
+            label="Annulla" 
+            (onClick)="hideDialog()" 
+            [outlined]="true"
+            severity="secondary">
+        </p-button>
+        <p-button 
+            label="Salva modifiche" 
+            (onClick)="submitEdit()" 
+            [disabled]="!isFormValid()"
+            [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none', 'font-weight': 'bold'}">
+        </p-button>
+    </ng-template>
+</p-dialog>
+
+<!-- Dialog di conferma eliminazione -->
+<p-confirmDialog>
+    <ng-template pTemplate="icon">
+        <span class="material-icons" style="font-size: 3rem; color: #f59e0b;">warning</span>
+    </ng-template>
+</p-confirmDialog>

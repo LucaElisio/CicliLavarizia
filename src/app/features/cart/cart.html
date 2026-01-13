@@ -22,10 +22,17 @@
                             <h3 class="text-xl font-bold" style="color: rgb(235, 238, 232);">
                                 {{ product.name }}
                             </h3>
-                            <p-button class="material-icons" [outlined]="true" severity="danger" size="small"
-                                (onClick)="removeProduct(product.productId)" [style]="{'color': '#ef4444'}">
-                                delete
-                            </p-button>
+                            <div class="flex gap-2">
+                                <p-button class="material-icons" [outlined]="true" size="small"
+                                    [routerLink]="['/product', ]" [queryParams]="{productId: product.productId}"
+                                    [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}">
+                                    info
+                                </p-button>
+                                <p-button class="material-icons" [outlined]="true" severity="danger" size="small"
+                                    (onClick)="removeProduct(product.productId)" [style]="{'color': '#ef4444'}">
+                                    delete
+                                </p-button>
+                            </div>
                         </div>
 
                         <div class="space-y-1">
@@ -47,7 +54,7 @@
                                         style="color: rgb(235, 238, 232); min-width: 30px; text-align: center;">
                                         {{ product.quantity }}
                                     </span>
-                                    <p-button icon="pi pi-plus" [outlined]="true" size="small"
+                                    <p-button [outlined]="true" size="small"
                                         class="material-icons"
                                         (onClick)="increaseQuantity(product.productId, product.quantity)"
                                         [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}">
@@ -85,7 +92,7 @@
                 <ng-template pTemplate="header">
                     <div class="p-4">
                         <h2 class="text-2xl font-bold" style="color: rgb(235, 238, 232);">
-                            <i class="pi pi-shopping-cart mr-2"></i>
+                            <span class="material-icons mr-2" style="vertical-align: middle;">shopping_cart</span>
                             Riepilogo
                         </h2>
                     </div>
@@ -109,9 +116,12 @@
                     <p-divider></p-divider>
 
                     <!-- Pulsante Checkout -->
-                    <p-button label="Procedi al Checkout" icon="pi pi-arrow-right" iconPos="right"
+                    <p-button label="Procedi al Checkout" iconPos="right"
                         [style]="{'width': '100%', 'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none', 'font-weight': 'bold'}"
                         [disabled]="totalElements() === 0" routerLink="/sales">
+                        <ng-template pTemplate="icon">
+                            <span class="material-icons" style="font-size: 20px; vertical-align: middle;">arrow_forward</span>
+                        </ng-template>
                     </p-button>
                 </div>
             </p-card>

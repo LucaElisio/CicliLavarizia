@@ -1,7 +1,7 @@
 export interface ProductResponse {
     productId: number,
     name: string,
-    productNumber: number
+    productNumber: string
     color?: string,
     standardCost: number,
     listPrice: number,
@@ -11,6 +11,7 @@ export interface ProductResponse {
     thumbnailPhotoFileName?: string,
     productCategoryId: number,
     productModelId?: number,
+    sellStartDate: string
     productCategory: ProductCategoryResponse
 }
 

@@ -10,10 +10,11 @@ import { CommonModule } from '@angular/common';
 import { DividerModule } from 'primeng/divider';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { Review } from './review/review';
 
 @Component({
   selector: 'app-product-info',
-  imports: [CardModule, ButtonModule, CommonModule, DividerModule, ToastModule],
+  imports: [CardModule, ButtonModule, CommonModule, DividerModule, ToastModule, Review],
   providers: [MessageService],
   templateUrl: './product-info.component.html',
   styleUrl: './product-info.component.css',
@@ -84,5 +85,7 @@ export class ProductInfoComponent implements OnInit {
     });
 
   }
+
+
 
 }

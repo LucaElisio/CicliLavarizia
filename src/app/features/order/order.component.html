@@ -70,7 +70,7 @@
                         </span>
                         @if (order.onlineOrderFlag) {
                         <span class="block mt-1">
-                            <i class="pi pi-shopping-cart text-xs"></i>
+                            <span class="material-icons text-xs" style="vertical-align: middle;">shopping_cart</span>
                         </span>
                         }
                     </td>
@@ -112,7 +112,7 @@
             <ng-template pTemplate="emptymessage">
                 <tr>
                     <td colspan="6" class="text-center py-8">
-                        <i class="pi pi-inbox text-4xl mb-2"></i>
+                        <span class="material-icons text-4xl mb-2">inbox</span>
                         <p>Nessun ordine trovato</p>
                     </td>
                 </tr>
@@ -242,8 +242,12 @@
         }
 
         <ng-template pTemplate="footer">
-            <button pButton label="Chiudi" icon="pi pi-times" class="p-button-text"
-                (click)="displayDialog = false"></button>
+            <button pButton label="Chiudi" class="p-button-text"
+                (click)="displayDialog = false">
+                <ng-template pTemplate="icon">
+                    <span class="material-icons" style="font-size: 18px;">close</span>
+                </ng-template>
+            </button>
         </ng-template>
     </p-dialog>
 
@@ -348,10 +352,18 @@
         }
 
         <ng-template pTemplate="footer">
-            <button pButton label="Annulla" icon="pi pi-times" class="p-button-text"
-                (click)="displayEditDialog = false"></button>
-            <button pButton label="Salva Modifiche" icon="pi pi-check"
-                (click)="updateOrder()"></button>
+            <button pButton label="Annulla" class="p-button-text"
+                (click)="displayEditDialog = false">
+                <ng-template pTemplate="icon">
+                    <span class="material-icons" style="font-size: 18px;">close</span>
+                </ng-template>
+            </button>
+            <button pButton label="Salva Modifiche"
+                (click)="updateOrder()">
+                <ng-template pTemplate="icon">
+                    <span class="material-icons" style="font-size: 18px;">check</span>
+                </ng-template>
+            </button>
         </ng-template>
     </p-dialog>
 </div>
