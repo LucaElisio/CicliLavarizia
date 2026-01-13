@@ -27,15 +27,17 @@
         Profilo
       </a>
 
+      @if(CustomerRole === Roles.Customer || CustomerRole === Roles.Admin) {
       <a routerLink="/orders" class="p-button p-button-text">
         <i class="material-icons">receipt_long</i>
         Ordini
       </a>
-
       <a routerLink="/personal-reviews" class="p-button p-button-text">
         <i class="material-icons">rate_review</i>
         Le mie recensioni
       </a>
+    }
+    
     </nav>
   </div>
 

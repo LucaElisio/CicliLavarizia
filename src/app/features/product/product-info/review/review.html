@@ -9,6 +9,7 @@
           label="Scrivi una recensione" 
           [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none', 'font-weight': 'bold'}"
           (onClick)="showDialog()"
+          [disabled]="!authService.isAuthenticated()"
           size="small">
           <ng-template pTemplate="icon">
               <span class="material-icons" aria-hidden="true" style="vertical-align: middle; font-size: 18px;">edit</span>

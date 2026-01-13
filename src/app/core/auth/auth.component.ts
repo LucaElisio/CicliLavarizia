@@ -112,7 +112,18 @@ export class AuthComponent implements OnInit {
           this.error.set(null);
           this.authForm.reset();
           this.isLoading.set(false);
-          this.router.navigate(['/']);
+          if (this.authService.userInfo()?.role === 'Admin' || this.authService.userInfo()?.role === 'Customer') {
+            this.router.navigate(['/']);
+            return;
+          }
+          else if (this.authService.userInfo()?.role === 'Logistic') {
+            this.router.navigate(['/logistic']);
+            return;
+          }
+          else if (this.authService.userInfo()?.role === 'SaleAssistant') {
+            this.router.navigate(['/sales-assistant']);
+            return;
+          }
         },
         error: (err) => {
           this.isLoading.set(false);

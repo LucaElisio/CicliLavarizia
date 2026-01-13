@@ -1,6 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-
 import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -13,6 +12,7 @@ import { ProfileService } from '../../../shared/services/profile.service';
 import { AuthService } from '../../../shared/services/auth.service';
 import { CustomerInfoRequest } from '../../../shared/models/customerModel';
 import { DrawerModule } from 'primeng/drawer';
+import {Role} from "../../../shared/models/customerModel";
 
 @Component({
   selector: 'app-sidebar',
@@ -37,6 +37,9 @@ export class SidebarComponent implements OnInit {
   authService = inject(AuthService);
   visible: boolean = false;
 
+  CustomerRole = this.authService.userInfo()?.role;
+  Roles = Role;
+  
   labelName!: string;
 
   ngOnInit(): void {

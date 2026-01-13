@@ -27,7 +27,7 @@
   background-color: transparent;
 }
 
-h1:hover .bike {
+h1:hover .bike, a:hover .cart {
   animation: bike-dynamic 0.8s ease-out;
 }
 

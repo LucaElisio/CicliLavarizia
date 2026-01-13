@@ -17,10 +17,8 @@ export const roleGuard = (allowedRoles: Role[]): CanActivateFn => {
 
     if (allowedRoles.includes(userInfo.role)) {
       return true;
-    }
-
-    // Reindirizza alla home se l'utente non ha il ruolo necessario
-    router.navigate(['/']);
+    };
+    
     return false;
   };
 };

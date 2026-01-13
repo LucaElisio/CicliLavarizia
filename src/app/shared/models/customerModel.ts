@@ -41,5 +41,6 @@ export enum Role {
   Admin = "Admin",
   Customer = "Customer",
   SaleAssistant = "SaleAssistant",
-  Logistic = "Logistic"
+  Logistic = "Logistic",
+  Guest = "Guest"
 }

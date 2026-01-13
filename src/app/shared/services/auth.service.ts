@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { TokenDecoded, TokenResponse } from '../models/tokenModel';
 import { jwtDecode } from 'jwt-decode';
 import { CustomerInfoRequest } from '../models/customerModel';
+import { Role } from '../models/customerModel';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,11 @@ export class AuthService {
   public customerInfo = signal<CustomerInfoRequest | null>(null);
   isRefreshing = false;
   refreshSubject = new BehaviorSubject<string | null>(null);
+
+  TokenGuest: TokenDecoded = {
+    email: '',
+    role: Role.Guest,
+  }
 
   login(userData: LoginRequest): Observable<TokenResponse> {
     return this.http.post<TokenResponse>(`${this.url}/Auth/Login`, userData, {
@@ -60,7 +66,7 @@ export class AuthService {
       this.userInfo.set(jwtDecode(token));
     } else {
       this.isAuthenticated.set(false);
-      this.userInfo.set(null);
+      this.userInfo.set(this.TokenGuest);
     }
   }
 }

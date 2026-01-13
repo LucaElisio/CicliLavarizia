@@ -1,82 +1,114 @@
 <header
-  class="navbar flex bg-primary-800 md:flex-row flex-col items-center justify-between w-full md:py-4 md:px-8 py-3 px-4"
+  class="navbar flex bg-primary-800 items-center justify-between w-full md:py-4 md:px-8 py-3 px-4"
   [class.navbar-hidden]="!isNavbarVisible" [class.navbar-visible]="isNavbarVisible && !isAtTop"
   [class.navbar-at-top]="isAtTop">
 
-  <div class="flex items-center justify-between w-full md:w-auto gap-4">
+  <!-- Sezione sinistra: Logo e Navigation -->
+  <div class="flex items-center gap-8">
+    <!-- Logo -->
     <h1>
-      <a routerLink="/" class="flex items-center gap-2">
-        <span class="material-icons bike text-2xl">pedal_bike</span>
-        <span class="text-xl md:text-2xl font-bold tracking-tight">Cicli L'Avarizia</span>
-      </a>
+      @if (CustomerRole === Roles.Admin || CustomerRole === Roles.Customer || CustomerRole === Roles.Guest) {
+        <a routerLink="/" class="flex items-center gap-2">
+          <span class="material-icons bike text-2xl">pedal_bike</span>
+          <span class="text-xl md:text-2xl font-bold tracking-tight">Cicli L'Avarizia</span>
+        </a>
+      } @else {
+        <div class="flex items-center gap-2">
+          <span class="material-icons bike text-2xl">pedal_bike</span>
+          <span class="text-xl md:text-2xl font-bold tracking-tight">Cicli L'Avarizia</span>
+        </div>
+      }
     </h1>
 
+    <!-- Link specifici per ruolo -->
+    <nav class="hidden md:flex items-center gap-6">
+      @switch (CustomerRole) {
+        @case (Roles.Admin) {
+          <a routerLink="/sales-assistant"
+            class="text-lg font-semibold transition-transform hover:scale-105">
+            Assistente di vendita
+          </a>
+          <a routerLink="/logistic"
+            class="text-lg font-semibold transition-transform hover:scale-105">
+            Logistica
+          </a>
+        }
+        @case (Roles.SaleAssistant) {
+          <a routerLink="/sales-assistant"
+            class="text-lg font-semibold transition-transform hover:scale-105">
+            Assistente di vendita
+          </a>
+        }
+        @case (Roles.Logistic) {
+          <a routerLink="/logistic"
+            class="text-lg font-semibold transition-transform hover:scale-105">
+            Logistica
+          </a>
+        }
 
-    <a routerLink="/products" class="text-sm md:text-lg font-semibold ml-auto md:ml-0 md:hidden">
-      Prodotti
-    </a>
-
-    <div class="flex items-center gap-3 md:hidden">
-      @if (authService.isAuthenticated()) {
-      <p-overlay-badge [value]="cartService.cartProducts()?.totalElements ?? 0" badgeSize="small">
-        <a routerLink="/cart" class="material-icons">shopping_cart</a>
-      </p-overlay-badge>
-      <app-sidebar></app-sidebar>
-      } @else {
-      <a routerLink="/auth/login" class="material-icons">account_circle</a>
       }
-    </div>
+    </nav>
   </div>
 
+  <!-- Sezione centro: Barra di ricerca -->
+  <div class="flex-1 flex justify-center mx-8">
+    @if (CustomerRole === Roles.Customer || CustomerRole === Roles.Admin ||CustomerRole === Roles.Guest) {
+      <div class="relative w-full max-w-md search-wrapper">
+        <form class="w-full">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <span class="material-icons text-gray-400 text-base">search</span>
+          </div>
 
-  <div class="relative w-full max-w-md search-wrapper">
-    <form class="w-full">
-      <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-        <span class="material-icons text-gray-400 text-base">search</span>
+          <input type="search" id="search" [formControl]="searchControl"
+            class="block w-full p-2.5 ps-10 text-sm rounded-xl focus:ring-1 focus:ring-white/20 outline-none"
+            style="background-color: #1c1b22;" placeholder="Cerca prodotti..." />
+        </form>
+
+        @if(searchResultsShow() && searchResults().length > 0) {
+          <div
+            class="absolute top-full start-0 w-full mt-1 border rounded-xl shadow-lg z-50 bg-[#1c1b22] max-h-60 overflow-y-auto custom-scrollbar">
+            @for(product of searchResults(); track $index) {
+              <a routerLink="/product" [queryParams]="{productId: product.productId}" (click)="closeSearch()"
+                class="block px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                {{ product.name }}
+              </a>
+            }
+          </div>
+        }
       </div>
-
-      <input type="search" id="search" [formControl]="searchControl"
-        class="block w-full p-2.5 ps-10 text-sm rounded-xl focus:ring-1 focus:ring-white/20 outline-none"
-        style="background-color: #1c1b22;" placeholder="Cerca prodotti..." />
-    </form>
-
-    @if(searchResultsShow() && searchResults().length > 0) {
-    <div
-      class="absolute top-full start-0 w-full mt-1 border rounded-xl shadow-lg z-50 bg-[#1c1b22] max-h-60 overflow-y-auto custom-scrollbar">
-      @for(product of searchResults(); track $index) {
-      <a routerLink="/product" [queryParams]="{productId: product.productId}" (click)="closeSearch()"
-        class="block px-4 py-2 hover:bg-gray-700 cursor-pointer">
-        {{ product.name }}
-      </a>
-      }
-    </div> }
+    }
   </div>
 
-
-  <div class="hidden md:flex items-center gap-6">
-
-    @if(CustomerRole === Roles.Customer || CustomerRole === Roles.Admin) {
-    <a routerLink="/products" class="text-lg font-semibold transition-transform hover:scale-105">
-      Prodotti
-    </a>
+  <!-- Sezione destra: Prodotti, Carrello, Profilo -->
+  <div class="flex items-center gap-6">
+    
+    <!-- Link Prodotti -->
+    @if (CustomerRole === Roles.Customer || CustomerRole === Roles.Admin || CustomerRole === Roles.Guest) {
+      <a routerLink="/products" 
+        class="hidden md:block text-lg font-semibold transition-transform hover:scale-105">
+        Prodotti
+      </a>
     }
 
-    @if(CustomerRole !== undefined) {
-    @if (authService.isAuthenticated() && (CustomerRole === Roles.Customer || CustomerRole === Roles.Admin)) {
-    <p-overlay-badge [style]="{outline: 'unset'}" [value]="cartService.cartProducts()?.totalElements ?? 0"
-      badgeSize="small">
-      <a routerLink="/cart" class="material-icons">shopping_cart</a>
-    </p-overlay-badge>
+    <!-- Carrello (solo per Customer e Admin) -->
+    @if (CustomerRole === Roles.Customer || CustomerRole === Roles.Admin || CustomerRole === Roles.Guest) {
+      <p-overlay-badge [style]="{outline: 'unset'}" [value]="cartService.cartProducts()?.totalElements ?? 0"
+        badgeSize="small">
+        <a routerLink="/cart">
+          <span class="material-icons cart text-3xl">shopping_cart</span>
+        </a>
+      </p-overlay-badge>
     }
-    }
+
+    <!-- Profilo o Login -->
     <nav>
       <ul class="flex items-center">
         @if (authService.isAuthenticated()) {
-        <li><app-sidebar></app-sidebar></li>
+          <li><app-sidebar></app-sidebar></li>
         } @else {
-        <li>
-          <a routerLink="/auth/login" pButton label="Login" class="transition-transform hover:scale-105"></a>
-        </li>
+          <li>
+            <a routerLink="/auth/login" pButton label="Login" class="transition-transform hover:scale-105"></a>
+          </li>
         }
       </ul>
     </nav>

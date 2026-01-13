@@ -22,7 +22,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 export class Review {
   private reviewService = inject(ReviewService);
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   @Input() productId!: number;

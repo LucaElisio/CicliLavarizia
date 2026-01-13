@@ -5,15 +5,19 @@ import { CommonModule } from '@angular/common';
 import { Button } from "primeng/button";
 import { RouterLink } from "@angular/router";
 import { DividerModule } from 'primeng/divider';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-cart',
-  imports: [CardModule, CommonModule, Button, RouterLink, DividerModule],
+  imports: [CardModule, CommonModule, Button, RouterLink, DividerModule, ConfirmDialogModule],
+  providers: [ConfirmationService],
   templateUrl: './cart.html',
   styleUrl: './cart.css',
 })
 export class CartComponent implements OnInit {
   cartService = inject(CartService);
+  private confirmationService = inject(ConfirmationService);
 
   cartProducts = computed(() => this.cartService.cartProducts());
   totalElements = computed(() => this.cartService.cartProducts()?.totalElements ?? 0);
@@ -79,15 +83,29 @@ export class CartComponent implements OnInit {
   }
 
   removeProduct(productId: number) {
-    if (confirm('Sei sicuro di voler rimuovere questo prodotto dal carrello?')) {
-      this.removeItemFromCart(productId);
-    }
+    this.confirmationService.confirm({
+      message: 'Sei sicuro di voler rimuovere questo prodotto dal carrello?',
+      header: 'Conferma Rimozione',
+      acceptLabel: 'Sì, rimuovi',
+      rejectLabel: 'Annulla',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-outlined',
+      accept: () => {
+        this.removeItemFromCart(productId);
+      },
+      reject: () => {
+        // Dialog chiuso senza azione
+      }
+    });
   }
 
   removeItemFromCart(productId: number) {
     this.cartService.removeFromCart(productId).subscribe({
       next: () => {
-        this.getCart();
+        // Delay per evitare il flash del dialog
+        setTimeout(() => {
+          this.getCart();
+        }, 300);
       },
       error: (err) => {
         console.log(err);
