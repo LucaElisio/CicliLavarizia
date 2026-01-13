@@ -61,13 +61,14 @@
     </a>
     }
 
+    @if(CustomerRole !== undefined) {
     @if (authService.isAuthenticated() && (CustomerRole === Roles.Customer)) {
     <p-overlay-badge [style]="{outline: 'unset'}" [value]="cartService.cartProducts()?.totalElements ?? 0"
       badgeSize="small">
       <a routerLink="/cart" class="material-icons">shopping_cart</a>
     </p-overlay-badge>
     }
-
+    }
     <nav>
       <ul class="flex items-center">
         @if (authService.isAuthenticated()) {
