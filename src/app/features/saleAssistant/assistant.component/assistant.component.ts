@@ -17,10 +17,11 @@ import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { ProductDiscount } from '../../../shared/models/discountModel';
 import { DatePickerModule } from 'primeng/datepicker';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-assistant.component',
-  imports: [CardModule, InputTextModule, InputNumberModule, ButtonModule, ToastModule, FormsModule, CommonModule, SelectModule, TableModule, DialogModule, DatePickerModule],
+  imports: [CardModule, InputTextModule, InputNumberModule, ButtonModule, ToastModule, FormsModule, CommonModule, SelectModule, TableModule, DialogModule, DatePickerModule, TooltipModule],
   providers: [MessageService],
   templateUrl: './assistant.component.html',
   styleUrl: './assistant.component.css',
@@ -92,6 +93,18 @@ export class AssistantComponent implements OnInit {
     this.loadCategories();
     this.loadModels();
     this.loadDiscounts();
+    this.loadProducts();
+  }
+
+  loadProducts(): void {
+    this.productService.getProducts(1, 1000, 'All').subscribe({
+      next: (data) => {
+        this.products.set(data.products);
+      },
+      error: (err: any) => {
+        console.error('Errore nel caricamento dei prodotti:', err);
+      }
+    });
   }
 
   loadCategories(): void {
@@ -202,6 +215,50 @@ export class AssistantComponent implements OnInit {
       
       reader.readAsArrayBuffer(file);
     }
+  }
+
+  removeSingleProduct(productId: number): void {
+    this.saleService.removeSingleProduct(productId).subscribe({
+      next: () => {
+        this.messageService.add({ 
+          severity: 'success', 
+          summary: 'Prodotto rimosso', 
+          detail: 'Il prodotto è stato eliminato con successo',
+          life: 3000 
+        });
+        this.loadProducts();
+      },
+      error: (err) => {
+        console.error('Errore rimozione prodotto:', err);
+        this.messageService.add({ 
+          severity: 'error', 
+          summary: 'Errore eliminazione prodotto', 
+          life: 5000 
+        });
+      }
+    });
+  }
+
+  removeAllProducts(productNumber: string): void {
+    this.saleService.removeAllProducts(productNumber).subscribe({
+      next: () => {
+        this.messageService.add({ 
+          severity: 'success', 
+          summary: 'Prodotti rimossi', 
+          detail: `Tutti i prodotti con numero ${productNumber} sono stati eliminati`,
+          life: 3000 
+        });
+        this.loadProducts();
+      },
+      error: (err) => {
+        console.error('Errore rimozione prodotti:', err);
+        this.messageService.add({ 
+          severity: 'error', 
+          summary: 'Errore eliminazione prodotti', 
+          life: 5000 
+        });
+      }
+    });
   }
 
   // === CATEGORIE ===
@@ -358,5 +415,11 @@ export class AssistantComponent implements OnInit {
   // === SWITCH SEZIONE ===
   setActiveSection(section: 'product' | 'category' | 'model' | 'discount'): void {
     this.activeSection = section;
+  }
+
+  // Metodo helper per ottenere il nome della categoria dall'ID
+  getCategoryName(categoryId: number): string {
+    const category = this.categories().find(c => c.productCategoryId === categoryId);
+    return category ? category.name : 'N/A';
   }
 }

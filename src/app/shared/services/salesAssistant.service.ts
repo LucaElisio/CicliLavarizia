@@ -26,7 +26,7 @@ export class SaleService {
     }
 
     removeSingleProduct(productId: number): Observable<void> {
-        return this.http.delete<void>(`${this.url}/SalesAssistant/Rimuovi%20singolo%20prodotto${productId}`);
+        return this.http.delete<void>(`${this.url}/SalesAssistant/Rimuovi%20singolo%20prodotto/${productId}`);
     }
 
     removeAllProducts(prNumber: string): Observable<void> {

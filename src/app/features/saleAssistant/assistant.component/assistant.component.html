@@ -167,6 +167,53 @@
             </div>
         </ng-template>
         </p-card>
+
+        <!-- Tabella Prodotti -->
+        <p-card [style]="{'background-color': 'rgb(78, 86, 80)', 'border-radius': '8px', 'margin-top': '24px'}">
+            <ng-template pTemplate="header">
+                <div class="p-4">
+                    <h2 class="text-2xl font-bold" style="color: rgb(235, 238, 232);">
+                        <i class="material-icons align-middle mr-2">list</i>
+                        Lista Prodotti
+                    </h2>
+                </div>
+            </ng-template>
+            <p-table [value]="products()" [paginator]="true" [rows]="10">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="color: rgb(235, 238, 232);">ID</th>
+                        <th style="color: rgb(235, 238, 232);">Nome</th>
+                        <th style="color: rgb(235, 238, 232);">Numero</th>
+                        <th style="color: rgb(235, 238, 232);">Prezzo</th>
+                        <th style="color: rgb(235, 238, 232);">Categoria</th>
+                        <th style="color: rgb(235, 238, 232);">Azioni</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product>
+                    <tr>
+                        <td style="color: rgb(235, 238, 232);">{{product.productId}}</td>
+                        <td style="color: rgb(235, 238, 232);">{{product.name}}</td>
+                        <td style="color: rgb(235, 238, 232);">{{product.productNumber}}</td>
+                        <td style="color: rgb(235, 238, 232);">{{product.listPrice | currency:'EUR'}}</td>
+                        <td style="color: rgb(235, 238, 232);">{{getCategoryName(product.productCategoryId)}}</td>
+                        <td>
+                            <p-button 
+                                [style]="{'background-color': 'transparent', 'color': 'rgb(255, 100, 100)', 'border': 'none', 'margin-right': '8px'}"
+                                (onClick)="removeSingleProduct(product.productId)"
+                                pTooltip="Rimuovi questo prodotto">
+                                <i class="material-icons">delete</i>
+                            </p-button>
+                            <p-button 
+                                [style]="{'background-color': 'transparent', 'color': 'rgb(255, 150, 80)', 'border': 'none'}"
+                                (onClick)="removeAllProducts(product.productNumber)"
+                                pTooltip="Rimuovi tutti i prodotti con questo numero">
+                                <i class="material-icons">delete_sweep</i>
+                            </p-button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-card>
     </div>
 
     <!-- SEZIONE CATEGORIE -->
