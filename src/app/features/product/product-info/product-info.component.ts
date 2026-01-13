@@ -5,6 +5,7 @@ import { ProductService } from '../../../shared/services/product.service';
 import { ProductResponse } from '../../../shared/models/productModel';
 import { CardModule } from 'primeng/card';
 import { CartService } from '../../../shared/services/cart.service';
+import { AuthService } from '../../../shared/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { DividerModule } from 'primeng/divider';
@@ -23,6 +24,7 @@ export class ProductInfoComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private productService = inject(ProductService);
   private cartService = inject(CartService);
+  private authService = inject(AuthService);
   private messageService = inject(MessageService);
   location = inject(Location);
 
@@ -52,20 +54,42 @@ export class ProductInfoComponent implements OnInit {
 
   addToCart(productId: number, quantity: number = 1) {
     console.log(`Aggiungo al carrello il prodotto con ID: ${productId}, Quantità: ${quantity}`);
-    this.cartService.addToCart(productId, quantity).subscribe({
-      next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Elemento aggiunto al carrello!',
-          life: 3000
-        });
-        this.cartService.getCart().subscribe({
-          next: (data) => {
-            this.cartService.cartProducts.set(data);
-          },
-        });
-      },
-    });
+    const isAuth = this.authService.isAuthenticated();
+    
+    if (isAuth) {
+      // Utente autenticato: usa il carrello del DB
+      this.cartService.addToCart(productId, quantity).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Elemento aggiunto al carrello!',
+            life: 3000
+          });
+          this.cartService.getCart().subscribe({
+            next: (data) => {
+              this.cartService.cartProducts.set(data);
+            },
+          });
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Errore',
+            detail: 'Impossibile aggiungere al carrello',
+            life: 3000
+          });
+        }
+      });
+    } else {
+      // Utente non autenticato: usa il carrello locale
+      this.cartService.addToLocalCart(productId, quantity);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Elemento aggiunto al carrello!',
+        detail: 'Effettua il login per completare l\'acquisto',
+        life: 3000
+      });
+    }
   }
 
   getModel(): void {

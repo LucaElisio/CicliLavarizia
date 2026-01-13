@@ -92,7 +92,7 @@
 
     <!-- Carrello (solo per Customer e Admin) -->
     @if (CustomerRole === Roles.Customer || CustomerRole === Roles.Admin || CustomerRole === Roles.Guest) {
-      <p-overlay-badge [style]="{outline: 'unset'}" [value]="cartService.cartProducts()?.totalElements ?? 0"
+      <p-overlay-badge [style]="{outline: 'unset'}" [value]="cartItemsCount()"
         badgeSize="small">
         <a routerLink="/cart">
           <span class="material-icons cart text-3xl">shopping_cart</span>

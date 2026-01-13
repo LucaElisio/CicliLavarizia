@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
+import { CartService } from '../../shared/services/cart.service';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -19,6 +20,7 @@ import { LoginRequest, RegisterRequest } from '../../shared/models/authModel';
 import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
+import { Role } from '../../shared/models/customerModel';
 
 @Component({
   selector: 'app-auth',
@@ -41,6 +43,7 @@ import { DialogModule } from 'primeng/dialog';
 })
 export class AuthComponent implements OnInit {
   private authService = inject(AuthService);
+  private cartService = inject(CartService);
   private activatedRoute = inject(ActivatedRoute);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
@@ -111,18 +114,28 @@ export class AuthComponent implements OnInit {
           this.authService.changeAuthState();
           this.error.set(null);
           this.authForm.reset();
-          this.isLoading.set(false);
-          if (this.authService.userInfo()?.role === 'Admin' || this.authService.userInfo()?.role === 'Customer') {
-            this.router.navigate(['/']);
-            return;
-          }
-          else if (this.authService.userInfo()?.role === 'Logistic') {
+          
+          const userRole = this.authService.userInfo()?.role;
+          
+          // Trasferisci il carrello locale al DB se l'utente è Customer o Admin
+          if (userRole === Role.Admin || userRole === Role.Customer) {
+            this.cartService.mergeLocalCartToServer().subscribe({
+              next: () => {
+                this.isLoading.set(false);
+                this.router.navigate(['/']);
+              },
+              error: (err) => {
+                console.error('Errore merge carrello:', err);
+                this.isLoading.set(false);
+                this.router.navigate(['/']);
+              }
+            });
+          } else if (userRole === Role.Logistic) {
+            this.isLoading.set(false);
             this.router.navigate(['/logistic']);
-            return;
-          }
-          else if (this.authService.userInfo()?.role === 'SaleAssistant') {
+          } else if (userRole === Role.SaleAssistant) {
+            this.isLoading.set(false);
             this.router.navigate(['/sales-assistant']);
-            return;
           }
         },
         error: (err) => {

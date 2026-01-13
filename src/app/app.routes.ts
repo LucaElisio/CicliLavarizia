@@ -26,7 +26,7 @@ export const routes: Routes = [
   { path: 'auth/delete', component: DeleteComponent, canActivate: [authGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
   { path: 'products', component: ProductComponent, canActivate: [roleGuard([Role.Customer, Role.Admin, Role.Guest])] },
-  { path: 'cart', component: CartComponent, canActivate: [authGuard, roleGuard([Role.Admin, Role.Customer, Role.Guest])] },
+  { path: 'cart', component: CartComponent, canActivate: [roleGuard([Role.Admin, Role.Customer, Role.Guest])] },
   { path: 'sales', component: SaleComponent, canActivate: [authGuard, roleGuard([Role.Admin, Role.Customer])] },
   { path: 'orders', component: OrderComponent, canActivate: [authGuard, roleGuard([Role.Admin, Role.Customer])] },
   { path: 'logistic', component: LogisticComponent, canActivate: [authGuard, roleGuard([Role.Admin, Role.Logistic])] },

@@ -1,4 +1,4 @@
-import { Component, inject, HostListener, signal, OnInit } from '@angular/core';
+import { Component, inject, HostListener, signal, OnInit, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -36,6 +36,16 @@ export class NavbarComponent implements OnInit {
 
   CustomerRole = this.authService.userInfo()?.role;
   Roles = Role;
+
+  // Calcola il numero totale di elementi nel carrello (sia locale che server)
+  cartItemsCount = computed(() => {
+    if (this.authService.isAuthenticated()) {
+      return this.cartService.cartProducts()?.totalElements ?? 0;
+    } else {
+      const localCart = this.cartService.localCartItems();
+      return localCart.reduce((sum, item) => sum + item.quantity, 0);
+    }
+  });
 
   isNavbarVisible = true;
   isAtTop = true;

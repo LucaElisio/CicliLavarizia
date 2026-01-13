@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CartService } from '../../shared/services/cart.service';
 import { CardModule } from 'primeng/card';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,9 @@ import { RouterLink } from "@angular/router";
 import { DividerModule } from 'primeng/divider';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { AuthService } from '../../shared/services/auth.service';
+import { ProductService } from '../../shared/services/product.service';
+import { forkJoin, of } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
@@ -18,13 +21,34 @@ import { ConfirmationService } from 'primeng/api';
 export class CartComponent implements OnInit {
   cartService = inject(CartService);
   private confirmationService = inject(ConfirmationService);
+  private authService = inject(AuthService);
+  private productService = inject(ProductService);
+
+  // Signal per i prodotti del carrello locale caricati dal server
+  localCartProducts = signal<any[]>([]);
+  isLoadingLocalCart = signal<boolean>(false);
 
   cartProducts = computed(() => this.cartService.cartProducts());
-  totalElements = computed(() => this.cartService.cartProducts()?.totalElements ?? 0);
-  totalPrice = computed(() => this.cartService.cartProducts()?.totalAmount ?? 0);
+  totalElements = computed(() => {
+    if (!this.authService.isAuthenticated()) {
+      return this.localCartProducts().reduce((sum, p) => sum + p.quantity, 0);
+    }
+    return this.cartService.cartProducts()?.totalElements ?? 0;
+  });
+  
+  totalPrice = computed(() => {
+    if (!this.authService.isAuthenticated()) {
+      return this.localCartProducts().reduce((sum, p) => sum + (p.listPrice * p.quantity), 0);
+    }
+    return this.cartService.cartProducts()?.totalAmount ?? 0;
+  });
 
   // Raggruppa prodotti duplicati con quantità
   groupedProducts = computed(() => {
+    if (!this.authService.isAuthenticated()) {
+      return this.localCartProducts();
+    }
+    
     const products = this.cartService.cartProducts()?.products;
     if (!products) return [];
 
@@ -42,7 +66,11 @@ export class CartComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.getCart();
+    if (this.authService.isAuthenticated()) {
+      this.getCart();
+    } else {
+      this.loadLocalCart();
+    }
   }
 
   getCart() {
@@ -51,26 +79,48 @@ export class CartComponent implements OnInit {
         this.cartService.cartProducts.set(data);
       },
       error: (err) => {
-        console.log(err);
+        console.error('Errore recupero carrello dal server:', err);
+        // Se l'utente non è autenticato e il backend ritorna un errore,
+        // ignoriamo l'errore perché useremo il carrello locale
       },
     });
   }
 
-  increaseQuantity(productId: number, currentQuantity: number) {
-    this.cartService.addToCart(productId, currentQuantity + 1).subscribe({
-      next: () => {
-        this.getCart();
+  loadLocalCart() {
+    const localCart = this.cartService.getLocalCart();
+    if (localCart.length === 0) {
+      this.localCartProducts.set([]);
+      this.isLoadingLocalCart.set(false);
+      return;
+    }
+
+    this.isLoadingLocalCart.set(true);
+
+    // Carica i dettagli di tutti i prodotti nel carrello locale
+    const productRequests = localCart.map(item =>
+      this.productService.getProductById(item.productId)
+    );
+
+    forkJoin(productRequests).subscribe({
+      next: (products) => {
+        const productsWithQuantity = products.map((product, index) => ({
+          ...product,
+          quantity: localCart[index].quantity
+        }));
+        this.localCartProducts.set(productsWithQuantity);
+        this.isLoadingLocalCart.set(false);
       },
       error: (err) => {
-        console.log(err);
-        alert('Errore durante l\'aggiornamento della quantità');
+        console.error('Errore caricamento prodotti carrello locale:', err);
+        this.localCartProducts.set([]);
+        this.isLoadingLocalCart.set(false);
       }
     });
   }
 
-  decreaseQuantity(productId: number, currentQuantity: number) {
-    if (currentQuantity > 1) {
-      this.cartService.addToCart(productId, currentQuantity - 1).subscribe({
+  increaseQuantity(productId: number, currentQuantity: number) {
+    if (this.authService.isAuthenticated()) {
+      this.cartService.addToCart(productId, currentQuantity + 1).subscribe({
         next: () => {
           this.getCart();
         },
@@ -79,6 +129,30 @@ export class CartComponent implements OnInit {
           alert('Errore durante l\'aggiornamento della quantità');
         }
       });
+    } else {
+      // Carrello locale - incrementa la quantità
+      this.cartService.updateLocalCartQuantity(productId, currentQuantity + 1);
+      this.loadLocalCart();
+    }
+  }
+
+  decreaseQuantity(productId: number, currentQuantity: number) {
+    if (currentQuantity > 1) {
+      if (this.authService.isAuthenticated()) {
+        this.cartService.addToCart(productId, currentQuantity - 1).subscribe({
+          next: () => {
+            this.getCart();
+          },
+          error: (err) => {
+            console.log(err);
+            alert('Errore durante l\'aggiornamento della quantità');
+          }
+        });
+      } else {
+        // Carrello locale - riduci la quantità
+        this.cartService.updateLocalCartQuantity(productId, currentQuantity - 1);
+        this.loadLocalCart();
+      }
     }
   }
 
@@ -91,7 +165,11 @@ export class CartComponent implements OnInit {
       acceptButtonStyleClass: 'p-button-danger',
       rejectButtonStyleClass: 'p-button-outlined',
       accept: () => {
-        this.removeItemFromCart(productId);
+        if (this.authService.isAuthenticated()) {
+          this.removeItemFromCart(productId);
+        } else {
+          this.removeItemFromLocalCart(productId);
+        }
       },
       reject: () => {
         // Dialog chiuso senza azione
@@ -111,5 +189,12 @@ export class CartComponent implements OnInit {
         console.log(err);
       },
     });
+  }
+
+  removeItemFromLocalCart(productId: number) {
+    this.cartService.removeFromLocalCart(productId);
+    setTimeout(() => {
+      this.loadLocalCart();
+    }, 300);
   }
 }
