@@ -17,10 +17,14 @@ export const errorsInterceptor: HttpInterceptorFn = (req, next) => {
         return throwError(() => error);
       }
 
+      if (error.status === 401) {
+        return throwError(() => error);
+      }
+
       // Naviga verso una pagina dedicata agli errori, passando il codice
       setTimeout(() => {
         router.navigate(['/error'], {
-          queryParams: { code: error.status }
+          queryParams: { code: error.status },
         });
       }, 0);
 

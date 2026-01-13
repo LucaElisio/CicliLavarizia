@@ -8,24 +8,26 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (req.url.startsWith("/auth/login") || req.url.startsWith("/auth/register")) {
+  if (
+    req.url.startsWith('/auth/login') ||
+    req.url.startsWith('/auth/register') ||
+    req.url.startsWith('/auth/refresh')
+  ) {
     return next(req);
   }
 
-  const token = localStorage.getItem("token");
-  const authReq = token
-    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
-    : req;
+  const token = localStorage.getItem('token');
+  const authReq = token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
 
   return next(authReq).pipe(
     catchError((err: HttpErrorResponse) => {
       if (err.status === 401 && token) {
         return authService.refresh().pipe(
           switchMap((data) => {
-            localStorage.setItem("token", data.token);
+            localStorage.setItem('token', data.token);
             authService.changeAuthState();
             const retryReq = req.clone({
-              setHeaders: { Authorization: `Bearer ${data.token}` }
+              setHeaders: { Authorization: `Bearer ${data.token}` },
             });
             return next(retryReq);
           }),
@@ -33,12 +35,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             localStorage.removeItem('token');
             authService.changeAuthState();
             router.navigate(['/auth/login']);
-            return throwError(() => new Error("Sessione scaduta, effettua il login"));
+            return throwError(() => new Error('Sessione scaduta, effettua il login'));
           })
         );
       } else if (err.status === 0) {
-        console.warn("Nessuna connessione o server offline");
-        return throwError(() => new Error("Server non raggiungibile"));
+        console.warn('Nessuna connessione o server offline');
+        return throwError(() => new Error('Server non raggiungibile'));
       }
 
       return throwError(() => err);
