@@ -57,9 +57,9 @@ export class AuthComponent implements OnInit {
     const url = this.activatedRoute.url.subscribe({
       next: (data) => {
         this.isLoginPage = data[data.length - 1].path === 'login';
+        this.generateForm();
       },
     });
-    this.generateForm();
   }
 
   private generateForm() {
