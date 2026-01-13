@@ -1,0 +1,102 @@
+<table class="orders-table">
+    <thead>
+        <tr>
+            <th>Numero Ordine</th>
+            <th>Stato</th>
+            <th>Totale (€)</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @for (order of orders$ | async; track order.salesOrderId) {
+
+        <!-- RIGA PRINCIPALE -->
+        <tr>
+            <td>{{ order.salesOrderNumber }}</td>
+            <td>{{ getStatusLabel(order.status) }}</td>
+            <td>{{ order.totalDue }} €</td>
+            <td class="actions">
+                <button class="btn select" (click)="openDetail(order)">
+                    <span class="material-icons">info</span>
+                </button>
+            </td>
+        </tr>
+
+        <!-- DETTAGLIO -->
+        @if (activeOrder?.salesOrderId === order.salesOrderId) {
+        <tr class="detail-row">
+            <td colspan="4">
+
+                <!-- VISUALIZZAZIONE -->
+                @if (rowMode === 'detail') {
+                <div class="order-detail">
+                    <p><strong>Data ordine:</strong> {{ order.orderDate }}</p>
+                    <p><strong>Cliente:</strong> {{ order.customerId }}</p>
+                    <p><strong>Ship Date:</strong> {{ order.shipDate }}</p>
+                    <p><strong>Due Date:</strong> {{ order.dueDate }}</p>
+
+                    <button class="btn close" (click)="closeDetail()"><span class="material-icons">arrow_back</span></button>
+
+                    <button class="btn select" [disabled]="!canEdit(order)" (click)="openEdit()">
+                        <span class="material-icons">edit</span>
+                    </button>
+
+                    <button class="btn danger" [disabled]="!canEdit(order)" (click)="askDelete()">
+                        <span class="material-icons">delete</span>
+                    </button>
+                </div>
+                }
+
+                <!-- MODIFICA -->
+                @if (rowMode === 'edit') {
+                <form [formGroup]="editForm" class="edit-form">
+
+                    <label>
+                        Ship Date
+                        <input type="date" formControlName="shipDate">
+                    </label>
+
+                    <label>
+                        Due Date
+                        <input type="date" formControlName="dueDate">
+                    </label>
+
+                    <label>
+                        Stato
+                        <select formControlName="status">
+
+                            @for (s of editableStatuses; track $index) {
+                                <option [value]="s" class="status">
+                                    {{ statusMap[s] }}
+                                </option>
+                            }
+
+
+                            <!-- <option *ngFor="let s of editableStatuses" [value]="s">
+                                {{ statusMap[s] }}
+                            </option> -->
+                        </select>
+                    </label>
+
+                    <button class="btn select" type="button" (click)="saveEdit()">
+                        <span class="material-icons">save</span>
+                    </button>
+
+                    <button class="btn close" type="button" (click)="cancelEdit()">
+                        <span class="material-icons">cancel</span>
+                    </button>
+                </form>
+                }
+
+            </td>
+        </tr>
+        }
+        }
+    </tbody>
+</table>
+
+<!-- PRIME NG -->
+<p-confirmDialog></p-confirmDialog>
+<p-toast position="center" key="center"></p-toast>
+

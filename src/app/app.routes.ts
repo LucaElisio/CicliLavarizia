@@ -10,6 +10,7 @@ import { CartComponent } from './features/cart/cart';
 import { ProductInfoComponent } from './features/product/product-info/product-info.component';
 import { SaleComponent } from './features/sale/sale.component/sale.component';
 import { OrderComponent } from './features/order/order.component';
+import { LogisticComponent } from './features/logistic/logistic.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -23,4 +24,6 @@ export const routes: Routes = [
   { path: 'product', component: ProductInfoComponent },
   { path: 'sales', component: SaleComponent, canActivate: [authGuard] },
   { path: 'orders', component: OrderComponent, canActivate: [authGuard] },
+  { path: 'logistic', component: LogisticComponent, canActivate: [authGuard] },
+
 ];
