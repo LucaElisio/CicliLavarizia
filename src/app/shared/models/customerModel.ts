@@ -37,6 +37,12 @@ export interface CustomerUpdateRequest {
   phone: string;
 }
 
+export interface CustomerAdminUpdateRequest {
+  customerId: number;
+  emailAddress: string;
+  role: Role;
+}
+
 export enum Role {
   Admin = "Admin",
   Customer = "Customer",

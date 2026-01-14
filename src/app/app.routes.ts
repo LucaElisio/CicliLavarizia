@@ -16,6 +16,7 @@ import { AssistantComponent } from './features/saleAssistant/assistant.component
 import { Role } from './shared/models/customerModel';
 import { PersonalReviews } from './features/profile/personal-reviews/personal-reviews';
 import { ErrorComponent } from './core/error/error.component';
+import { AdminComponent } from './features/admin.component/admin.component';
 
 
 export const routes: Routes = [
@@ -34,5 +35,6 @@ export const routes: Routes = [
   { path: 'sales', component: SaleComponent, canActivate: [authGuard, roleGuard([Role.Admin, Role.Customer])] },  
   { path: 'sales-assistant', component: AssistantComponent, canActivate: [authGuard, roleGuard([Role.SaleAssistant, Role.Admin])] },
   {path: 'personal-reviews', component: PersonalReviews, canActivate: [authGuard, roleGuard([Role.Customer, Role.Admin])]},
+  {path: 'admin', component: AdminComponent, canActivate: [authGuard, roleGuard([Role.Admin])]},
   { path: 'error', component: ErrorComponent },
 ];
