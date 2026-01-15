@@ -136,11 +136,11 @@ export class AssistantComponent implements OnInit {
   //Gestione prodotti
   InsertProduct() {
     // Validazione campi obbligatori
-    if (!this.newProduct.name || !this.newProduct.productNumber || !this.newProduct.productCategoryId) {
+    if (!this.newProduct.name || !this.newProduct.productNumber || !this.newProduct.productCategoryId || !this.newProduct.sellStartDate) {
       this.messageService.add({
         severity: 'warn',
         summary: 'Campi obbligatori mancanti',
-        detail: 'Compila tutti i campi obbligatori (Nome, Numero Prodotto, Categoria)',
+        detail: 'Compila tutti i campi obbligatori (Nome, Numero Prodotto, Categoria, Data Inizio Vendita)',
         life: 5000
       });
       return;
