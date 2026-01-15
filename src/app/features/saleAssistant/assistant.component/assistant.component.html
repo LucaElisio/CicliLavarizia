@@ -311,7 +311,7 @@
                             <p-button 
                                 [style]="{'background-color': 'transparent', 'color': 'rgb(170, 200, 170)', 'border': 'none', 'margin-right': '8px'}"
                                 (onClick)="openModelDescriptionDialog(model)"
-                                pTooltip="Modifica descrizione">
+                                pTooltip="Modifica modello">
                                 <i class="material-icons">edit</i>
                             </p-button>
                             <p-button 
@@ -593,23 +593,34 @@
 </p-dialog>
 
 <!-- DIALOG MODIFICA DESCRIZIONE MODELLO -->
-<p-dialog [(visible)]="displayModelDescriptionDialog" [modal]="true" [style]="{width: '500px'}" header="Modifica Descrizione Modello">
+<p-dialog [(visible)]="displayModelDescriptionDialog" [modal]="true" [style]="{width: '500px'}" header="Modifica Modello">
     <div class="space-y-4 p-4" *ngIf="selectedModelForDescription">
         <div>
-            <label class="block mb-2" style="color: rgb(190, 195, 188);">Nome Modello</label>
-            <input type="text" pInputText [value]="selectedModelForDescription.name" disabled class="w-full" />
+            <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
+                <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">label</i>
+                Nome Modello *
+            </label>
+            <input type="text" pInputText [(ngModel)]="selectedModelForDescription.name" class="w-full" 
+                placeholder="Inserisci nome modello" />
         </div>
         <div>
-            <label class="block mb-2" style="color: rgb(190, 195, 188);">Descrizione</label>
-            <textarea pInputText [(ngModel)]="selectedModelForDescription.modelDescription" class="w-full" rows="4"></textarea>
+            <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
+                <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">description</i>
+                Descrizione
+            </label>
+            <textarea pInputText [(ngModel)]="selectedModelForDescription.modelDescription" class="w-full" rows="4"
+                placeholder="Inserisci descrizione"></textarea>
         </div>
     </div>
     <ng-template pTemplate="footer">
         <p-button [outlined]="true" (onClick)="displayModelDescriptionDialog = false">
             <i class="material-icons mr-2">close</i> Annulla
         </p-button>
-        <p-button [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}" (onClick)="updateModelDescription()">
-            <i class="material-icons mr-2">check</i> Salva
+        <p-button 
+            [disabled]="!selectedModelForDescription?.name"
+            [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}" 
+            (onClick)="updateModelDescription()">
+            <i class="material-icons mr-2">check_circle</i> Salva
         </p-button>
     </ng-template>
 </p-dialog>

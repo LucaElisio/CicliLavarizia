@@ -441,28 +441,40 @@ export class AssistantComponent implements OnInit {
 
   updateModelDescription(): void {
     if (!this.selectedModelForDescription || !this.selectedModelForDescription.name) {
-      this.messageService.add({ severity: 'error', summary: 'Nome modello mancante', life: 5000 });
+      this.messageService.add({ severity: 'warn', summary: 'Nome modello obbligatorio', life: 3000 });
       return;
     }
 
-    console.log('Updating description for model:', this.selectedModelForDescription.name);
+    console.log('Updating model:', this.selectedModelForDescription.productModelId);
+    console.log('New name:', this.selectedModelForDescription.name);
     console.log('New description:', this.selectedModelForDescription.modelDescription);
 
-    this.saleService.updateProductDescription(
-      this.selectedModelForDescription.name,
-      this.selectedModelForDescription.modelDescription
+    // Prima aggiorna il nome
+    this.saleService.updateProductModel(
+      this.selectedModelForDescription.productModelId,
+      this.selectedModelForDescription.name
     ).subscribe({
-      next: (response) => {
-        console.log('Description updated successfully:', response);
-        this.messageService.add({ severity: 'success', summary: 'Descrizione aggiornata', life: 3000 });
-        this.displayModelDescriptionDialog = false;
-        this.loadModels();
+      next: () => {
+        // Poi aggiorna la descrizione
+        this.saleService.updateProductDescription(
+          this.selectedModelForDescription!.name,
+          this.selectedModelForDescription!.modelDescription
+        ).subscribe({
+          next: () => {
+            console.log('Model updated successfully');
+            this.messageService.add({ severity: 'success', summary: 'Modello aggiornato', life: 3000 });
+            this.displayModelDescriptionDialog = false;
+            this.loadModels();
+          },
+          error: (err) => {
+            console.error('Errore aggiornamento descrizione:', err);
+            this.messageService.add({ severity: 'error', summary: 'Errore aggiornamento descrizione', life: 5000 });
+          }
+        });
       },
       error: (err) => {
-        console.error('Errore aggiornamento descrizione:', err);
-        console.error('Error status:', err.status);
-        console.error('Error body:', err.error);
-        this.messageService.add({ severity: 'error', summary: 'Errore aggiornamento descrizione', life: 5000 });
+        console.error('Errore aggiornamento nome:', err);
+        this.messageService.add({ severity: 'error', summary: 'Errore aggiornamento nome', life: 5000 });
       }
     });
   }
