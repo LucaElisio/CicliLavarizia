@@ -64,6 +64,7 @@
 
 /* Dettaglio */
 .detail-row td {
+    /* width: 100%; */
     background-color: #1f1f1f;
 }
 
@@ -77,6 +78,7 @@
     display: flex;
     gap: 12px;
     margin-top: 12px;
+    align-items: center;
 }
 
 .edit-form label {

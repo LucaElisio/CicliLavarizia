@@ -17,6 +17,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { DatePickerModule } from 'primeng/datepicker';
+import { SelectModule } from 'primeng/select';
+
 
 
 @Component({
@@ -27,7 +30,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     ReactiveFormsModule,
     ConfirmDialogModule,
     ButtonModule,
-    ToastModule
+    ToastModule,
+    SelectModule,
+    DatePickerModule
   ],
   providers: [ConfirmationService, MessageService], //Provider LOCALI
   templateUrl: './logistic.component.html',
@@ -42,7 +47,7 @@ export class LogisticComponent {
   //- closed: nessun dettaglio/modifica aperto
   //- detail: visualizzazione dettaglio
   //- edit: modalità modifica
-  rowMode: 'closed' | 'detail' | 'edit' = 'closed'; 
+  rowMode: 'closed' | 'detail' | 'edit' = 'closed';
 
   editForm!: FormGroup; //Reactive form per la modifica dell'ordine
 
@@ -56,8 +61,14 @@ export class LogisticComponent {
     6: 'Cancellato'
   };
 
+
   /** Elenco status che permettono la modifica */
   editableStatuses = [1, 2, 3, 5];
+
+  statusOptions = this.editableStatuses.map(s => ({
+    label: this.statusMap[s],
+    value: s
+  }));
 
   constructor(
     private logisticService: LogisticService,
@@ -83,11 +94,23 @@ export class LogisticComponent {
     return this.editableStatuses.includes(order.status);
   }
 
-  //Converte una data ISO(stringa) in formato YYYY-MM-DD compatibile per <input type=date>
-  private toDateInput(value: string | null | undefined): string | null {
+  /** Converte stringa ISO in Date */
+  private toDate(value?: string | null): Date | null {
     if (!value) return null;
-    return value.substring(0, 10); // YYYY-MM-DD
+    return new Date(value);
   }
+
+  /** Converte Date in YYYY-MM-DD gestendo anche la timezone */
+  private toIsoDate(value?: Date | null): string | null {
+    if (!value) return null;
+
+    const year = value.getFullYear(); // Ottengo l'anno usano la data locale
+    const month = String(value.getMonth() + 1).padStart(2, '0'); //Ottengo mese, aggiustando per l'indice 0-based (gennaio sarebbe 0, così diventa 1), con padding 1 diventa 01
+    const day = String(value.getDate()).padStart(2, '0'); // Ottengo giorno del mese locale, con padding
+
+    return `${year}-${month}-${day}`; // Ritorno in formato YYYY-MM-DD
+  }
+
 
 
   /* ======================= DETTAGLIO ======================= */
@@ -111,15 +134,15 @@ export class LogisticComponent {
   openEdit(): void {
     if (!this.activeOrder || !this.canEdit(this.activeOrder)) return;
 
-    // Form già popolato 
     this.editForm = this.fb.group({
-      shipDate: [this.toDateInput(this.activeOrder.shipDate)],
-      dueDate: [this.toDateInput(this.activeOrder.dueDate)],
+      shipDate: [this.toDate(this.activeOrder.shipDate)],
+      dueDate: [this.toDate(this.activeOrder.dueDate)],
       status: [this.activeOrder.status]
     });
 
     this.rowMode = 'edit';
   }
+
 
   //Salva le modifiche effettuate
   saveEdit(): void {
@@ -127,26 +150,20 @@ export class LogisticComponent {
 
     const raw = this.editForm.value;
 
-
-    //Payload inviato al Backend, se un campo non è stato modificato, viene mantutenuto il valore originale
     const payload: LogisticManagerRequest = {
-      shipDate: raw.shipDate
-        ? raw.shipDate
-        : this.toDateInput(this.activeOrder.shipDate)!,
-
-      dueDate: raw.dueDate
-        ? raw.dueDate
-        : this.toDateInput(this.activeOrder.dueDate)!,
-
+      shipDate: this.toIsoDate(raw.shipDate)!,
+      dueDate: this.toIsoDate(raw.dueDate)!,
       status: Number(raw.status)
     };
+
+    console.log('FORM RAW', raw);
+    console.log('PAYLOAD', payload);
+
 
     this.logisticService
       .updateOrder(this.activeOrder.salesOrderId, payload)
       .subscribe({
         next: () => {
-
-          //Feedback utente SUCCESSO
           this.messageService.add({
             key: 'center',
             severity: 'success',
@@ -155,13 +172,10 @@ export class LogisticComponent {
             life: 3000
           });
 
-          //Ricarica gli ordini e chiude il dettaglio/modifica
           this.orders$ = this.logisticService.getOrders();
           this.closeDetail();
         },
         error: () => {
-
-          //Feedback utente ERRORE
           this.messageService.add({
             key: 'center',
             severity: 'error',
@@ -172,6 +186,8 @@ export class LogisticComponent {
         }
       });
   }
+
+
 
   //Annulla le modifiche effettuate:
   //- Se il form non è dirty(nessuna modifica), torna al dettaglio
@@ -192,7 +208,7 @@ export class LogisticComponent {
     });
   }
 
-/* ======================= ELIMINAZIONE (STATUS 6) ======================= */
+  /* ======================= ELIMINAZIONE (STATUS 6) ======================= */
 
   //Chiede conferma per cancellare l'ordine (impostare status a 6)
   askDelete(): void {
@@ -213,10 +229,11 @@ export class LogisticComponent {
     if (!this.activeOrder) return;
 
     const payload: LogisticManagerRequest = {
-      shipDate: this.toDateInput(this.activeOrder.shipDate)!,
-      dueDate: this.toDateInput(this.activeOrder.dueDate)!,
-      status: 6 
+      shipDate: this.toIsoDate(this.toDate(this.activeOrder.shipDate))!,
+      dueDate: this.toIsoDate(this.toDate(this.activeOrder.dueDate))!,
+      status: 6
     };
+
 
     this.logisticService
       .updateOrder(this.activeOrder.salesOrderId, payload)
@@ -228,7 +245,7 @@ export class LogisticComponent {
             summary: 'Ordine cancellato',
             detail: 'Lo stato è stato impostato su "Cancellato"',
             life: 3000 // Durata della notifica
-          }); 
+          });
 
           this.orders$ = this.logisticService.getOrders();
           this.closeDetail();

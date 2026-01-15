@@ -4,6 +4,7 @@
             <th>Numero Ordine</th>
             <th>Stato</th>
             <th>Totale (€)</th>
+            <th>ID Cliente</th>
             <th></th>
         </tr>
     </thead>
@@ -16,6 +17,7 @@
             <td>{{ order.salesOrderNumber }}</td>
             <td>{{ getStatusLabel(order.status) }}</td>
             <td>{{ order.totalDue }} €</td>
+            <td>{{ order.customerId }}</td>
             <td class="actions">
                 <button class="btn select" (click)="openDetail(order)">
                     <span class="material-icons">info</span>
@@ -26,25 +28,29 @@
         <!-- DETTAGLIO -->
         @if (activeOrder?.salesOrderId === order.salesOrderId) {
         <tr class="detail-row">
-            <td colspan="4">
+            <td colspan="5">
 
                 <!-- VISUALIZZAZIONE -->
                 @if (rowMode === 'detail') {
                 <div class="order-detail">
                     <p><strong>Data ordine:</strong> {{ order.orderDate }}</p>
-                    <p><strong>Cliente:</strong> {{ order.customerId }}</p>
-                    <p><strong>Ship Date:</strong> {{ order.shipDate }}</p>
-                    <p><strong>Due Date:</strong> {{ order.dueDate }}</p>
+                    <p><strong>Spedizione:</strong> {{ order.shipDate }}</p>
+                    <p><strong>Consegna:</strong> {{ order.dueDate }}</p>
+                    <p><strong>Metodo di spedizione:</strong> {{ order.shipMethod }}</p>
 
-                    <button class="btn close" (click)="closeDetail()"><span class="material-icons">arrow_back</span></button>
+                    <div class="detail-actions">
+                        <button class="btn close" (click)="closeDetail()">
+                            <span class="material-icons">arrow_back</span>
+                        </button>
 
-                    <button class="btn select" [disabled]="!canEdit(order)" (click)="openEdit()">
-                        <span class="material-icons">edit</span>
-                    </button>
+                        <button class="btn select" [disabled]="!canEdit(order)" (click)="openEdit()">
+                            <span class="material-icons">edit</span>
+                        </button>
 
-                    <button class="btn danger" [disabled]="!canEdit(order)" (click)="askDelete()">
-                        <span class="material-icons">delete</span>
-                    </button>
+                        <button class="btn danger" [disabled]="!canEdit(order)" (click)="askDelete()">
+                            <span class="material-icons">delete</span>
+                        </button>
+                    </div>
                 </div>
                 }
 
@@ -53,35 +59,34 @@
                 <form [formGroup]="editForm" class="edit-form">
 
                     <label>
-                        Ship Date
-                        <input type="date" formControlName="shipDate">
+                        Spedizione
+                        <p-datepicker formControlName="shipDate" dateFormat="yy-mm-dd" showIcon="true" appendTo="body">
+                        </p-datepicker>
                     </label>
 
                     <label>
-                        Due Date
-                        <input type="date" formControlName="dueDate">
+                        Consegna
+                        <p-datepicker formControlName="dueDate" dateFormat="yy-mm-dd" showIcon="true" appendTo="body">
+                        </p-datepicker>
                     </label>
 
                     <label>
                         Stato
-                        <select formControlName="status">
-
-                            @for (s of editableStatuses; track $index) {
-                                <option [value]="s" class="status">
-                                    {{ statusMap[s] }}
-                                </option>
-                            }
-
-                        </select>
+                        <p-select formControlName="status" [options]="statusOptions" optionLabel="label"
+                            optionValue="value" placeholder="Seleziona stato" appendTo="body">
+                        </p-select>
                     </label>
 
-                    <button class="btn select" type="button" (click)="saveEdit()">
-                        <span class="material-icons">save</span>
-                    </button>
+                    <div class="edit-actions">
+                        <button class="btn select" type="button" [disabled]="editForm.invalid" (click)="saveEdit()">
+                            <span class="material-icons">save</span>
+                        </button>
 
-                    <button class="btn close" type="button" (click)="cancelEdit()">
-                        <span class="material-icons">cancel</span>
-                    </button>
+                        <button class="btn close" type="button" (click)="cancelEdit()">
+                            <span class="material-icons">cancel</span>
+                        </button>
+                    </div>
+
                 </form>
                 }
 
@@ -92,7 +97,5 @@
     </tbody>
 </table>
 
-<!-- Dialog -->
 <p-confirmDialog></p-confirmDialog>
 <p-toast position="center" key="center"></p-toast>
-
