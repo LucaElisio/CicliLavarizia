@@ -72,6 +72,8 @@ export class AdminComponent implements OnInit {
   employees = signal<CustomerAdminUpdateRequest[]>([]);
   customers = signal<CustomerInfoRequest[]>([]);
   loading = signal<boolean>(false);
+  loadingCustomerId = signal<number | null>(null);
+  loadingEmployeeId = signal<number | null>(null);
 
   roles = [
     { label: 'Admin', value: 0 },
@@ -142,10 +144,10 @@ export class AdminComponent implements OnInit {
   }
 
   updateRole(employee: CustomerAdminUpdateRequest): void {
-    this.loading.set(true);
+    this.loadingEmployeeId.set(employee.customerId);
     this.adminService.updateUserRole(employee).subscribe({
       next: () => {
-        this.loading.set(false);
+        this.loadingEmployeeId.set(null);
         this.messageService.add({
           severity: 'success',
           summary: 'Successo',
@@ -156,7 +158,7 @@ export class AdminComponent implements OnInit {
         this.loadCustomers();
       },
       error: (err) => {
-        this.loading.set(false);
+        this.loadingEmployeeId.set(null);
         this.messageService.add({
           severity: 'error',
           summary: 'Errore',
@@ -167,7 +169,7 @@ export class AdminComponent implements OnInit {
   }
 
   updateCustomerRole(customer: CustomerInfoRequest): void {
-    this.loading.set(true);
+    this.loadingCustomerId.set(customer.customerId);
     const updateRequest: CustomerAdminUpdateRequest = {
       customerId: customer.customerId,
       role: customer.role,
@@ -175,7 +177,7 @@ export class AdminComponent implements OnInit {
 
     this.adminService.updateUserRole(updateRequest).subscribe({
       next: () => {
-        this.loading.set(false);
+        this.loadingCustomerId.set(null);
         this.messageService.add({
           severity: 'success',
           summary: 'Successo',
@@ -186,7 +188,7 @@ export class AdminComponent implements OnInit {
         this.loadEmployees();
       },
       error: (err) => {
-        this.loading.set(false);
+        this.loadingCustomerId.set(null);
         this.messageService.add({
           severity: 'error',
           summary: 'Errore',

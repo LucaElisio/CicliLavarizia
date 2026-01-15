@@ -51,8 +51,8 @@
                   placeholder="Seleziona ruolo" appendTo="body" [style]="{'width': '200px'}" />
               </td>
               <td>
-                <p-button class="material-icons" (onClick)="updateCustomerRole(customer)" [loading]="loading"
-                  severity="success" size="small">
+                <p-button class="material-icons" (onClick)="updateCustomerRole(customer)"
+                  [loading]="loadingCustomerId() === customer.customerId" severity="success" size="small">
                   check
                 </p-button>
               </td>
@@ -105,8 +105,8 @@
                   placeholder="Seleziona ruolo" appendTo="body" [style]="{'width': '200px'}" />
               </td>
               <td>
-                <p-button class="material-icons" (onClick)="updateRole(employee)" [loading]="loading" severity="success"
-                  size="small">
+                <p-button class="material-icons" (onClick)="updateRole(employee)"
+                  [loading]="loadingEmployeeId() === employee.customerId" severity="success" size="small">
                   check
                 </p-button>
               </td>
