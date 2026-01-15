@@ -34,7 +34,7 @@ export class NavbarComponent implements OnInit {
   public cartService = inject(CartService);
   private productService = inject(ProductService);
 
-  CustomerRole = this.authService.userInfo()?.role;
+  CustomerRole = computed(() => this.authService.userInfo()?.role);
   Roles = Role;
 
   // Calcola il numero totale di elementi nel carrello (sia locale che server)
