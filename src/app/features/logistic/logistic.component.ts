@@ -57,7 +57,7 @@ export class LogisticComponent {
   };
 
   /** Elenco status che permettono la modifica */
-  editableStatuses = [1, 2, 3];
+  editableStatuses = [1, 2, 3, 5];
 
   constructor(
     private logisticService: LogisticService,

@@ -36,7 +36,7 @@ export class SaleService {
     }
 
     updateCategory(categoryId: number, categoryName: string): Observable<boolean> {
-      return this.http.put<boolean>(`${this.url}/SalesAssistant/Aggiorna%20categoria${categoryId}`, { categoryName });
+      return this.http.put<boolean>(`${this.url}/SalesAssistant/Aggiorna%20categoria${categoryId}?categoryName=${encodeURIComponent(categoryName)}`, {});
     }
 
     deleteCategory(categoryId: number): Observable<boolean> {
@@ -76,7 +76,11 @@ export class SaleService {
     }
 
     updateProductModel(productModelId: number, modelName: string): Observable<boolean> {
-      return this.http.put<boolean>(`${this.url}/SalesAssistant/Aggiorna%20modello%20prodotto${productModelId}`, { modelName });
+      return this.http.put<boolean>(
+        `${this.url}/SalesAssistant/Aggiorna%20modello%20prodotto${productModelId}`, 
+        JSON.stringify(modelName),
+        { headers: { 'Content-Type': 'application/json' } }
+      );
     }
 
     updateProductDescription(productModel: string, description: string): Observable<boolean> {

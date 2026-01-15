@@ -64,11 +64,20 @@
 
                 <!-- Pulsante Aggiungi al Carrello -->
                 <div class="flex gap-3">
+                    @if(cartService.isInCart(productId)) {
+                    <p-button 
+                        label="Aggiungi al carrello" 
+                        [style]="{'width': '100%', 'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none', 'font-weight': 'bold'}"
+                        (onClick)="addToCart(productId, cartService.itemCount(productId) + 1)">
+                    </p-button>
+                    }
+                    @else {
                     <p-button 
                         label="Aggiungi al carrello" 
                         [style]="{'width': '100%', 'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none', 'font-weight': 'bold'}"
                         (onClick)="addToCart(productId)">
                     </p-button>
+                    }
                 </div>
             </div>
         </div>

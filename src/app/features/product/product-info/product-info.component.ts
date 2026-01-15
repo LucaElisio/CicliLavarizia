@@ -23,7 +23,7 @@ import { Review } from './review/review';
 export class ProductInfoComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private productService = inject(ProductService);
-  private cartService = inject(CartService);
+  public cartService = inject(CartService);
   private authService = inject(AuthService);
   private messageService = inject(MessageService);
   location = inject(Location);

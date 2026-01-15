@@ -41,6 +41,7 @@ export class AssistantComponent implements OnInit {
 
   // Gestione dialogs
   displayCategoryDialog = false;
+  displayCategoryUpdateDialog = false;
   displayModelDialog = false;
   displayDiscountDialog = false;
   displayProductUpdateDialog = false;
@@ -71,6 +72,8 @@ export class AssistantComponent implements OnInit {
     productCategoryId: 0,
     name: ''
   };
+
+  selectedCategory: ProductCategoryResponse | null = null;
 
   newModel = {
     productModelId: 0,
@@ -133,11 +136,11 @@ export class AssistantComponent implements OnInit {
   //Gestione prodotti
   InsertProduct() {
     // Validazione campi obbligatori
-    if (!this.newProduct.name || !this.newProduct.productNumber || !this.newProduct.productCategoryId) {
+    if (!this.newProduct.name || !this.newProduct.productNumber || !this.newProduct.productCategoryId || !this.newProduct.sellStartDate) {
       this.messageService.add({
         severity: 'warn',
         summary: 'Campi obbligatori mancanti',
-        detail: 'Compila tutti i campi obbligatori (Nome, Numero Prodotto, Categoria)',
+        detail: 'Compila tutti i campi obbligatori (Nome, Numero Prodotto, Categoria, Data Inizio Vendita)',
         life: 5000
       });
       return;
@@ -198,6 +201,20 @@ export class AssistantComponent implements OnInit {
   onFileSelect(event: any): void {
     const file = event.target.files[0];
     if (file) {
+      // Validazione dimensione file (max 500KB per evitare header troppo grandi)
+      const maxSizeKB = 500;
+      const fileSizeKB = file.size / 1024;
+      
+      if (fileSizeKB > maxSizeKB) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Immagine troppo grande',
+          detail: `La dimensione dell'immagine deve essere inferiore a ${maxSizeKB}KB. Dimensione attuale: ${fileSizeKB.toFixed(0)}KB`,
+          life: 5000
+        });
+        return;
+      }
+      
       this.newProduct.thumbnailPhotoFileName = file.name;
       
       const reader = new FileReader();
@@ -214,6 +231,47 @@ export class AssistantComponent implements OnInit {
         
         this.newProduct.thumbNailPhoto = hex;
         console.log('Image converted to hex, length:', hex.length);
+      };
+      
+      reader.readAsArrayBuffer(file);
+    }
+  }
+
+  onUpdateFileSelect(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      // Validazione dimensione file (max 500KB per evitare header troppo grandi)
+      const maxSizeKB = 500;
+      const fileSizeKB = file.size / 1024;
+      
+      if (fileSizeKB > maxSizeKB) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Immagine troppo grande',
+          detail: `La dimensione dell'immagine deve essere inferiore a ${maxSizeKB}KB. Dimensione attuale: ${fileSizeKB.toFixed(0)}KB`,
+          life: 5000
+        });
+        // Reset input file
+        event.target.value = '';
+        return;
+      }
+      
+      this.selectedProduct.thumbnailPhotoFileName = file.name;
+      
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const arrayBuffer = e.target.result;
+        const bytes = new Uint8Array(arrayBuffer);
+        
+        // Converti in stringa esadecimale
+        let hex = '';
+        for (let i = 0; i < bytes.length; i++) {
+          const hexByte = bytes[i].toString(16).padStart(2, '0');
+          hex += hexByte;
+        }
+        
+        this.selectedProduct.thumbNailPhoto = hex;
+        console.log('Update image converted to hex, length:', hex.length);
       };
       
       reader.readAsArrayBuffer(file);
@@ -242,6 +300,17 @@ export class AssistantComponent implements OnInit {
     });
   }
 
+
+  isProductUpdateValid(): boolean {
+    if (!this.selectedProduct) return false;
+    
+    return !!(this.selectedProduct.name &&
+      this.selectedProduct.productNumber &&
+      this.selectedProduct.listPrice > 0 &&
+      this.selectedProduct.standardCost > 0 &&
+      this.selectedProduct.productCategoryId &&
+      this.selectedProduct.sellStartDate);
+  }
 
   updateProduct(productId: number): void {
     // Converti la data in formato ISO string se è un oggetto Date
@@ -304,6 +373,27 @@ export class AssistantComponent implements OnInit {
     });
   }
 
+  openCategoryUpdateDialog(category: ProductCategoryResponse): void {
+    this.selectedCategory = { ...category };
+    this.displayCategoryUpdateDialog = true;
+  }
+
+  updateCategory(): void {
+    if (!this.selectedCategory || !this.selectedCategory.name) {
+      this.messageService.add({ severity: 'warn', summary: 'Nome categoria obbligatorio', life: 3000 });
+      return;
+    }
+
+    this.saleService.updateCategory(this.selectedCategory.productCategoryId, this.selectedCategory.name).subscribe({
+      next: () => {
+        this.messageService.add({ severity: 'success', summary: 'Categoria aggiornata', life: 3000 });
+        this.displayCategoryUpdateDialog = false;
+        this.loadCategories();
+      },
+      error: () => this.messageService.add({ severity: 'error', summary: 'Errore aggiornamento categoria', life: 5000 })
+    });
+  }
+
   // === MODELLI ===
   openModelDialog(): void {
     this.newModel = { productModelId: 0, name: '', modelDescription: '' };
@@ -351,28 +441,40 @@ export class AssistantComponent implements OnInit {
 
   updateModelDescription(): void {
     if (!this.selectedModelForDescription || !this.selectedModelForDescription.name) {
-      this.messageService.add({ severity: 'error', summary: 'Nome modello mancante', life: 5000 });
+      this.messageService.add({ severity: 'warn', summary: 'Nome modello obbligatorio', life: 3000 });
       return;
     }
 
-    console.log('Updating description for model:', this.selectedModelForDescription.name);
+    console.log('Updating model:', this.selectedModelForDescription.productModelId);
+    console.log('New name:', this.selectedModelForDescription.name);
     console.log('New description:', this.selectedModelForDescription.modelDescription);
 
-    this.saleService.updateProductDescription(
-      this.selectedModelForDescription.name,
-      this.selectedModelForDescription.modelDescription
+    // Prima aggiorna il nome
+    this.saleService.updateProductModel(
+      this.selectedModelForDescription.productModelId,
+      this.selectedModelForDescription.name
     ).subscribe({
-      next: (response) => {
-        console.log('Description updated successfully:', response);
-        this.messageService.add({ severity: 'success', summary: 'Descrizione aggiornata', life: 3000 });
-        this.displayModelDescriptionDialog = false;
-        this.loadModels();
+      next: () => {
+        // Poi aggiorna la descrizione
+        this.saleService.updateProductDescription(
+          this.selectedModelForDescription!.name,
+          this.selectedModelForDescription!.modelDescription
+        ).subscribe({
+          next: () => {
+            console.log('Model updated successfully');
+            this.messageService.add({ severity: 'success', summary: 'Modello aggiornato', life: 3000 });
+            this.displayModelDescriptionDialog = false;
+            this.loadModels();
+          },
+          error: (err) => {
+            console.error('Errore aggiornamento descrizione:', err);
+            this.messageService.add({ severity: 'error', summary: 'Errore aggiornamento descrizione', life: 5000 });
+          }
+        });
       },
       error: (err) => {
-        console.error('Errore aggiornamento descrizione:', err);
-        console.error('Error status:', err.status);
-        console.error('Error body:', err.error);
-        this.messageService.add({ severity: 'error', summary: 'Errore aggiornamento descrizione', life: 5000 });
+        console.error('Errore aggiornamento nome:', err);
+        this.messageService.add({ severity: 'error', summary: 'Errore aggiornamento nome', life: 5000 });
       }
     });
   }
