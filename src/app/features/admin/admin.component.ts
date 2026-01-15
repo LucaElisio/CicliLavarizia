@@ -88,6 +88,7 @@ export class AdminComponent implements OnInit {
   }
 
   onViewChange(): void {
+    // Usa setTimeout per evitare l'errore ExpressionChangedAfterItHasBeenCheckedError
     setTimeout(() => {
       if (this.currentView === 'customers') {
         if (this.customers().length === 0) {
@@ -105,6 +106,8 @@ export class AdminComponent implements OnInit {
     this.loading = true;
     this.adminService.getCustomers().subscribe({
       next: (data) => {
+        // Filtra solo i clienti con ruolo Customer
+        // Il backend restituisce numeri (1), l'enum è stringhe ('Customer')
         const filteredCustomers = data.filter((c) => (c.role as any) === 1);
         this.customers.set(filteredCustomers);
         this.loading = false;
@@ -154,8 +157,11 @@ export class AdminComponent implements OnInit {
           summary: 'Successo',
           detail: 'Ruolo aggiornato con successo',
         });
-        // Ricarica i dipendenti dopo l'aggiornamento
-        this.loadEmployees();
+        // Ricarica entrambe le liste dopo l'aggiornamento
+        setTimeout(() => {
+          this.loadEmployees();
+          this.loadCustomers();
+        });
       },
       error: (err) => {
         this.loading = false;
@@ -183,8 +189,11 @@ export class AdminComponent implements OnInit {
           summary: 'Successo',
           detail: 'Ruolo cliente aggiornato con successo',
         });
-        // Ricarica i clienti dopo l'aggiornamento
-        this.loadCustomers();
+        // Ricarica entrambe le liste dopo l'aggiornamento
+        setTimeout(() => {
+          this.loadCustomers();
+          this.loadEmployees();
+        });
       },
       error: (err) => {
         this.loading = false;
