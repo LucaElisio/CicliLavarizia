@@ -26,7 +26,7 @@
           <span class="p-input-icon-left w-full md:w-96">
             <input pInputText type="text" [(ngModel)]="searchCustomerValue"
               (input)="customerTable.filterGlobal($any($event.target).value, 'contains')"
-              placeholder="Cerca per nome o email..." class="w-full" />
+              placeholder="Cerca per nome..." class="w-full" />
           </span>
         </div>
         <p-table #customerTable [value]="customers()" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
