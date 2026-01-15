@@ -5,6 +5,7 @@ import { map, Observable } from 'rxjs';
 import { CartResponse } from '../models/cartModel';
 import { ProductService } from './product.service';
 import { SaleResponse } from '../models/saleModel';
+import { ProductDiscount } from '../models/discountModel';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,6 @@ import { SaleResponse } from '../models/saleModel';
 export class SaleService {
   private http = inject(HttpClient);
   private productService = inject(ProductService);
-
   private url = environment.apiUrl;
 
   cartProducts = signal<CartResponse | null>(null);
@@ -31,11 +31,17 @@ export class SaleService {
     );
   }
 
-   createOrder(orderData: SaleResponse): Observable<SaleResponse> {
+  createOrder(orderData: SaleResponse): Observable<SaleResponse> {
     return this.http.post<SaleResponse>(`${this.url}/Sales/CreateSalesOrder`, orderData);
-   }
+  }
 
-   showOrder(): Observable<SaleResponse> {
+  showOrder(): Observable<SaleResponse> {
     return this.http.get<SaleResponse>(`${this.url}/Sales/GetCustomerOrders`);
-   }
-}   
+  }
+
+  validateDiscount(code: string): Observable<ProductDiscount> {
+    return this.http.get<ProductDiscount>(`${this.url}/Discount/ValidateDiscount`, {
+      params: { code },
+    });
+  }
+}

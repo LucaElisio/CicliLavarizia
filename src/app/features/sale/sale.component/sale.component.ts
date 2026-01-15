@@ -16,13 +16,20 @@ import { AddressResponse } from '../../../shared/models/addressModel';
 
 @Component({
   selector: 'app-sale.component',
-  imports: [CardModule, CommonModule, FormsModule, InputTextModule, ButtonModule, DividerModule, SelectModule, ToastModule],
+  imports: [
+    CardModule,
+    CommonModule,
+    FormsModule,
+    InputTextModule,
+    ButtonModule,
+    DividerModule,
+    SelectModule,
+    ToastModule,
+  ],
   providers: [MessageService],
   templateUrl: './sale.component.html',
   styleUrl: './sale.component.css',
 })
-
-
 export class SaleComponent implements OnInit {
   private saleService = inject(SaleService);
   cartService = inject(CartService);
@@ -37,19 +44,19 @@ export class SaleComponent implements OnInit {
   // Opzioni metodo di spedizione
   shipMethodOptions = [
     { label: 'CARGO TRANSPORT', value: false },
-    { label: 'CARGO EXPRESS (+5$)', value: true }
+    { label: 'CARGO EXPRESS (+5$)', value: true },
   ];
 
   // Dati dell'ordine
   shipMethodSignal = signal<boolean>(false);
-  
+
   // Computed per il costo di spedizione
-  shippingCost = computed(() => this.shipMethodSignal() ? 5 : 0);
-  
+  shippingCost = computed(() => (this.shipMethodSignal() ? 5 : 0));
+
   // Computed per il totale finale
   finalTotal = computed(() => this.totalPrice() + this.shippingCost());
-  
-  // Computed per calcolare l'IVA per ogni prodotto (22%)
+
+  // Computed per calcolare l'IVA (22%)
   taxAmount = computed(() => {
     const products = this.cartService.cartProducts()?.products ?? [];
     return products.reduce((total, product) => {
@@ -57,23 +64,23 @@ export class SaleComponent implements OnInit {
       return total + productTax;
     }, 0);
   });
-  
+
   // Computed per il totale con IVA
   totalWithTax = computed(() => this.finalTotal() + this.taxAmount());
-  
+
   // shipType segue automaticamente shipMethod
   get shipType(): boolean {
     return this.shipMethodSignal();
   }
-  
+
   get shipMethod(): boolean {
     return this.shipMethodSignal();
   }
-  
+
   set shipMethod(value: boolean) {
     this.shipMethodSignal.set(value);
   }
-  
+
   creditCardApprovalCode: string = '';
   comment: string = '';
   discountCode: string = '';
@@ -85,7 +92,7 @@ export class SaleComponent implements OnInit {
     city: '',
     stateProvince: '',
     countryRegion: '',
-    postalCode: ''
+    postalCode: '',
   };
 
   // Indirizzo di fatturazione
@@ -95,7 +102,7 @@ export class SaleComponent implements OnInit {
     city: '',
     stateProvince: '',
     countryRegion: '',
-    postalCode: ''
+    postalCode: '',
   };
 
   useSameAddress: boolean = true;
@@ -120,7 +127,7 @@ export class SaleComponent implements OnInit {
         severity: 'warn',
         summary: 'Attenzione',
         detail: 'Per favore compila tutti i campi obbligatori',
-        life: 5000
+        life: 5000,
       });
       return;
     }
@@ -134,7 +141,7 @@ export class SaleComponent implements OnInit {
       shipType: this.shipType,
       shipToAddress: this.shipToAddress,
       billToAddress: this.useSameAddress ? this.shipToAddress : this.billToAddress,
-      discountCode: this.discountCode
+      discountCode: this.discountCode.trim() || '', // Invia il codice sconto se presente
     };
 
     this.saleService.createOrder(orderData).subscribe({
@@ -143,8 +150,10 @@ export class SaleComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'Successo',
-          detail: 'Ordine creato con successo!',
-          life: 3000
+          detail: this.discountCode
+            ? 'Ordine creato con successo! Sconto applicato.'
+            : 'Ordine creato con successo!',
+          life: 3000,
         });
         setTimeout(() => {
           this.router.navigate(['/products']);
@@ -152,22 +161,31 @@ export class SaleComponent implements OnInit {
       },
       error: (error) => {
         this.isProcessing.set(false);
+
+        // Gestisci errori specifici dello sconto
+        const errorMessage = error.error?.message || error.error || 'Errore sconosciuto';
+
         this.messageService.add({
           severity: 'error',
           summary: 'Errore',
-          detail: 'Errore nella creazione dell\'ordine: ' + (error.error?.message || 'Errore sconosciuto'),
-          life: 5000
+          detail:
+            errorMessage.includes('sconto') || errorMessage.includes('discount')
+              ? "Codice sconto non valido o scaduto. L'ordine non è stato creato."
+              : "Errore nella creazione dell'ordine: " + errorMessage,
+          life: 5000,
         });
-      }
+      },
     });
   }
 
   validateForm(): boolean {
-    return !!this.shipToAddress.addressLine1 &&
-           !!this.shipToAddress.city &&
-           !!this.shipToAddress.stateProvince &&
-           !!this.shipToAddress.countryRegion &&
-           !!this.shipToAddress.postalCode &&
-           !!this.creditCardApprovalCode;
+    return (
+      !!this.shipToAddress.addressLine1 &&
+      !!this.shipToAddress.city &&
+      !!this.shipToAddress.stateProvince &&
+      !!this.shipToAddress.countryRegion &&
+      !!this.shipToAddress.postalCode &&
+      !!this.creditCardApprovalCode
+    );
   }
 }

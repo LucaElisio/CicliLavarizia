@@ -7,26 +7,22 @@
 
     <!-- Menu Tab Sezioni -->
     <div class="mb-6 flex gap-2">
-        <p-button 
-            [outlined]="activeSection !== 'product'"
+        <p-button [outlined]="activeSection !== 'product'"
             [style]="activeSection === 'product' ? {'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'} : {'color': 'rgb(235, 238, 232)', 'border-color': 'rgb(170, 200, 170)'}"
             (onClick)="setActiveSection('product')">
             <i class="material-icons mr-2">inventory_2</i> Prodotti
         </p-button>
-        <p-button 
-            [outlined]="activeSection !== 'category'"
+        <p-button [outlined]="activeSection !== 'category'"
             [style]="activeSection === 'category' ? {'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'} : {'color': 'rgb(235, 238, 232)', 'border-color': 'rgb(170, 200, 170)'}"
             (onClick)="setActiveSection('category')">
             <i class="material-icons mr-2">category</i> Categorie
         </p-button>
-        <p-button 
-            [outlined]="activeSection !== 'model'"
+        <p-button [outlined]="activeSection !== 'model'"
             [style]="activeSection === 'model' ? {'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'} : {'color': 'rgb(235, 238, 232)', 'border-color': 'rgb(170, 200, 170)'}"
             (onClick)="setActiveSection('model')">
             <i class="material-icons mr-2">view_in_ar</i> Modelli
         </p-button>
-        <p-button 
-            [outlined]="activeSection !== 'discount'"
+        <p-button [outlined]="activeSection !== 'discount'"
             [style]="activeSection === 'discount' ? {'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'} : {'color': 'rgb(235, 238, 232)', 'border-color': 'rgb(170, 200, 170)'}"
             (onClick)="setActiveSection('discount')">
             <i class="material-icons mr-2">local_offer</i> Sconti
@@ -45,127 +41,129 @@
                 </div>
             </ng-template>
 
-        <div class="space-y-4">
-            <!-- Nome Prodotto -->
-            <div>
-                <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Nome Prodotto *</label>
-                <input type="text" pInputText [(ngModel)]="newProduct.name"
-                    placeholder="Inserisci nome prodotto" class="w-full" />
-            </div>
-
-            <!-- Numero Prodotto -->
-            <div>
-                <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Numero Prodotto *</label>
-                <input type="text" pInputText [(ngModel)]="newProduct.productNumber"
-                    placeholder="Inserisci numero prodotto" class="w-full" />
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Colore -->
+            <div class="space-y-4">
+                <!-- Nome Prodotto -->
                 <div>
-                    <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Colore</label>
-                    <input type="text" pInputText [(ngModel)]="newProduct.color"
-                        placeholder="Inserisci colore" class="w-full" />
+                    <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Nome Prodotto *</label>
+                    <input type="text" pInputText [(ngModel)]="newProduct.name" placeholder="Inserisci nome prodotto"
+                        class="w-full" />
                 </div>
 
-                <!-- Taglia -->
+                <!-- Numero Prodotto -->
                 <div>
-                    <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Taglia</label>
-                    <input type="text" pInputText [(ngModel)]="newProduct.size"
-                        placeholder="Inserisci taglia" class="w-full" />
+                    <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Numero Prodotto *</label>
+                    <input type="text" pInputText [(ngModel)]="newProduct.productNumber"
+                        placeholder="Inserisci numero prodotto" class="w-full" />
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Colore -->
+                    <div>
+                        <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Colore</label>
+                        <input type="text" pInputText [(ngModel)]="newProduct.color" placeholder="Inserisci colore"
+                            class="w-full" />
+                    </div>
+
+                    <!-- Taglia -->
+                    <div>
+                        <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Taglia</label>
+                        <input type="text" pInputText [(ngModel)]="newProduct.size" placeholder="Inserisci taglia"
+                            class="w-full" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Costo Standard -->
+                    <div>
+                        <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Costo Standard
+                            *</label>
+                        <p-inputNumber [(ngModel)]="newProduct.standardCost" mode="currency" currency="EUR"
+                            locale="it-IT" [showButtons]="false" placeholder="0.00" class="w-full"
+                            [style]="{'width': '100%'}"></p-inputNumber>
+                    </div>
+
+                    <!-- Prezzo di Listino -->
+                    <div>
+                        <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Prezzo di Listino
+                            *</label>
+                        <p-inputNumber [(ngModel)]="newProduct.listPrice" mode="currency" currency="EUR" locale="it-IT"
+                            [showButtons]="false" placeholder="0.00" class="w-full"
+                            [style]="{'width': '100%'}"></p-inputNumber>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Peso -->
+                    <div>
+                        <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Peso (kg)</label>
+                        <p-inputNumber [(ngModel)]="newProduct.weight" [showButtons]="false" [minFractionDigits]="2"
+                            [maxFractionDigits]="2" placeholder="0.00" class="w-full"
+                            [style]="{'width': '100%'}"></p-inputNumber>
+                    </div>
+
+                    <!-- Categoria -->
+                    <div>
+                        <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Categoria *</label>
+                        <p-select [(ngModel)]="newProduct.productCategoryId" [options]="categories()" optionLabel="name"
+                            optionValue="productCategoryId" placeholder="Seleziona categoria" class="w-full"
+                            [style]="{'width': '100%'}"></p-select>
+                    </div>
+                </div>
+
+                <!-- ID Modello Prodotto -->
+                <div>
+                    <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Modello Prodotto</label>
+                    <p-select [(ngModel)]="newProduct.productModelId" [options]="models()" optionLabel="name"
+                        optionValue="productModelId" placeholder="Seleziona modello (opzionale)" class="w-full"
+                        [style]="{'width': '100%'}" [showClear]="true"></p-select>
+                </div>
+
+                <!-- Data Inizio Vendita -->
+                <div>
+                    <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Data Inizio Vendita
+                        *</label>
+                    <p-datepicker [(ngModel)]="newProduct.sellStartDate" dateFormat="dd/mm/yy"
+                        placeholder="Seleziona data" class="w-full" [style]="{'width': '100%'}"></p-datepicker>
+                </div>
+
+                <!-- Immagine Prodotto -->
+                <div>
+                    <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Immagine Prodotto</label>
+                    <input type="file" accept="image/*" (change)="onFileSelect($event)" class="w-full p-2"
+                        style="color: rgb(190, 195, 188); background-color: rgba(235, 238, 232, 0.1); border: 1px solid rgba(235, 238, 232, 0.3); border-radius: 4px;" />
+                    <small *ngIf="newProduct.thumbnailPhotoFileName" style="color: rgb(170, 200, 170);">
+                        File selezionato: {{newProduct.thumbnailPhotoFileName}}
+                    </small>
+                </div>
+
+                <!-- Note -->
+                <div class="mt-4 p-3"
+                    style="background-color: rgba(170, 200, 170, 0.1); border-left: 4px solid rgb(170, 200, 170); border-radius: 4px;">
+                    <p class="text-sm" style="color: rgb(190, 195, 188);">
+                        <i class="material-icons align-middle text-sm mr-1">info</i>
+                        I campi contrassegnati con * sono obbligatori
+                    </p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Costo Standard -->
-                <div>
-                    <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Costo Standard *</label>
-                    <p-inputNumber [(ngModel)]="newProduct.standardCost" mode="currency" currency="EUR"
-                        locale="it-IT" [showButtons]="false" placeholder="0.00"
-                        class="w-full" [style]="{'width': '100%'}"></p-inputNumber>
+            <ng-template pTemplate="footer">
+                <div class="flex gap-3 justify-end">
+                    <p-button label="Annulla" [outlined]="true"
+                        [style]="{'color': 'rgb(235, 238, 232)', 'border-color': 'rgb(235, 238, 232)'}"
+                        (onClick)="resetForm()">
+                        <ng-template pTemplate="icon">
+                            <span class="material-icons" style="font-size: 18px;">close</span>
+                        </ng-template>
+                    </p-button>
+                    <p-button label="Inserisci Prodotto"
+                        [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none', 'font-weight': 'bold'}"
+                        (onClick)="InsertProduct()">
+                        <ng-template pTemplate="icon">
+                            <span class="material-icons" style="font-size: 18px;">check</span>
+                        </ng-template>
+                    </p-button>
                 </div>
-
-                <!-- Prezzo di Listino -->
-                <div>
-                    <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Prezzo di Listino *</label>
-                    <p-inputNumber [(ngModel)]="newProduct.listPrice" mode="currency" currency="EUR"
-                        locale="it-IT" [showButtons]="false" placeholder="0.00"
-                        class="w-full" [style]="{'width': '100%'}"></p-inputNumber>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Peso -->
-                <div>
-                    <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Peso (kg)</label>
-                    <p-inputNumber [(ngModel)]="newProduct.weight" [showButtons]="false" [minFractionDigits]="2"
-                        [maxFractionDigits]="2" placeholder="0.00" class="w-full" [style]="{'width': '100%'}"></p-inputNumber>
-                </div>
-
-                <!-- Categoria -->
-                <div>
-                    <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Categoria *</label>
-                    <p-select [(ngModel)]="newProduct.productCategoryId" [options]="categories()"
-                        optionLabel="name" optionValue="productCategoryId" placeholder="Seleziona categoria"
-                        class="w-full" [style]="{'width': '100%'}"></p-select>
-                </div>
-            </div>
-
-            <!-- ID Modello Prodotto -->
-            <div>
-                <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Modello Prodotto</label>
-                <p-select [(ngModel)]="newProduct.productModelId" [options]="models()"
-                    optionLabel="name" optionValue="productModelId" placeholder="Seleziona modello (opzionale)"
-                    class="w-full" [style]="{'width': '100%'}" [showClear]="true"></p-select>
-            </div>
-
-            <!-- Data Inizio Vendita -->
-            <div>
-                <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Data Inizio Vendita *</label>
-                <p-datepicker [(ngModel)]="newProduct.sellStartDate" dateFormat="dd/mm/yy" 
-                    placeholder="Seleziona data" class="w-full" [style]="{'width': '100%'}"></p-datepicker>
-            </div>
-
-            <!-- Immagine Prodotto -->
-            <div>
-                <label class="block mb-2 font-semibold" style="color: rgb(190, 195, 188);">Immagine Prodotto</label>
-                <input type="file" accept="image/*" (change)="onFileSelect($event)" 
-                    class="w-full p-2" style="color: rgb(190, 195, 188); background-color: rgba(235, 238, 232, 0.1); border: 1px solid rgba(235, 238, 232, 0.3); border-radius: 4px;" />
-                <small *ngIf="newProduct.thumbnailPhotoFileName" style="color: rgb(170, 200, 170);">
-                    File selezionato: {{newProduct.thumbnailPhotoFileName}}
-                </small>
-            </div>
-
-            <!-- Note -->
-            <div class="mt-4 p-3" style="background-color: rgba(170, 200, 170, 0.1); border-left: 4px solid rgb(170, 200, 170); border-radius: 4px;">
-                <p class="text-sm" style="color: rgb(190, 195, 188);">
-                    <i class="material-icons align-middle text-sm mr-1">info</i>
-                    I campi contrassegnati con * sono obbligatori
-                </p>
-            </div>
-        </div>
-
-        <ng-template pTemplate="footer">
-            <div class="flex gap-3 justify-end">
-                <p-button 
-                    label="Annulla" 
-                    [outlined]="true"
-                    [style]="{'color': 'rgb(235, 238, 232)', 'border-color': 'rgb(235, 238, 232)'}"
-                    (onClick)="resetForm()">
-                    <ng-template pTemplate="icon">
-                        <span class="material-icons" style="font-size: 18px;">close</span>
-                    </ng-template>
-                </p-button>
-                <p-button 
-                    label="Inserisci Prodotto" 
-                    [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none', 'font-weight': 'bold'}"
-                    (onClick)="InsertProduct()">
-                    <ng-template pTemplate="icon">
-                        <span class="material-icons" style="font-size: 18px;">check</span>
-                    </ng-template>
-                </p-button>
-            </div>
-        </ng-template>
+            </ng-template>
         </p-card>
 
         <!-- Tabella Prodotti -->
@@ -181,7 +179,7 @@
 
             <p-table #dtProducts [value]="products()" [paginator]="true" [rows]="10" styleClass="p-datatable-rounded"
                 [globalFilterFields]="['name', 'productNumber']">
-                
+
                 <ng-template pTemplate="caption">
                     <div class="flex justify-between items-center gap-4 p-3">
                         <span class="text-lg font-semibold caption-title">
@@ -194,9 +192,9 @@
                                 search
                             </i>
 
-                            <input pInputText type="text" 
+                            <input pInputText type="text"
                                 (input)="dtProducts.filterGlobal($any($event.target).value, 'contains')"
-                                placeholder="Cerca per nome o numero" 
+                                placeholder="Cerca per nome o numero"
                                 class="pr-3 py-2 w-64 outline-none search-input" />
                         </div>
                     </div>
@@ -222,16 +220,14 @@
                         <td style="color: rgb(235, 238, 232);">{{getCategoryName(product.productCategoryId)}}</td>
                         <td style="color: rgb(235, 238, 232);">{{getModelName(product.productModelId)}}</td>
                         <td>
-                            <p-button 
+                            <p-button
                                 [style]="{'background-color': 'transparent', 'color': 'rgb(255, 100, 100)', 'border': 'none', 'margin-right': '8px'}"
-                                (onClick)="removeSingleProduct(product.productId)"
-                                pTooltip="Rimuovi questo prodotto">
+                                (onClick)="removeSingleProduct(product.productId)" pTooltip="Rimuovi questo prodotto">
                                 <i class="material-icons">delete</i>
                             </p-button>
-                            <p-button 
+                            <p-button
                                 [style]="{'background-color': 'transparent', 'color': 'rgb(170, 200, 170)', 'border': 'none', 'margin-left': '8px'}"
-                                (onClick)="openProductUpdateDialog(product)"
-                                pTooltip="Modifica prodotto">
+                                (onClick)="openProductUpdateDialog(product)" pTooltip="Modifica prodotto">
                                 <i class="material-icons">edit</i>
                             </p-button>
                         </td>
@@ -244,8 +240,7 @@
     <!-- SEZIONE CATEGORIE -->
     <div *ngIf="activeSection === 'category'">
         <div class="mb-4">
-            <p-button 
-                [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}"
+            <p-button [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}"
                 (onClick)="openCategoryDialog()">
                 <i class="material-icons mr-2">add</i> Nuova Categoria
             </p-button>
@@ -264,16 +259,13 @@
                         <td style="color: rgb(235, 238, 232);">{{category.productCategoryId}}</td>
                         <td style="color: rgb(235, 238, 232);">{{category.name}}</td>
                         <td>
-                            <p-button 
+                            <p-button
                                 [style]="{'background-color': 'transparent', 'color': 'rgb(170, 200, 170)', 'border': 'none', 'margin-right': '8px'}"
-                                (onClick)="openCategoryUpdateDialog(category)"
-                                pTooltip="Modifica categoria">
+                                (onClick)="openCategoryUpdateDialog(category)" pTooltip="Modifica categoria">
                                 <i class="material-icons">edit</i>
                             </p-button>
-                            <p-button 
-                                [style]="{'background-color': 'transparent', 'color': 'red', 'border': 'none'}"
-                                (onClick)="deleteCategory(category.productCategoryId)"
-                                pTooltip="Elimina categoria">
+                            <p-button [style]="{'background-color': 'transparent', 'color': 'red', 'border': 'none'}"
+                                (onClick)="deleteCategory(category.productCategoryId)" pTooltip="Elimina categoria">
                                 <i class="material-icons">delete</i>
                             </p-button>
                         </td>
@@ -286,8 +278,7 @@
     <!-- SEZIONE MODELLI -->
     <div *ngIf="activeSection === 'model'">
         <div class="mb-4">
-            <p-button 
-                [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}"
+            <p-button [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}"
                 (onClick)="openModelDialog()">
                 <i class="material-icons mr-2">add</i> Nuovo Modello
             </p-button>
@@ -308,14 +299,12 @@
                         <td style="color: rgb(235, 238, 232);">{{model.name}}</td>
                         <td style="color: rgb(235, 238, 232);">{{model.modelDescription}}</td>
                         <td>
-                            <p-button 
+                            <p-button
                                 [style]="{'background-color': 'transparent', 'color': 'rgb(170, 200, 170)', 'border': 'none', 'margin-right': '8px'}"
-                                (onClick)="openModelDescriptionDialog(model)"
-                                pTooltip="Modifica modello">
+                                (onClick)="openModelDescriptionDialog(model)" pTooltip="Modifica modello">
                                 <i class="material-icons">edit</i>
                             </p-button>
-                            <p-button 
-                                [style]="{'background-color': 'transparent', 'color': 'red', 'border': 'none'}"
+                            <p-button [style]="{'background-color': 'transparent', 'color': 'red', 'border': 'none'}"
                                 (onClick)="deleteModel(model.productModelId)">
                                 <i class="material-icons">delete</i>
                             </p-button>
@@ -329,8 +318,7 @@
     <!-- SEZIONE SCONTI -->
     <div *ngIf="activeSection === 'discount'">
         <div class="mb-4">
-            <p-button 
-                [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}"
+            <p-button [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}"
                 (onClick)="openDiscountDialog()">
                 <i class="material-icons mr-2">add</i> Nuovo Sconto
             </p-button>
@@ -350,11 +338,12 @@
                     <tr>
                         <td style="color: rgb(235, 238, 232);">{{discount.code || discount.Code}}</td>
                         <td style="color: rgb(235, 238, 232);">{{discount.percentage || discount.Percentage}}%</td>
-                        <td style="color: rgb(235, 238, 232);">{{discount.startDate || discount.StartDate | date:'dd/MM/yyyy'}}</td>
-                        <td style="color: rgb(235, 238, 232);">{{discount.endDate || discount.EndDate | date:'dd/MM/yyyy'}}</td>
+                        <td style="color: rgb(235, 238, 232);">{{discount.startDate || discount.StartDate |
+                            date:'dd/MM/yyyy'}}</td>
+                        <td style="color: rgb(235, 238, 232);">{{discount.endDate || discount.EndDate |
+                            date:'dd/MM/yyyy'}}</td>
                         <td>
-                            <p-button 
-                                [style]="{'background-color': 'transparent', 'color': 'red', 'border': 'none'}"
+                            <p-button [style]="{'background-color': 'transparent', 'color': 'red', 'border': 'none'}"
                                 (onClick)="deleteDiscount(discount.productDiscountId || discount.ProductDiscountId)">
                                 <i class="material-icons">delete</i>
                             </p-button>
@@ -368,21 +357,22 @@
 
 
 <!-- DIALOG AGGIORNAMENTO PRODOTTO -->
-<p-dialog [(visible)]="displayProductUpdateDialog" [modal]="true" [style]="{width: '800px'}" 
-    [draggable]="false" [resizable]="false">
+<p-dialog [(visible)]="displayProductUpdateDialog" [modal]="true" [style]="{width: '800px'}" [draggable]="false"
+    [resizable]="false">
     <ng-template pTemplate="header">
         <div class="flex items-center gap-3">
             <i class="material-icons" style="color: rgb(170, 200, 170); font-size: 28px;">edit</i>
             <h3 class="text-xl font-bold" style="color: rgb(235, 238, 232);">Aggiorna Prodotto</h3>
         </div>
     </ng-template>
-    
+
     <div class="p-4" *ngIf="selectedProduct" style="background-color: rgb(78, 86, 80); border-radius: 8px;">
         <!-- Info Badge -->
-        <div class="mb-4 p-3 flex items-center gap-2" 
+        <div class="mb-4 p-3 flex items-center gap-2"
             style="background-color: rgba(170, 200, 170, 0.15); border-left: 4px solid rgb(170, 200, 170); border-radius: 4px;">
             <i class="material-icons" style="color: rgb(170, 200, 170); font-size: 20px;">info</i>
-            <span style="color: rgb(190, 195, 188); font-size: 13px;">Modifica i dettagli del prodotto. I campi con * sono obbligatori.</span>
+            <span style="color: rgb(190, 195, 188); font-size: 13px;">Modifica i dettagli del prodotto. I campi con *
+                sono obbligatori.</span>
         </div>
 
         <div class="space-y-4">
@@ -397,7 +387,8 @@
                 </div>
                 <div>
                     <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
-                        <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">confirmation_number</i>
+                        <i class="material-icons"
+                            style="font-size: 18px; color: rgb(170, 200, 170);">confirmation_number</i>
                         Numero Prodotto *
                     </label>
                     <input type="text" pInputText [(ngModel)]="selectedProduct.productNumber" class="w-full" />
@@ -411,12 +402,13 @@
                         <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">euro</i>
                         Prezzo di Listino *
                     </label>
-                    <p-inputNumber [(ngModel)]="selectedProduct.listPrice" mode="currency" currency="EUR"
-                        locale="it-IT" [showButtons]="false" class="w-full" [style]="{'width': '100%'}"></p-inputNumber>
+                    <p-inputNumber [(ngModel)]="selectedProduct.listPrice" mode="currency" currency="EUR" locale="it-IT"
+                        [showButtons]="false" class="w-full" [style]="{'width': '100%'}"></p-inputNumber>
                 </div>
                 <div>
                     <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
-                        <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">account_balance_wallet</i>
+                        <i class="material-icons"
+                            style="font-size: 18px; color: rgb(170, 200, 170);">account_balance_wallet</i>
                         Costo Standard *
                     </label>
                     <p-inputNumber [(ngModel)]="selectedProduct.standardCost" mode="currency" currency="EUR"
@@ -458,17 +450,17 @@
                         Categoria *
                     </label>
                     <p-select [(ngModel)]="selectedProduct.productCategoryId" [options]="categories()"
-                        optionLabel="name" optionValue="productCategoryId"
-                        class="w-full" [style]="{'width': '100%'}"></p-select>
+                        optionLabel="name" optionValue="productCategoryId" class="w-full"
+                        [style]="{'width': '100%'}"></p-select>
                 </div>
                 <div>
                     <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
                         <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">view_in_ar</i>
                         Modello Prodotto
                     </label>
-                    <p-select [(ngModel)]="selectedProduct.productModelId" [options]="models()"
-                        optionLabel="name" optionValue="productModelId"
-                        class="w-full" [style]="{'width': '100%'}" [showClear]="true"></p-select>
+                    <p-select [(ngModel)]="selectedProduct.productModelId" [options]="models()" optionLabel="name"
+                        optionValue="productModelId" class="w-full" [style]="{'width': '100%'}"
+                        [showClear]="true"></p-select>
                 </div>
             </div>
 
@@ -478,8 +470,8 @@
                     <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">event</i>
                     Data Inizio Vendita *
                 </label>
-                <p-datepicker [(ngModel)]="selectedProduct.sellStartDate" dateFormat="dd/mm/yy" 
-                    class="w-full" [style]="{'width': '100%'}"></p-datepicker>
+                <p-datepicker [(ngModel)]="selectedProduct.sellStartDate" dateFormat="dd/mm/yy" class="w-full"
+                    [style]="{'width': '100%'}"></p-datepicker>
             </div>
 
             <!-- Immagine Prodotto -->
@@ -488,9 +480,10 @@
                     <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">image</i>
                     Aggiorna Immagine Prodotto
                 </label>
-                <input type="file" accept="image/*" (change)="onUpdateFileSelect($event)" 
-                    class="w-full p-2" style="color: rgb(190, 195, 188); background-color: rgba(235, 238, 232, 0.1); border: 1px solid rgba(235, 238, 232, 0.3); border-radius: 4px;" />
-                <small *ngIf="selectedProduct.thumbnailPhotoFileName" style="color: rgb(170, 200, 170); display: block; margin-top: 4px;">
+                <input type="file" accept="image/*" (change)="onUpdateFileSelect($event)" class="w-full p-2"
+                    style="color: rgb(190, 195, 188); background-color: rgba(235, 238, 232, 0.1); border: 1px solid rgba(235, 238, 232, 0.3); border-radius: 4px;" />
+                <small *ngIf="selectedProduct.thumbnailPhotoFileName"
+                    style="color: rgb(170, 200, 170); display: block; margin-top: 4px;">
                     <i class="material-icons" style="font-size: 14px; vertical-align: middle;">check_circle</i>
                     Nuova immagine: {{selectedProduct.thumbnailPhotoFileName}}
                 </small>
@@ -501,21 +494,17 @@
             </div>
         </div>
     </div>
-    
+
     <ng-template pTemplate="footer">
         <div class="flex gap-3 justify-end">
-            <p-button 
-                label="Annulla" 
-                [outlined]="true"
+            <p-button label="Annulla" [outlined]="true"
                 [style]="{'color': 'rgb(235, 238, 232)', 'border-color': 'rgb(170, 200, 170)'}"
                 (onClick)="displayProductUpdateDialog = false">
                 <ng-template pTemplate="icon">
                     <span class="material-icons" style="font-size: 18px;">close</span>
                 </ng-template>
             </p-button>
-            <p-button 
-                label="Salva Modifiche" 
-                [disabled]="!isProductUpdateValid()"
+            <p-button label="Salva Modifiche" [disabled]="!isProductUpdateValid()"
                 [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none', 'font-weight': 'bold'}"
                 (onClick)="updateProduct(selectedProduct.productId)">
                 <ng-template pTemplate="icon">
@@ -539,21 +528,23 @@
         <p-button [outlined]="true" (onClick)="displayCategoryDialog = false">
             <i class="material-icons mr-2">close</i> Annulla
         </p-button>
-        <p-button [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}" (onClick)="insertCategory()">
+        <p-button [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}"
+            (onClick)="insertCategory()">
             <i class="material-icons mr-2">check</i> Inserisci
         </p-button>
     </ng-template>
 </p-dialog>
 
 <!-- DIALOG MODIFICA CATEGORIA -->
-<p-dialog [(visible)]="displayCategoryUpdateDialog" [modal]="true" [style]="{width: '400px'}" header="Modifica Categoria">
+<p-dialog [(visible)]="displayCategoryUpdateDialog" [modal]="true" [style]="{width: '400px'}"
+    header="Modifica Categoria">
     <div class="space-y-4 p-4">
         <div *ngIf="selectedCategory">
             <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
                 <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">category</i>
                 Nome Categoria *
             </label>
-            <input type="text" pInputText [(ngModel)]="selectedCategory.name" class="w-full" 
+            <input type="text" pInputText [(ngModel)]="selectedCategory.name" class="w-full"
                 placeholder="Inserisci nuovo nome" />
         </div>
     </div>
@@ -561,9 +552,8 @@
         <p-button [outlined]="true" (onClick)="displayCategoryUpdateDialog = false">
             <i class="material-icons mr-2">close</i> Annulla
         </p-button>
-        <p-button 
-            [disabled]="!selectedCategory?.name"
-            [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}" 
+        <p-button [disabled]="!selectedCategory?.name"
+            [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}"
             (onClick)="updateCategory()">
             <i class="material-icons mr-2">check_circle</i> Salva
         </p-button>
@@ -586,21 +576,23 @@
         <p-button [outlined]="true" (onClick)="displayModelDialog = false">
             <i class="material-icons mr-2">close</i> Annulla
         </p-button>
-        <p-button [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}" (onClick)="insertModel()">
+        <p-button [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}"
+            (onClick)="insertModel()">
             <i class="material-icons mr-2">check</i> Inserisci
         </p-button>
     </ng-template>
 </p-dialog>
 
 <!-- DIALOG MODIFICA DESCRIZIONE MODELLO -->
-<p-dialog [(visible)]="displayModelDescriptionDialog" [modal]="true" [style]="{width: '500px'}" header="Modifica Modello">
+<p-dialog [(visible)]="displayModelDescriptionDialog" [modal]="true" [style]="{width: '500px'}"
+    header="Modifica Modello">
     <div class="space-y-4 p-4" *ngIf="selectedModelForDescription">
         <div>
             <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
                 <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">label</i>
                 Nome Modello *
             </label>
-            <input type="text" pInputText [(ngModel)]="selectedModelForDescription.name" class="w-full" 
+            <input type="text" pInputText [(ngModel)]="selectedModelForDescription.name" class="w-full"
                 placeholder="Inserisci nome modello" />
         </div>
         <div>
@@ -616,9 +608,8 @@
         <p-button [outlined]="true" (onClick)="displayModelDescriptionDialog = false">
             <i class="material-icons mr-2">close</i> Annulla
         </p-button>
-        <p-button 
-            [disabled]="!selectedModelForDescription?.name"
-            [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}" 
+        <p-button [disabled]="!selectedModelForDescription?.name"
+            [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}"
             (onClick)="updateModelDescription()">
             <i class="material-icons mr-2">check_circle</i> Salva
         </p-button>
@@ -626,8 +617,9 @@
 </p-dialog>
 
 <!-- DIALOG SCONTO -->
-<p-dialog [(visible)]="displayDiscountDialog" [modal]="true" [style]="{width: '600px'}" header="Nuovo Sconto">
+<p-dialog [(visible)]="displayDiscountDialog" [modal]="true" [style]="{width: '700px'}" header="Nuovo Sconto">
     <div class="space-y-4 p-4">
+        <!-- Codice e Percentuale -->
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block mb-2" style="color: rgb(190, 195, 188);">Codice *</label>
@@ -635,27 +627,89 @@
             </div>
             <div>
                 <label class="block mb-2" style="color: rgb(190, 195, 188);">Percentuale *</label>
-                <p-inputNumber [(ngModel)]="newDiscount.percentage" [showButtons]="false" suffix="%" class="w-full"></p-inputNumber>
+                <p-inputNumber [(ngModel)]="newDiscount.percentage" [showButtons]="false" suffix="%"
+                    class="w-full"></p-inputNumber>
             </div>
         </div>
+
+        <!-- Date -->
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block mb-2" style="color: rgb(190, 195, 188);">Data Inizio</label>
-                <p-datepicker [(ngModel)]="newDiscount.startDate" dateFormat="dd/mm/yy" 
-                    placeholder="Seleziona data" class="w-full" [style]="{'width': '100%'}" appendTo="body"></p-datepicker>
+                <p-datepicker [(ngModel)]="newDiscount.startDate" dateFormat="dd/mm/yy" placeholder="Seleziona data"
+                    class="w-full" [style]="{'width': '100%'}" appendTo="body"></p-datepicker>
             </div>
             <div>
                 <label class="block mb-2" style="color: rgb(190, 195, 188);">Data Fine</label>
-                <p-datepicker [(ngModel)]="newDiscount.endDate" dateFormat="dd/mm/yy" 
-                    placeholder="Seleziona data" class="w-full" [style]="{'width': '100%'}" appendTo="body"></p-datepicker>
+                <p-datepicker [(ngModel)]="newDiscount.endDate" dateFormat="dd/mm/yy" placeholder="Seleziona data"
+                    class="w-full" [style]="{'width': '100%'}" appendTo="body"></p-datepicker>
+            </div>
+        </div>
+
+        <!-- Categorie -->
+        <div class="relative" style="z-index: 100;">
+            <label class="block mb-2" style="color: rgb(190, 195, 188);">Categorie</label>
+            <p-multiSelect [options]="categories()" [(ngModel)]="newDiscount.productCategoryId" optionLabel="name"
+                optionValue="productCategoryId" placeholder="Seleziona categorie" class="w-full"
+                [style]="{'width': '100%'}" display="chip" [filter]="false" appendTo="body">
+            </p-multiSelect>
+        </div>
+
+        <!-- Ricerca Prodotti -->
+        <div class="relative" style="z-index: 90;">
+            <label class="block mb-2" style="color: rgb(190, 195, 188);">Prodotti</label>
+
+            <!-- Prodotti selezionati - SOPRA il box di ricerca -->
+            <div *ngIf="selectedProducts().length > 0" class="mb-3">
+                <label class="block mb-2 text-sm" style="color: rgb(190, 195, 188);">
+                    Prodotti selezionati ({{selectedProducts().length}})
+                </label>
+                <div class="flex flex-wrap gap-2"
+                    style="padding: 0.5rem; background: var(--surface-ground); border: 1px solid var(--surface-border); border-radius: 6px;">
+                    <span *ngFor="let product of selectedProducts()" class="p-tag p-component"
+                        style="background-color: var(--primary-color); color: var(--primary-color-text); display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <span class="p-tag-value">{{product.name}}</span>
+                        <i class="material-icons" (click)="removeProduct(product.productId)"
+                            style="cursor: pointer; font-size: 16px; opacity: 0.7;">cancel</i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="relative">
+                <span class="p-input-icon-left w-full block">
+                    <i class="material-icons"
+                        style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: #6b7280;">search</i>
+                    <input type="text" pInputText [(ngModel)]="productSearchTerm" (input)="onProductSearch()"
+                        placeholder="Cerca prodotto per nome..." class="w-full" style="padding-left: 2.5rem;" />
+                </span>
+
+                <!-- Lista prodotti cercati -->
+                <div *ngIf="searchedProducts().length > 0"
+                    class="border rounded-xl shadow-lg max-h-48 overflow-y-auto mt-1"
+                    style="position: fixed; z-index: 9999; width: calc(100% - 2rem); background-color: #1e1e1e; padding: 0.5rem;"
+                    #searchResultsBox>
+                    <div *ngFor="let product of searchedProducts()"
+                        class="p-3 cursor-pointer rounded hover:bg-gray-700 transition-colors"
+                        (click)="addProduct(product)">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="font-medium">{{product.name}}</div>
+                                <div class="text-sm text-gray-400">{{product.productNumber}}</div>
+                            </div>
+                            <i class="material-icons text-green-600">add</i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
     <ng-template pTemplate="footer">
         <p-button [outlined]="true" (onClick)="displayDiscountDialog = false">
             <i class="material-icons mr-2">close</i> Annulla
         </p-button>
-        <p-button [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}" (onClick)="insertDiscount()">
+        <p-button [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}"
+            (onClick)="insertDiscount()">
             <i class="material-icons mr-2">check</i> Inserisci
         </p-button>
     </ng-template>
