@@ -1,12 +1,4 @@
-import {
-  Component,
-  inject,
-  signal,
-  OnInit,
-  HostListener,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, inject, signal, OnInit, HostListener, ElementRef } from '@angular/core';
 import { SaleService } from '../../../shared/services/salesAssistant.service';
 import { ProductComponent } from '../../product/product.component';
 import { ProductResponse, ProductCategoryResponse } from '../../../shared/models/productModel';
@@ -56,8 +48,6 @@ export class AssistantComponent implements OnInit {
   private messageService = inject(MessageService);
   private productService = inject(ProductService);
   private elementRef = inject(ElementRef);
-
-  @ViewChild('searchResultsBox') searchResultsBox?: ElementRef;
 
   categories = signal<ProductCategoryResponse[]>([]);
   models = signal<ProductModelsResponse[]>([]);
@@ -135,11 +125,21 @@ export class AssistantComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
-    const clickedInside = this.elementRef.nativeElement.contains(target);
 
-    // Se il click è fuori dal componente e ci sono risultati visibili, chiudi
-    if (!clickedInside && this.searchedProducts().length > 0) {
+    // Trova il campo di ricerca e la lista dei risultati
+    const searchInput = this.elementRef.nativeElement.querySelector(
+      'input[placeholder="Cerca prodotto per nome..."]'
+    );
+    const searchResults = this.elementRef.nativeElement.querySelector('[style*="position: fixed"]');
+
+    // Controlla se il click è dentro il campo di ricerca o la lista risultati
+    const clickedInsideSearch = searchInput?.contains(target);
+    const clickedInsideResults = searchResults?.contains(target);
+
+    // Se il click è fuori da entrambi e ci sono risultati visibili, chiudi
+    if (!clickedInsideSearch && !clickedInsideResults && this.searchedProducts().length > 0) {
       this.searchedProducts.set([]);
+      this.productSearchTerm = '';
     }
   }
 
@@ -682,10 +682,12 @@ export class AssistantComponent implements OnInit {
   }
 
   insertDiscount(): void {
+    // Validazione campi obbligatori
     if (!this.newDiscount.code || !this.newDiscount.percentage) {
       this.messageService.add({
         severity: 'warn',
-        summary: 'Codice e percentuale obbligatori',
+        summary: 'Campi obbligatori mancanti',
+        detail: 'Inserisci codice e percentuale',
         life: 3000,
       });
       return;
@@ -693,6 +695,20 @@ export class AssistantComponent implements OnInit {
 
     // Popola l'array di productId con i prodotti selezionati
     this.newDiscount.productId = this.selectedProducts().map((p) => p.productId);
+
+    // Validazione: almeno una categoria o un prodotto deve essere selezionato
+    if (
+      this.newDiscount.productId.length === 0 &&
+      this.newDiscount.productCategoryId.length === 0
+    ) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Selezione richiesta',
+        detail: 'Seleziona almeno una categoria o un prodotto',
+        life: 3000,
+      });
+      return;
+    }
 
     // Converti le date se necessario
     if (this.newDiscount.startDate) {
@@ -737,7 +753,11 @@ export class AssistantComponent implements OnInit {
 
   private formatDate(date: any): string {
     if (date instanceof Date) {
-      return date.toISOString().split('T')[0];
+      // Usa toLocaleDateString per ottenere la data locale in formato ISO
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
     }
     return date;
   }
