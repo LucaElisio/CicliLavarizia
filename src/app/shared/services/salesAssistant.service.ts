@@ -36,7 +36,7 @@ export class SaleService {
     }
 
     updateCategory(categoryId: number, categoryName: string): Observable<boolean> {
-      return this.http.put<boolean>(`${this.url}/SalesAssistant/Aggiorna%20categoria${categoryId}`, { categoryName });
+      return this.http.put<boolean>(`${this.url}/SalesAssistant/Aggiorna%20categoria${categoryId}?categoryName=${encodeURIComponent(categoryName)}`, {});
     }
 
     deleteCategory(categoryId: number): Observable<boolean> {

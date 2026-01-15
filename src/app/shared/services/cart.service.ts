@@ -47,7 +47,7 @@ export class CartService {
     const existingItem = cart.find(item => item.productId === productId);
     
     if (existingItem) {
-      existingItem.quantity += quantity;
+      existingItem.quantity = quantity; // Imposta la quantità invece di aggiungerla
     } else {
       cart.push({ productId, quantity });
     }
@@ -126,17 +126,30 @@ export class CartService {
 
 
   isInCart(productId: number): boolean {
-    return this.cartProducts()?.products.some(p => p.productId === productId) ?? false;
+    // Controlla prima il carrello del server
+    const inServerCart = this.cartProducts()?.products.some(p => p.productId === productId) ?? false;
+    if (inServerCart) return true;
+    
+    // Se non trovato, controlla il carrello locale
+    const inLocalCart = this.localCartItems().some(item => item.productId === productId);
+    return inLocalCart;
   }
 
   itemCount(productId: number): number {
+    // Controlla prima il carrello del server
     let count = 0;
-
     for (let item of this.cartProducts()?.products ?? []) {
       if (item.productId === productId) {
         count += 1;
       }
     }
+    
+    // Se non trovato nel carrello del server, controlla il localStorage
+    if (count === 0) {
+      const localItem = this.localCartItems().find(item => item.productId === productId);
+      count = localItem?.quantity ?? 0;
+    }
+    
     return count;
   }
 

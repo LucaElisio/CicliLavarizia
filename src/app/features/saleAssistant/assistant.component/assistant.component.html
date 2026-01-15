@@ -265,8 +265,15 @@
                         <td style="color: rgb(235, 238, 232);">{{category.name}}</td>
                         <td>
                             <p-button 
+                                [style]="{'background-color': 'transparent', 'color': 'rgb(170, 200, 170)', 'border': 'none', 'margin-right': '8px'}"
+                                (onClick)="openCategoryUpdateDialog(category)"
+                                pTooltip="Modifica categoria">
+                                <i class="material-icons">edit</i>
+                            </p-button>
+                            <p-button 
                                 [style]="{'background-color': 'transparent', 'color': 'red', 'border': 'none'}"
-                                (onClick)="deleteCategory(category.productCategoryId)">
+                                (onClick)="deleteCategory(category.productCategoryId)"
+                                pTooltip="Elimina categoria">
                                 <i class="material-icons">delete</i>
                             </p-button>
                         </td>
@@ -474,6 +481,24 @@
                 <p-datepicker [(ngModel)]="selectedProduct.sellStartDate" dateFormat="dd/mm/yy" 
                     class="w-full" [style]="{'width': '100%'}"></p-datepicker>
             </div>
+
+            <!-- Immagine Prodotto -->
+            <div>
+                <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
+                    <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">image</i>
+                    Aggiorna Immagine Prodotto
+                </label>
+                <input type="file" accept="image/*" (change)="onUpdateFileSelect($event)" 
+                    class="w-full p-2" style="color: rgb(190, 195, 188); background-color: rgba(235, 238, 232, 0.1); border: 1px solid rgba(235, 238, 232, 0.3); border-radius: 4px;" />
+                <small *ngIf="selectedProduct.thumbnailPhotoFileName" style="color: rgb(170, 200, 170); display: block; margin-top: 4px;">
+                    <i class="material-icons" style="font-size: 14px; vertical-align: middle;">check_circle</i>
+                    Nuova immagine: {{selectedProduct.thumbnailPhotoFileName}}
+                </small>
+                <small style="color: rgb(190, 195, 188); display: block; margin-top: 4px;">
+                    <i class="material-icons" style="font-size: 14px; vertical-align: middle;">info</i>
+                    Dimensione massima: 500KB
+                </small>
+            </div>
         </div>
     </div>
     
@@ -490,6 +515,7 @@
             </p-button>
             <p-button 
                 label="Salva Modifiche" 
+                [disabled]="!isProductUpdateValid()"
                 [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none', 'font-weight': 'bold'}"
                 (onClick)="updateProduct(selectedProduct.productId)">
                 <ng-template pTemplate="icon">
@@ -515,6 +541,31 @@
         </p-button>
         <p-button [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}" (onClick)="insertCategory()">
             <i class="material-icons mr-2">check</i> Inserisci
+        </p-button>
+    </ng-template>
+</p-dialog>
+
+<!-- DIALOG MODIFICA CATEGORIA -->
+<p-dialog [(visible)]="displayCategoryUpdateDialog" [modal]="true" [style]="{width: '400px'}" header="Modifica Categoria">
+    <div class="space-y-4 p-4">
+        <div *ngIf="selectedCategory">
+            <label class="flex items-center gap-2 mb-2 font-semibold" style="color: rgb(190, 195, 188);">
+                <i class="material-icons" style="font-size: 18px; color: rgb(170, 200, 170);">category</i>
+                Nome Categoria *
+            </label>
+            <input type="text" pInputText [(ngModel)]="selectedCategory.name" class="w-full" 
+                placeholder="Inserisci nuovo nome" />
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button [outlined]="true" (onClick)="displayCategoryUpdateDialog = false">
+            <i class="material-icons mr-2">close</i> Annulla
+        </p-button>
+        <p-button 
+            [disabled]="!selectedCategory?.name"
+            [style]="{'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none'}" 
+            (onClick)="updateCategory()">
+            <i class="material-icons mr-2">check_circle</i> Salva
         </p-button>
     </ng-template>
 </p-dialog>
