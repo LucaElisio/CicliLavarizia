@@ -16,7 +16,7 @@
       <div>
         <h2 class="text-2xl font-semibold mb-4">Gestione Clienti</h2>
 
-        @if (loading) {
+        @if (loading()) {
         <div class="flex flex-col justify-center items-center py-12">
           <span class="material-icons text-6xl text-blue-500 animate-spin">refresh</span>
           <span class="mt-4 text-xl text-gray-600">Caricamento clienti...</span>
@@ -76,7 +76,7 @@
       <div>
         <h2 class="text-2xl font-semibold mb-4">Gestione Dipendenti</h2>
 
-        @if (loading) {
+        @if (loading()) {
         <div class="flex flex-col justify-center items-center py-12">
           <span class="material-icons text-6xl text-blue-500 animate-spin">refresh</span>
           <span class="mt-4 text-xl text-gray-600">Caricamento dipendenti...</span>

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../shared/services/admin.service';
@@ -41,6 +41,7 @@ interface ViewOption {
 export class AdminComponent implements OnInit {
   private adminService = inject(AdminService);
   private messageService = inject(MessageService);
+  private cdr = inject(ChangeDetectorRef);
 
   // Mappatura ruoli: numero -> stringa
   private roleMap: { [key: number]: string } = {
@@ -70,7 +71,7 @@ export class AdminComponent implements OnInit {
 
   employees = signal<CustomerAdminUpdateRequest[]>([]);
   customers = signal<CustomerInfoRequest[]>([]);
-  loading = false;
+  loading = signal<boolean>(false);
 
   roles = [
     { label: 'Admin', value: 0 },
@@ -81,40 +82,33 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void {
     // Carica automaticamente i clienti all'avvio
-    // Usa setTimeout per evitare ExpressionChangedAfterItHasBeenCheckedError
-    setTimeout(() => {
-      this.loadCustomers();
-    });
+    this.loadCustomers();
   }
 
   onViewChange(): void {
-    // Usa setTimeout per evitare l'errore ExpressionChangedAfterItHasBeenCheckedError
-    setTimeout(() => {
-      if (this.currentView === 'customers') {
-        if (this.customers().length === 0) {
-          this.loadCustomers();
-        }
-      } else if (this.currentView === 'employees') {
-        if (this.employees().length === 0) {
-          this.loadEmployees();
-        }
+    if (this.currentView === 'customers') {
+      if (this.customers().length === 0) {
+        this.loadCustomers();
       }
-    });
+    } else if (this.currentView === 'employees') {
+      if (this.employees().length === 0) {
+        this.loadEmployees();
+      }
+    }
   }
 
   loadCustomers(): void {
-    this.loading = true;
+    this.loading.set(true);
     this.adminService.getCustomers().subscribe({
       next: (data) => {
         // Filtra solo i clienti con ruolo Customer
-        // Il backend restituisce numeri (1), l'enum è stringhe ('Customer')
         const filteredCustomers = data.filter((c) => (c.role as any) === 1);
         this.customers.set(filteredCustomers);
-        this.loading = false;
+        this.loading.set(false);
       },
       error: (err) => {
         this.customers.set([]);
-        this.loading = false;
+        this.loading.set(false);
         this.messageService.add({
           severity: 'error',
           summary: 'Errore',
@@ -125,7 +119,7 @@ export class AdminComponent implements OnInit {
   }
 
   loadEmployees(): void {
-    this.loading = true;
+    this.loading.set(true);
     this.adminService.getEmployees().subscribe({
       next: (data) => {
         if (Array.isArray(data)) {
@@ -133,11 +127,11 @@ export class AdminComponent implements OnInit {
         } else {
           this.employees.set([]);
         }
-        this.loading = false;
+        this.loading.set(false);
       },
       error: (err) => {
         this.employees.set([]);
-        this.loading = false;
+        this.loading.set(false);
         this.messageService.add({
           severity: 'error',
           summary: 'Errore',
@@ -148,23 +142,21 @@ export class AdminComponent implements OnInit {
   }
 
   updateRole(employee: CustomerAdminUpdateRequest): void {
-    this.loading = true;
+    this.loading.set(true);
     this.adminService.updateUserRole(employee).subscribe({
       next: () => {
-        this.loading = false;
+        this.loading.set(false);
         this.messageService.add({
           severity: 'success',
           summary: 'Successo',
           detail: 'Ruolo aggiornato con successo',
         });
         // Ricarica entrambe le liste dopo l'aggiornamento
-        setTimeout(() => {
-          this.loadEmployees();
-          this.loadCustomers();
-        });
+        this.loadEmployees();
+        this.loadCustomers();
       },
       error: (err) => {
-        this.loading = false;
+        this.loading.set(false);
         this.messageService.add({
           severity: 'error',
           summary: 'Errore',
@@ -175,7 +167,7 @@ export class AdminComponent implements OnInit {
   }
 
   updateCustomerRole(customer: CustomerInfoRequest): void {
-    this.loading = true;
+    this.loading.set(true);
     const updateRequest: CustomerAdminUpdateRequest = {
       customerId: customer.customerId,
       role: customer.role,
@@ -183,20 +175,18 @@ export class AdminComponent implements OnInit {
 
     this.adminService.updateUserRole(updateRequest).subscribe({
       next: () => {
-        this.loading = false;
+        this.loading.set(false);
         this.messageService.add({
           severity: 'success',
           summary: 'Successo',
           detail: 'Ruolo cliente aggiornato con successo',
         });
         // Ricarica entrambe le liste dopo l'aggiornamento
-        setTimeout(() => {
-          this.loadCustomers();
-          this.loadEmployees();
-        });
+        this.loadCustomers();
+        this.loadEmployees();
       },
       error: (err) => {
-        this.loading = false;
+        this.loading.set(false);
         this.messageService.add({
           severity: 'error',
           summary: 'Errore',
