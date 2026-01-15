@@ -39,14 +39,13 @@ export interface CustomerUpdateRequest {
 
 export interface CustomerAdminUpdateRequest {
   customerId: number;
-  emailAddress: string;
   role: Role;
 }
 
 export enum Role {
-  Admin = "Admin",
-  Customer = "Customer",
-  SaleAssistant = "SaleAssistant",
-  Logistic = "Logistic",
-  Guest = "Guest"
+  Admin = 'Admin',
+  Customer = 'Customer',
+  SaleAssistant = 'SaleAssistant',
+  Logistic = 'Logistic',
+  Guest = 'Guest',
 }
