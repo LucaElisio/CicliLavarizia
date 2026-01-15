@@ -14,7 +14,8 @@
 
                     <div class="relative flex items-center">
                         <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                            placeholder="Cerca ordini..." class="pr-3 py-2 w-64 outline-none search-input-order" #searchInput />
+                            placeholder="Cerca ordini..." class="pr-3 py-2 w-64 outline-none search-input-order"
+                            #searchInput />
                     </div>
                 </div>
             </ng-template>
@@ -62,12 +63,9 @@
                     </td>
                     <td>
                         <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold">
-                            Status {{ order.status }}
+                            {{statusLabel(order.status)}}
                         </span>
                         @if (order.onlineOrderFlag) {
-                        <span class="block mt-1">
-                            <span class="material-icons text-xs" style="vertical-align: middle;">shopping_cart</span>
-                        </span>
                         }
                     </td>
                     <td>
@@ -76,7 +74,7 @@
                         </div>
                     </td>
                     <td class="text-right">
-                        <span class="font-bold text-lg">{{ order.subTotal | currency:'EUR' }}</span>
+                        <span class="font-bold text-lg">{{ order.totalDue | currency:'EUR' }}</span>
                     </td>
                     <td class="text-center">
                         <span class="px-2 py-1 rounded-full text-xs font-semibold">

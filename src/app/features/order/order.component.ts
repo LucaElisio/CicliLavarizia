@@ -17,7 +17,19 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-order',
-  imports: [CardModule, DialogModule, CommonModule, TableModule, OrderListModule, ButtonModule, FormsModule, InputTextModule, SelectModule, ToastModule, ConfirmDialogModule],
+  imports: [
+    CardModule,
+    DialogModule,
+    CommonModule,
+    TableModule,
+    OrderListModule,
+    ButtonModule,
+    FormsModule,
+    InputTextModule,
+    SelectModule,
+    ToastModule,
+    ConfirmDialogModule,
+  ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './order.component.html',
   styleUrl: './order.component.css',
@@ -47,7 +59,7 @@ export class OrderComponent implements OnInit {
       city: '',
       stateProvince: '',
       countryRegion: '',
-      postalCode: ''
+      postalCode: '',
     },
     billToAddress: {
       addressLine1: '',
@@ -55,13 +67,13 @@ export class OrderComponent implements OnInit {
       city: '',
       stateProvince: '',
       countryRegion: '',
-      postalCode: ''
-    }
+      postalCode: '',
+    },
   };
 
   shipMethodOptions = [
     { label: 'CARGO TRANSPORT', value: 'CARGO TRANSPORT' },
-    { label: 'CARGO EXPRESS (+5$)', value: 'CARGO EXPRESS' }
+    { label: 'CARGO EXPRESS (+5$)', value: 'CARGO EXPRESS' },
   ];
 
   showOrderDetails(order: OrderModelResponse): void {
@@ -72,16 +84,42 @@ export class OrderComponent implements OnInit {
   openEditDialog(order: OrderModelResponse, event: Event): void {
     event.stopPropagation();
     this.selectedOrder = order;
-    
+
     // Popola i dati di modifica con i valori attuali
     this.editOrderData = {
       comment: order.comment || '',
       shipMethod: order.shipMethod,
       shipToAddress: { ...order.shipToAddress } as AddressResponse,
-      billToAddress: { ...order.billToAddress } as AddressResponse
+      billToAddress: { ...order.billToAddress } as AddressResponse,
     };
-    
+
     this.displayEditDialog = true;
+  }
+
+  statusLabel(status: number): string {
+    let label: string = '';
+
+    switch (status) {
+      case 1:
+        label = 'Process';
+        break;
+      case 2:
+        label = 'Approved';
+        break;
+      case 3:
+        label = 'Backordered';
+        break;
+      case 4:
+        label = 'Rejected';
+        break;
+      case 5:
+        label = 'Shipped';
+        break;
+      case 6:
+        label = 'cancelled';
+        break;
+    }
+    return label;
   }
 
   updateOrder(): void {
@@ -92,8 +130,8 @@ export class OrderComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'Ordine aggiornato',
-          detail: 'I dettagli dell\'ordine sono stati aggiornati con successo',
-          life: 3000
+          detail: "I dettagli dell'ordine sono stati aggiornati con successo",
+          life: 3000,
         });
         this.displayEditDialog = false;
         this.getOrders();
@@ -102,16 +140,16 @@ export class OrderComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Errore',
-          detail: 'Impossibile aggiornare l\'ordine',
-          life: 5000
+          detail: "Impossibile aggiornare l'ordine",
+          life: 5000,
         });
-      }
+      },
     });
   }
 
   removeOrder(orderId: number, event: Event): void {
     event.stopPropagation();
-    
+
     this.confirmationService.confirm({
       message: 'Sei sicuro di voler rimuovere questo ordine?',
       header: 'Conferma Rimozione',
@@ -123,8 +161,8 @@ export class OrderComponent implements OnInit {
             this.messageService.add({
               severity: 'success',
               summary: 'Ordine rimosso',
-              detail: 'L\'ordine è stato rimosso con successo',
-              life: 3000
+              detail: "L'ordine è stato rimosso con successo",
+              life: 3000,
             });
             this.getOrders();
           },
@@ -132,12 +170,12 @@ export class OrderComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Errore',
-              detail: 'Impossibile rimuovere l\'ordine',
-              life: 5000
+              detail: "Impossibile rimuovere l'ordine",
+              life: 5000,
             });
-          }
+          },
         });
-      }
+      },
     });
   }
 
@@ -149,7 +187,7 @@ export class OrderComponent implements OnInit {
     this.orderService.getOrders().subscribe({
       next: (data) => {
         // Filtra gli ordini con status 6 (cancellati)
-        const activeOrders = data.filter(order => order.status !== 6);
+        const activeOrders = data.filter((order) => order.status !== 6);
         this.orders.set(activeOrders);
       },
     });
