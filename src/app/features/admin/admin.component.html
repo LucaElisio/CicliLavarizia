@@ -24,7 +24,6 @@
         } @else {
         <div class="mb-4">
           <span class="p-input-icon-left w-full md:w-96">
-            <i class="pi pi-search"></i>
             <input pInputText type="text" [(ngModel)]="searchCustomerValue"
               (input)="customerTable.filterGlobal($any($event.target).value, 'contains')"
               placeholder="Cerca per nome o email..." class="w-full" />
@@ -92,7 +91,6 @@
         } @else {
         <div class="mb-4">
           <span class="p-input-icon-left w-full md:w-96">
-            <i class="pi pi-search"></i>
             <input pInputText type="text" [(ngModel)]="searchEmployeeValue"
               (input)="employeeTable.filterGlobal($any($event.target).value, 'contains')"
               placeholder="Cerca per email..." class="w-full" />
