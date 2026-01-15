@@ -6,7 +6,7 @@
   <div class="flex items-center gap-8">
     <!-- Logo -->
     <h1>
-      @if (CustomerRole === Roles.Admin || CustomerRole === Roles.Customer || CustomerRole === Roles.Guest) {
+      @if (CustomerRole() === Roles.Admin || CustomerRole() === Roles.Customer || CustomerRole() === Roles.Guest) {
       <a routerLink="/" class="flex items-center gap-2">
         <span class="material-icons bike text-2xl">pedal_bike</span>
         <span class="text-xl md:text-2xl font-bold tracking-tight">Cicli L'Avarizia</span>
@@ -21,7 +21,7 @@
 
     <!-- Link specifici per ruolo -->
     <nav class="hidden md:flex items-center gap-6">
-      @switch (CustomerRole) {
+      @switch (CustomerRole()) {
       @case (Roles.Admin) {
       <a routerLink="/sales-assistant" class="text-lg font-semibold transition-transform hover:scale-105">
         Assistente di vendita
@@ -50,7 +50,7 @@
 
   <!-- Sezione centro: Barra di ricerca -->
   <div class="flex-1 flex justify-center mx-8">
-    @if (CustomerRole === Roles.Customer || CustomerRole === Roles.Admin ||CustomerRole === Roles.Guest) {
+    @if (CustomerRole() === Roles.Customer || CustomerRole() === Roles.Admin ||CustomerRole() === Roles.Guest) {
     <div class="relative w-full max-w-md search-wrapper">
       <form class="w-full">
         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -81,14 +81,14 @@
   <div class="flex items-center gap-6">
 
     <!-- Link Prodotti -->
-    @if (CustomerRole === Roles.Customer || CustomerRole === Roles.Admin || CustomerRole === Roles.Guest) {
+    @if (CustomerRole() === Roles.Customer || CustomerRole() === Roles.Admin || CustomerRole() === Roles.Guest) {
     <a routerLink="/products" class="hidden md:block text-lg font-semibold transition-transform hover:scale-105">
       Prodotti
     </a>
     }
 
     <!-- Carrello (solo per Customer e Admin) -->
-    @if (CustomerRole === Roles.Customer || CustomerRole === Roles.Admin || CustomerRole === Roles.Guest) {
+    @if (CustomerRole() === Roles.Customer || CustomerRole() === Roles.Admin || CustomerRole() === Roles.Guest) {
     <p-overlay-badge [style]="{outline: 'unset'}" [value]="cartItemsCount()" badgeSize="small">
       <a routerLink="/cart">
         <span class="material-icons cart text-3xl">shopping_cart</span>
