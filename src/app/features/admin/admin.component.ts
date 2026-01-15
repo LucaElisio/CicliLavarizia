@@ -15,6 +15,7 @@ import { MessageService } from 'primeng/api';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { InputTextModule } from 'primeng/inputtext';
 
 interface ViewOption {
   label: string;
@@ -33,6 +34,7 @@ interface ViewOption {
     CardModule,
     TagModule,
     SelectButtonModule,
+    InputTextModule,
   ],
   providers: [MessageService],
   templateUrl: './admin.component.html',
@@ -74,6 +76,9 @@ export class AdminComponent implements OnInit {
   loading = signal<boolean>(false);
   loadingCustomerId = signal<number | null>(null);
   loadingEmployeeId = signal<number | null>(null);
+
+  searchCustomerValue: string = '';
+  searchEmployeeValue: string = '';
 
   roles = [
     { label: 'Admin', value: 0 },

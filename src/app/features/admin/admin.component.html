@@ -18,13 +18,21 @@
 
         @if (loading()) {
         <div class="flex flex-col justify-center items-center py-12">
-          <span class="material-icons text-6xl text-blue-500 animate-spin">refresh</span>
+          <span class="material-icons text-6xl animate-spin">refresh</span>
           <span class="mt-4 text-xl text-gray-600">Caricamento clienti...</span>
         </div>
         } @else {
-        <p-table [value]="customers()" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        <div class="mb-4">
+          <span class="p-input-icon-left w-full md:w-96">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" [(ngModel)]="searchCustomerValue"
+              (input)="customerTable.filterGlobal($any($event.target).value, 'contains')"
+              placeholder="Cerca per nome o email..." class="w-full" />
+          </span>
+        </div>
+        <p-table #customerTable [value]="customers()" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
           currentPageReportTemplate="{first} - {last} di {totalRecords} clienti" [rowsPerPageOptions]="[10, 25, 50]"
-          class="p-datatable-striped">
+          [globalFilterFields]="['firstName', 'lastName', 'emailAddress', 'companyName']" class="p-datatable-striped">
           <ng-template pTemplate="header">
             <tr>
               <th>ID</th>
@@ -82,9 +90,17 @@
           <span class="mt-4 text-xl text-gray-600">Caricamento dipendenti...</span>
         </div>
         } @else {
-        <p-table [value]="employees()" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        <div class="mb-4">
+          <span class="p-input-icon-left w-full md:w-96">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" [(ngModel)]="searchEmployeeValue"
+              (input)="employeeTable.filterGlobal($any($event.target).value, 'contains')"
+              placeholder="Cerca per email..." class="w-full" />
+          </span>
+        </div>
+        <p-table #employeeTable [value]="employees()" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
           currentPageReportTemplate="{first} - {last} di {totalRecords} dipendenti" [rowsPerPageOptions]="[10, 25, 50]"
-          class="p-datatable-striped">
+          [globalFilterFields]="['emailAddress']" class="p-datatable-striped">
           <ng-template pTemplate="header">
             <tr>
               <th>Email</th>
