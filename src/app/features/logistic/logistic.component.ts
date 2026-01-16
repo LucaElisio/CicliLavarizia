@@ -62,13 +62,23 @@ export class LogisticComponent {
   };
 
 
-  /** Elenco status che permettono la modifica */
+  // Elenco status che permettono la modifica 
   editableStatuses = [1, 2, 3, 5];
 
-  statusOptions = this.editableStatuses.map(s => ({
-    label: this.statusMap[s],
-    value: s
-  }));
+  // Stati NON modificabili e NON cancellabili 
+  readonly blockedStatuses = [4, 5, 6];
+
+  // statusOptions = this.editableStatuses.map(s => ({
+  //   label: this.statusMap[s],
+  //   value: s
+  // }));
+
+  statusOptions = Object.entries(this.statusMap)
+    .filter(([key]) => !this.blockedStatuses.includes(+key))
+    .map(([key, label]) => ({
+      label,
+      value: +key
+    }));
 
   constructor(
     private logisticService: LogisticService,
@@ -91,7 +101,7 @@ export class LogisticComponent {
 
   //Verifica se l'ordine è modificabile 
   canEdit(order: SalesOrderHeader): boolean {
-    return this.editableStatuses.includes(order.status);
+    return !this.blockedStatuses.includes(order.status);
   }
 
   /** Converte stringa ISO in Date */
@@ -111,6 +121,13 @@ export class LogisticComponent {
     return `${year}-${month}-${day}`; // Ritorno in formato YYYY-MM-DD
   }
 
+  //Ritorna il metodo di spedizione, o 'non definito' se mancante
+  getShipMethod(value: string): string {
+    if(value === null || value === undefined || value === 'null') {
+      return 'Da definire';
+    }
+    return value;
+  }
 
 
   /* ======================= DETTAGLIO ======================= */
@@ -212,11 +229,11 @@ export class LogisticComponent {
 
   //Chiede conferma per cancellare l'ordine (impostare status a 6)
   askDelete(): void {
-    if (!this.activeOrder) return;
+    if (!this.activeOrder || !this.canEdit(this.activeOrder)) return;
 
     this.confirmationService.confirm({
       header: 'Conferma cancellazione',
-      message: 'L’ordine verrà impostato come "Cancellato". Continuare?',
+      message: 'L’ordine verrà impostato come "Cancellato"',
       icon: 'pi pi-trash',
       acceptLabel: 'Conferma',
       rejectLabel: 'Annulla',

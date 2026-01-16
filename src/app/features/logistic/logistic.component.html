@@ -33,10 +33,25 @@
                 <!-- VISUALIZZAZIONE -->
                 @if (rowMode === 'detail') {
                 <div class="order-detail">
-                    <p><strong>Data ordine:</strong> {{ order.orderDate }}</p>
-                    <p><strong>Spedizione:</strong> {{ order.shipDate }}</p>
-                    <p><strong>Consegna:</strong> {{ order.dueDate }}</p>
-                    <p><strong>Metodo di spedizione:</strong> {{ order.shipMethod }}</p>
+                    <p>
+                        <strong>Data ordine:</strong>
+                        {{ order.orderDate | date:'dd/MM/yyyy \'alle\' HH:mm' }}
+                    </p>
+
+                    <p>
+                        <strong>Spedizione:</strong>
+                        {{ order.shipDate ? (order.shipDate | date:'dd/MM/yyyy') : 'non definito' }}
+                    </p>
+
+                    <p>
+                        <strong>Consegna:</strong>
+                        {{ order.dueDate ? (order.dueDate | date:'dd/MM/yyyy') : 'non definito' }}
+                    </p>
+
+                    <p class="mb-2">
+                        <strong>Metodo di spedizione:</strong>
+                        {{ getShipMethod(order.shipMethod) }}
+                    </p>
 
                     <div class="detail-actions">
                         <button class="btn close" (click)="closeDetail()">
