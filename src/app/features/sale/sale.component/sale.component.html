@@ -22,41 +22,41 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block mb-2" style="color: rgb(190, 195, 188);">Indirizzo *</label>
-                        <input type="text" pInputText [(ngModel)]="shipToAddress.addressLine1" 
-                               placeholder="Via, numero civico" class="w-full" />
+                        <input type="text" pInputText [(ngModel)]="shipToAddress.addressLine1"
+                            placeholder="Via, numero civico" class="w-full" />
                     </div>
 
                     <div>
                         <label class="block mb-2" style="color: rgb(190, 195, 188);">Indirizzo 2 (opzionale)</label>
-                        <input type="text" pInputText [(ngModel)]="shipToAddress.addressLine2" 
-                               placeholder="Informazioni aggiuntive" class="w-full" />
+                        <input type="text" pInputText [(ngModel)]="shipToAddress.addressLine2"
+                            placeholder="Informazioni aggiuntive" class="w-full" />
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block mb-2" style="color: rgb(190, 195, 188);">Città *</label>
-                            <input type="text" pInputText [(ngModel)]="shipToAddress.city" 
-                                   placeholder="Città" class="w-full" />
+                            <input type="text" pInputText [(ngModel)]="shipToAddress.city" placeholder="Città"
+                                class="w-full" />
                         </div>
 
                         <div>
                             <label class="block mb-2" style="color: rgb(190, 195, 188);">CAP *</label>
-                            <input type="text" pInputText [(ngModel)]="shipToAddress.postalCode" 
-                                   placeholder="00000" class="w-full" />
+                            <input type="text" pInputText [(ngModel)]="shipToAddress.postalCode" placeholder="00000"
+                                class="w-full" />
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block mb-2" style="color: rgb(190, 195, 188);">Provincia/Stato *</label>
-                            <input type="text" pInputText [(ngModel)]="shipToAddress.stateProvince" 
-                                   placeholder="Provincia" class="w-full" />
+                            <input type="text" pInputText [(ngModel)]="shipToAddress.stateProvince"
+                                placeholder="Provincia" class="w-full" />
                         </div>
 
                         <div>
                             <label class="block mb-2" style="color: rgb(190, 195, 188);">Paese *</label>
-                            <input type="text" pInputText [(ngModel)]="shipToAddress.countryRegion" 
-                                   placeholder="Italia" class="w-full" />
+                            <input type="text" pInputText [(ngModel)]="shipToAddress.countryRegion" placeholder="Italia"
+                                class="w-full" />
                         </div>
                     </div>
                 </div>
@@ -75,8 +75,7 @@
 
                 <div class="mb-4">
                     <label class="flex items-center gap-2" style="color: rgb(190, 195, 188); cursor: pointer;">
-                        <input type="checkbox" [(ngModel)]="useSameAddress" 
-                               (ngModelChange)="copyShippingToBilling()" />
+                        <input type="checkbox" [(ngModel)]="useSameAddress" (ngModelChange)="copyShippingToBilling()" />
                         Usa lo stesso indirizzo di spedizione
                     </label>
                 </div>
@@ -84,41 +83,41 @@
                 <div *ngIf="!useSameAddress" class="space-y-4">
                     <div>
                         <label class="block mb-2" style="color: rgb(190, 195, 188);">Indirizzo *</label>
-                        <input type="text" pInputText [(ngModel)]="billToAddress.addressLine1" 
-                               placeholder="Via, numero civico" class="w-full" />
+                        <input type="text" pInputText [(ngModel)]="billToAddress.addressLine1"
+                            placeholder="Via, numero civico" class="w-full" />
                     </div>
 
                     <div>
                         <label class="block mb-2" style="color: rgb(190, 195, 188);">Indirizzo 2 (opzionale)</label>
-                        <input type="text" pInputText [(ngModel)]="billToAddress.addressLine2" 
-                               placeholder="Scala, interno, ecc." class="w-full" />
+                        <input type="text" pInputText [(ngModel)]="billToAddress.addressLine2"
+                            placeholder="Scala, interno, ecc." class="w-full" />
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block mb-2" style="color: rgb(190, 195, 188);">Città *</label>
-                            <input type="text" pInputText [(ngModel)]="billToAddress.city" 
-                                   placeholder="Città" class="w-full" />
+                            <input type="text" pInputText [(ngModel)]="billToAddress.city" placeholder="Città"
+                                class="w-full" />
                         </div>
 
                         <div>
                             <label class="block mb-2" style="color: rgb(190, 195, 188);">CAP *</label>
-                            <input type="text" pInputText [(ngModel)]="billToAddress.postalCode" 
-                                   placeholder="00000" class="w-full" />
+                            <input type="text" pInputText [(ngModel)]="billToAddress.postalCode" placeholder="00000"
+                                class="w-full" />
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block mb-2" style="color: rgb(190, 195, 188);">Provincia/Stato *</label>
-                            <input type="text" pInputText [(ngModel)]="billToAddress.stateProvince" 
-                                   placeholder="Provincia" class="w-full" />
+                            <input type="text" pInputText [(ngModel)]="billToAddress.stateProvince"
+                                placeholder="Provincia" class="w-full" />
                         </div>
 
                         <div>
                             <label class="block mb-2" style="color: rgb(190, 195, 188);">Paese *</label>
-                            <input type="text" pInputText [(ngModel)]="billToAddress.countryRegion" 
-                                   placeholder="Italia" class="w-full" />
+                            <input type="text" pInputText [(ngModel)]="billToAddress.countryRegion" placeholder="Italia"
+                                class="w-full" />
                         </div>
                     </div>
                 </div>
@@ -138,33 +137,31 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block mb-2" style="color: rgb(190, 195, 188);">Codice Approvazione Carta *</label>
-                        <input type="text" pInputText [(ngModel)]="creditCardApprovalCode" 
-                               placeholder="Codice approvazione" class="w-full" />
+                        <input type="text" pInputText [(ngModel)]="creditCardApprovalCode"
+                            placeholder="Codice approvazione" class="w-full" />
                     </div>
 
                     <div>
                         <label class="block mb-2" style="color: rgb(190, 195, 188);">Metodo di Spedizione</label>
-                        <p-select 
-                            [(ngModel)]="shipMethod" 
-                            [options]="shipMethodOptions" 
-                            optionLabel="label" 
-                            optionValue="value"
-                            placeholder="Seleziona metodo di spedizione" 
-                            class="w-full">
+                        <p-select [(ngModel)]="shipMethod" [options]="shipMethodOptions" optionLabel="label"
+                            optionValue="value" placeholder="Seleziona metodo di spedizione" class="w-full">
                         </p-select>
                     </div>
 
+                    <!-- Codice Sconto -->
                     <div>
                         <label class="block mb-2" style="color: rgb(190, 195, 188);">Codice Sconto (opzionale)</label>
-                        <input type="text" pInputText [(ngModel)]="discountCode" 
-                               placeholder="Inserisci codice sconto" class="w-full" />
+                        <input type="text" pInputText [(ngModel)]="discountCode" placeholder="Inserisci codice sconto"
+                            class="w-full" />
+                        <p class="text-sm mt-1" style="color: rgb(190, 195, 188);">
+                            Lo sconto verrà applicato automaticamente se valido
+                        </p>
                     </div>
 
                     <div>
                         <label class="block mb-2" style="color: rgb(190, 195, 188);">Note Ordine (opzionale)</label>
-                        <textarea pInputText [(ngModel)]="comment" 
-                                  placeholder="Eventuali note per l'ordine" 
-                                  class="w-full" rows="3"></textarea>
+                        <textarea pInputText [(ngModel)]="comment" placeholder="Eventuali note per l'ordine"
+                            class="w-full" rows="3"></textarea>
                     </div>
                 </div>
             </p-card>
@@ -172,7 +169,8 @@
 
         <!-- Riepilogo Ordine -->
         <div class="lg:col-span-1">
-            <p-card [style]="{'background-color': 'rgb(78, 86, 80)', 'border-radius': '8px', 'position': 'sticky', 'top': '20px'}">
+            <p-card
+                [style]="{'background-color': 'rgb(78, 86, 80)', 'border-radius': '8px', 'position': 'sticky', 'top': '20px'}">
                 <ng-template pTemplate="header">
                     <div class="p-4">
                         <h2 class="text-2xl font-bold" style="color: rgb(235, 238, 232);">
@@ -184,12 +182,13 @@
 
                 <div class="space-y-4">
                     <!-- Prodotti -->
-                    <div *ngIf="cartService.cartProducts()?.products && cartService.cartProducts()!.products.length > 0">
-                        <div *ngFor="let product of cartService.cartProducts()!.products" 
-                             class="flex items-center gap-3 mb-3 pb-3" 
-                             style="border-bottom: 1px solid rgba(190, 195, 188, 0.2);">
-                            <img [src]="product.thumbNailPhoto" [alt]="product.name" 
-                                 class="w-16 h-16 object-cover rounded" />
+                    <div
+                        *ngIf="cartService.cartProducts()?.products && cartService.cartProducts()!.products.length > 0">
+                        <div *ngFor="let product of cartService.cartProducts()!.products"
+                            class="flex items-center gap-3 mb-3 pb-3"
+                            style="border-bottom: 1px solid rgba(190, 195, 188, 0.2);">
+                            <img [src]="product.thumbNailPhoto" [alt]="product.name"
+                                class="w-16 h-16 object-cover rounded" />
                             <div class="flex-1">
                                 <p class="font-semibold" style="color: rgb(235, 238, 232);">{{ product.name }}</p>
                                 <p class="text-sm" style="color: rgb(190, 195, 188);">
@@ -236,16 +235,18 @@
                             <span style="color: rgb(170, 200, 170);">Totale + tasse:</span>
                             <span style="color: rgb(170, 200, 170);">{{ totalWithTax() | number:'1.2-2' }} €</span>
                         </div>
+
+                        <p *ngIf="discountCode" class="text-sm text-center mt-2" style="color: rgb(190, 195, 188);">
+                            * Lo sconto verrà applicato alla conferma dell'ordine
+                        </p>
                     </div>
 
                     <p-divider></p-divider>
 
                     <!-- Pulsante Conferma -->
-                    <p-button 
-                        label="Conferma Ordine" 
+                    <p-button label="Conferma Ordine"
                         [style]="{'width': '100%', 'background-color': 'rgb(170, 200, 170)', 'color': 'rgb(20, 20, 20)', 'border': 'none', 'font-weight': 'bold'}"
-                        [disabled]="isProcessing() || totalElements() === 0"
-                        (onClick)="createOrder()">
+                        [disabled]="isProcessing() || totalElements() === 0" (onClick)="createOrder()">
                         <ng-template pTemplate="icon">
                             <span class="material-icons" style="font-size: 20px; vertical-align: middle;">check</span>
                         </ng-template>

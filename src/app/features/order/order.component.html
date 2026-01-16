@@ -185,7 +185,7 @@
                         <td class="text-right">
                             @if (detail.unitPriceDiscount > 0) {
                             <span>
-                                -{{ detail.unitPriceDiscount | currency:'EUR' }}
+                                {{ (detail.unitPriceDiscount * 100) | number:'1.0-0' }}%
                             </span>
                             } @else {
                             <span>-</span>

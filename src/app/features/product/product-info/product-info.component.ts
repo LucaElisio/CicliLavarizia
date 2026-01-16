@@ -37,9 +37,9 @@ export class ProductInfoComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe({
       next: (data) => {
         this.productId = Number(data['productId']);
+        this.getProduct();
       },
     });
-    this.getProduct();
   }
 
   getProduct() {
@@ -55,7 +55,7 @@ export class ProductInfoComponent implements OnInit {
   addToCart(productId: number, quantity: number = 1) {
     console.log(`Aggiungo al carrello il prodotto con ID: ${productId}, Quantità: ${quantity}`);
     const isAuth = this.authService.isAuthenticated();
-    
+
     if (isAuth) {
       // Utente autenticato: usa il carrello del DB
       this.cartService.addToCart(productId, quantity).subscribe({
@@ -63,7 +63,7 @@ export class ProductInfoComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Elemento aggiunto al carrello!',
-            life: 3000
+            life: 3000,
           });
           this.cartService.getCart().subscribe({
             next: (data) => {
@@ -76,9 +76,9 @@ export class ProductInfoComponent implements OnInit {
             severity: 'error',
             summary: 'Errore',
             detail: 'Impossibile aggiungere al carrello',
-            life: 3000
+            life: 3000,
           });
-        }
+        },
       });
     } else {
       // Utente non autenticato: usa il carrello locale
@@ -86,17 +86,17 @@ export class ProductInfoComponent implements OnInit {
       this.messageService.add({
         severity: 'success',
         summary: 'Elemento aggiunto al carrello!',
-        detail: 'Effettua il login per completare l\'acquisto',
-        life: 3000
+        detail: "Effettua il login per completare l'acquisto",
+        life: 3000,
       });
     }
   }
 
   getModel(): void {
     const modelsLoadSize = 100;
-    this.productService.getProductModels(1, modelsLoadSize, "All").subscribe({
+    this.productService.getProductModels(1, modelsLoadSize, 'All').subscribe({
       next: (data) => {
-        data.forEach(model => {
+        data.forEach((model) => {
           if (model.productModelId === this.product()?.productModelId) {
             console.log('Descrizione modello trovata:', model.modelDescription);
             this.productDescription = model.modelDescription;
@@ -105,11 +105,7 @@ export class ProductInfoComponent implements OnInit {
       },
       error: (err) => {
         console.error('Errore nella chiamata API per le descrizioni:', err);
-      }
+      },
     });
-
   }
-
-
-
 }
